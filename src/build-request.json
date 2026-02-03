@@ -1,0 +1,194 @@
+{
+  "kind": "build_request",
+  "title": "Institution Hero: Workshop app for Heroes & Villains leadership activities",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create the core app information architecture and pages for an app titled “Institution Hero” using the provided proposal as the source of truth for all content (bio, abstracts, learning outcomes, takeaways, references, and session outline).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "I want to create an app titled Institution Hero\n use this proposal and its activites as foundation"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The app header/title displays “Institution Hero”.",
+        "There are navigable sections/pages for: Overview (abstract + short abstract), Bio, Learning Outcomes, Takeaways, Activities, Session Outline, and References.",
+        "All user-facing text is in English and directly reflects the provided proposal content (no placeholder lorem ipsum)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement Activity 1 (“Your Leadership Word”) as an interactive in-app exercise with: (1) a single-word input, (2) reflection prompts (why this word, who reflects it, how it shows resilience, one small action this week), and (3) a share/submit action that saves the user’s responses and shows an aggregated “patterns” summary across submissions (e.g., top words with counts).",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Activity 1. Your Leadership Word",
+          "What ONE word describes the kind of leader you admire?",
+          "Invite volunteers to share their word aloud.\nWhat are the patterns"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A user can complete Activity 1 end-to-end and submit a response.",
+        "Submitted Activity 1 responses persist via backend storage and are visible after refresh.",
+        "The Activity 1 screen includes an aggregated patterns view that summarizes submissions (at minimum: top submitted words with counts).",
+        "If the user has not signed in, the UI clearly prompts them to sign in before submitting (or prevents submission with an explanatory message)."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Implement Activity 2 (“Resilient Leadership for Campus Solutions”) as an interactive in-app exercise with: (1) selecting a common challenge from the provided list (plus an optional custom challenge), (2) inputs for villain response and heroic response, (3) selecting a protective factor (support, mentorship, collaboration, or a custom entry), and (4) creating a single micro-solution; include a share/submit action and a community list view that displays submitted micro-solutions.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Activity 2. Resilient Leadership for Campus Solutions",
+          "Present a Common Challenge",
+          "What would the villain response to this problem look like?\nWhat would the heroic response look like?\nWhich protective factor (support, mentorship, collaboration) helps solve it?",
+          "Create a Micro-Solution\nAsk students to propose ONE small action a student leader could take to improve the situation.",
+          "Share best\nShare the best micro-solution."
+        ]
+      },
+      "acceptanceCriteria": [
+        "A user can complete Activity 2 end-to-end and submit a response.",
+        "Submitted Activity 2 responses persist via backend storage and are visible after refresh.",
+        "The Activity 2 community list shows submitted micro-solutions with their associated challenge and protective factor.",
+        "If the user has not signed in, the UI clearly prompts them to sign in before submitting (or prevents submission with an explanatory message)."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Add an Internet Identity sign-in/out UX and gate “submit/share” actions for Activities 1 and 2 behind authentication, associating saved submissions with the authenticated user’s Principal.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "use this proposal and its activites as foundation"
+        ]
+      },
+      "acceptanceCriteria": [
+        "There is a visible Sign in / Sign out control in the app shell.",
+        "When signed in, submissions are stored and attributed to the user’s Principal in the backend.",
+        "When signed out, the user cannot submit/share activity responses and sees a clear sign-in prompt."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Create a “Session Outline” view that presents the provided timeline (Introduction, Activity 1, Activity 2, Conclusion, Q&A) with the specified durations, formatted for facilitating the workshop.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Session Outline\n10 minutes Introduction \n15 minutes activity 1. Your Leadership Word\n15 minutes activity 2. Resilient Leadership for Campus Solutions\n10 minutes Conclusion\n10 minutes Q&A"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The session outline displays all agenda items in order with their minute durations.",
+        "The view is readable on mobile and desktop (responsive layout)."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Implement backend data models and APIs in the single Motoko actor to support storing and querying Activity 1 and Activity 2 submissions, including aggregated word counts for Activity 1 and listing Activity 2 micro-solutions.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Invite volunteers to share their word aloud.\nWhat are the patterns",
+          "Share best\nShare the best micro-solution."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend exposes update calls to create Activity 1 submissions and Activity 2 submissions for the calling Principal.",
+        "Backend exposes query calls to: (a) return Activity 1 aggregated word counts, and (b) return a list of Activity 2 micro-solutions (most recent first or otherwise deterministic).",
+        "All backend logic is contained within the single actor (no additional services)."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Establish a coherent visual theme for Institution Hero and apply it consistently across all pages (typography, color, spacing, and components). The theme should feel academic and “cinematic mentor” inspired (wisdom/resilience), avoiding a default blue/purple look.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Hero and Villains in Higher Education: Resilience and The Role of Next Generation Student Leaders",
+          "Much like cinematic mentors who exemplify wisdom, Yoda or Morpheus"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The app has a consistent, distinctive theme (not the unstyled template).",
+        "The chosen color palette is not primarily blue/purple.",
+        "All core pages (Overview/Bio/Outcomes/Takeaways/Activities/Session Outline/References) share the same design language."
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Add the required generated images to the project as static assets and render them in the UI (e.g., logo in header, hero image on the landing/overview section). Store generated images under frontend/public/assets/generated and reference them directly from the frontend.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "I want to create an app titled Institution Hero"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Generated images exist in frontend/public/assets/generated with the exact filenames specified.",
+        "The logo is displayed in the app shell/header.",
+        "The hero/banner image is displayed prominently on the landing/overview section.",
+        "Images are loaded directly as static assets (not streamed/proxied through the backend)."
+      ]
+    }
+  ],
+  "constraints": [
+    "Use English for any user-facing text.",
+    "Backend must remain a single Motoko actor with all logic in backend/main.mo; only add backend/migration.mo if an upgrade-safe migration is actually required.",
+    "Do not edit files in frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui (compose these components instead).",
+    "No external databases or third-party auth providers; only Internet Identity for authentication."
+  ],
+  "nonGoals": [
+    "Do not implement real-time chat, WebSockets, or live session syncing.",
+    "Do not add payments, email/SMS, push notifications, or external social integrations.",
+    "Do not build complex moderation/admin dashboards unless explicitly requested later.",
+    "Do not add AI/LLM integrations."
+  ],
+  "imageRequirements": {
+    "required": [
+      "Minimal emblem logo: shield + open book + small star, flat vector, charcoal/ivory with gold accent (institution-hero-logo.dim_512x512.png)",
+      "Wide hero banner illustration: abstract campus silhouettes with a subtle light/dark (hero/villain) contrast, cinematic lighting, warm parchment background (institution-hero-banner.dim_1600x600.png)"
+    ],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [
+      "Build an app titled “Institution Hero” that delivers an interactive workshop experience based on the provided higher-education leadership/resilience proposal."
+    ],
+    "goalsToRemove": [],
+    "preferencesToAdd": [
+      "User-facing text should be in English."
+    ],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

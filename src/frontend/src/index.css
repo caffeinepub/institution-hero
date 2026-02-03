@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    
+    /* Warm parchment background with charcoal text */
+    --background: 0.96 0.015 60;
+    --foreground: 0.25 0.02 30;
+    
+    /* Ivory card surfaces */
+    --card: 0.98 0.01 60;
+    --card-foreground: 0.25 0.02 30;
+    
+    --popover: 0.98 0.01 60;
+    --popover-foreground: 0.25 0.02 30;
+    
+    /* Deep charcoal primary with gold accent undertones */
+    --primary: 0.35 0.03 40;
+    --primary-foreground: 0.98 0.01 60;
+    
+    /* Soft warm secondary */
+    --secondary: 0.92 0.02 50;
+    --secondary-foreground: 0.25 0.02 30;
+    
+    /* Muted warm tones */
+    --muted: 0.90 0.02 55;
+    --muted-foreground: 0.50 0.02 35;
+    
+    /* Gold accent */
+    --accent: 0.75 0.12 70;
+    --accent-foreground: 0.25 0.02 30;
+    
+    --destructive: 0.55 0.20 25;
+    --destructive-foreground: 0.98 0.01 60;
+    
+    /* Subtle borders */
+    --border: 0.88 0.015 55;
+    --input: 0.88 0.015 55;
+    --ring: 0.50 0.05 45;
+    
+    --chart-1: 0.65 0.15 45;
+    --chart-2: 0.60 0.12 200;
+    --chart-3: 0.70 0.10 80;
+    --chart-4: 0.55 0.18 340;
+    --chart-5: 0.75 0.14 25;
+  }
+
+  .dark {
+    /* Deep charcoal background */
+    --background: 0.20 0.02 30;
+    --foreground: 0.95 0.01 60;
+    
+    /* Slightly lighter charcoal for cards */
+    --card: 0.25 0.02 35;
+    --card-foreground: 0.95 0.01 60;
+    
+    --popover: 0.25 0.02 35;
+    --popover-foreground: 0.95 0.01 60;
+    
+    /* Warm ivory/cream primary */
+    --primary: 0.92 0.02 55;
+    --primary-foreground: 0.25 0.02 30;
+    
+    --secondary: 0.30 0.02 35;
+    --secondary-foreground: 0.95 0.01 60;
+    
+    --muted: 0.35 0.02 40;
+    --muted-foreground: 0.65 0.02 50;
+    
+    /* Gold accent for dark mode */
+    --accent: 0.70 0.15 65;
+    --accent-foreground: 0.20 0.02 30;
+    
+    --destructive: 0.60 0.22 25;
+    --destructive-foreground: 0.95 0.01 60;
+    
+    --border: 0.30 0.02 35;
+    --input: 0.35 0.02 40;
+    --ring: 0.60 0.05 50;
+    
+    --chart-1: 0.65 0.15 45;
+    --chart-2: 0.60 0.12 200;
+    --chart-3: 0.70 0.10 80;
+    --chart-4: 0.55 0.18 340;
+    --chart-5: 0.75 0.14 25;
+  }
+
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}

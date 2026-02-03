@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 4,
+  "summary": "Build an app named \"Institution Hero\" based on the provided higher-education leadership/resilience proposal, incorporating the session content and activities as core app experiences.",
+  "existing_features": [
+    {
+      "id": "feature-create-the-core-app-information-architecture-and-pages-for-an-app-titled-institution-hero-using-the-provided-proposal-as-the-source-of-truth-for-all-content-bio-abstracts-learning-outcomes-takeaways-references-and-session-outline",
+      "title": "Create the core app information architecture and pages for an app titled “Institution Hero” using the provided proposal as the source of truth for all content (bio, abstracts, learning outcomes, takeaways, references, and session outline).",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-activity-1-your-leadership-word-as-an-interactive-in-app-exercise-with-1-a-single-word-input-2-reflection-prompts-why-this-word-who-reflects-it-how-it-shows-resilience-one-small-action-this-week-and-3-a-share-submit-action-that-saves-the-user-s-responses-and-shows-an-aggregated-patterns-summary-across-submissions-e-g-top-words-with-counts",
+      "title": "Implement Activity 1 (“Your Leadership Word”) as an interactive in-app exercise with: (1) a single-word input, (2) reflection prompts (why this word, who reflects it, how it shows resilience, one small action this week), and (3) a share/submit action that saves the user’s responses and shows an aggregated “patterns” summary across submissions (e.g., top words with counts).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-activity-2-resilient-leadership-for-campus-solutions-as-an-interactive-in-app-exercise-with-1-selecting-a-common-challenge-from-the-provided-list-plus-an-optional-custom-challenge-2-inputs-for-villain-response-and-heroic-response-3-selecting-a-protective-factor-support-mentorship-collaboration-or-a-custom-entry-and-4-creating-a-single-micro-solution-include-a-share-submit-action-and-a-community-list-view-that-displays-submitted-micro-solutions",
+      "title": "Implement Activity 2 (“Resilient Leadership for Campus Solutions”) as an interactive in-app exercise with: (1) selecting a common challenge from the provided list (plus an optional custom challenge), (2) inputs for villain response and heroic response, (3) selecting a protective factor (support, mentorship, collaboration, or a custom entry), and (4) creating a single micro-solution; include a share/submit action and a community list view that displays submitted micro-solutions.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-internet-identity-sign-in-out-ux-and-gate-submit-share-actions-for-activities-1-and-2-behind-authentication-associating-saved-submissions-with-the-authenticated-user-s-principal",
+      "title": "Add an Internet Identity sign-in/out UX and gate “submit/share” actions for Activities 1 and 2 behind authentication, associating saved submissions with the authenticated user’s Principal.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-session-outline-view-that-presents-the-provided-timeline-introduction-activity-1-activity-2-conclusion-q-a-with-the-specified-durations-formatted-for-facilitating-the-workshop",
+      "title": "Create a “Session Outline” view that presents the provided timeline (Introduction, Activity 1, Activity 2, Conclusion, Q&A) with the specified durations, formatted for facilitating the workshop.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-establish-a-coherent-visual-theme-for-institution-hero-and-apply-it-consistently-across-all-pages-typography-color-spacing-and-components-the-theme-should-feel-academic-and-cinematic-mentor-inspired-wisdom-resilience-avoiding-a-default-blue-purple-look",
+      "title": "Establish a coherent visual theme for Institution Hero and apply it consistently across all pages (typography, color, spacing, and components). The theme should feel academic and “cinematic mentor” inspired (wisdom/resilience), avoiding a default blue/purple look.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-required-generated-images-to-the-project-as-static-assets-and-render-them-in-the-ui-e-g-logo-in-header-hero-image-on-the-landing-overview-section-store-generated-images-under-frontend-public-assets-generated-and-reference-them-directly-from-the-frontend",
+      "title": "Add the required generated images to the project as static assets and render them in the UI (e.g., logo in header, hero image on the landing/overview section). Store generated images under frontend/public/assets/generated and reference them directly from the frontend.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create core app structure and content based on the provided proposal (bio, abstracts, learning outcomes, takeaways, references).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Implement Activity 1: \"Your Leadership Word\" as an interactive in-app exercise with reflection prompts and share-out/pattern summary.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Implement Activity 2: \"Resilient Leadership for Campus Solutions\" as an interactive in-app exercise (villain vs heroic responses, protective factors, micro-solution creation and sharing).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Include a session outline/timeline view (intro, activities, conclusion, Q&A) for facilitating the workshop content in the app.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Implement backend data models and APIs in the single Motoko actor to support storing and querying Activity 1 and Activity 2 submissions, including aggregated word counts for Activity 1 and listing Activity 2 micro-solutions.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    }
+  ],
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Minimal emblem logo: shield + open book + small star, flat vector, charcoal/ivory with gold accent (institution-hero-logo.dim_512x512.png)\n- Wide hero banner illustration: abstract campus silhouettes with a subtle light/dark (hero/villain) contrast, cinematic lighting, warm parchment background (institution-hero-banner.dim_1600x600.png)",
+  "generatedImages": [
+    {
+      "filename": "institution-hero-logo.dim_512x512.png",
+      "description": "Minimal emblem logo: shield + open book + small star, flat vector, charcoal/ivory with gold accent",
+      "targetWidth": 512,
+      "targetHeight": 512
+    },
+    {
+      "filename": "institution-hero-banner.dim_1600x600.png",
+      "description": "Wide hero banner illustration: abstract campus silhouettes with a subtle light/dark (hero/villain) contrast, cinematic lighting, warm parchment background",
+      "targetWidth": 1600,
+      "targetHeight": 600
+    }
+  ],
+  "projectName": "Institution Hero",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

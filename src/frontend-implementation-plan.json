@@ -1,0 +1,271 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Institution Hero (Frontend)",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Create the core information architecture and navigable pages for Institution Hero, with all content sourced from the provided proposal.",
+      "acceptanceCriteria": [
+        "The app header/title displays “Institution Hero”.",
+        "There are navigable sections/pages for: Overview (abstract + short abstract), Bio, Learning Outcomes, Takeaways, Activities, Session Outline, and References.",
+        "All user-facing text is in English and directly reflects the provided proposal content (no placeholder lorem ipsum)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the top-level app composition with routing/navigation for Overview, Bio, Learning Outcomes, Takeaways, Activities, Session Outline, and References; include the app title “Institution Hero” in the shell header and ensure all content is pulled from a centralized proposal content module."
+        },
+        {
+          "path": "frontend/src/content/proposalContent.ts",
+          "operation": "create",
+          "description": "Add a centralized content source-of-truth module containing the proposal-derived English copy for: short abstract, abstract, bio, learning outcomes, takeaways, activities descriptions, session outline text, and references (ensure the text is copied directly from the proposal; no placeholder text)."
+        },
+        {
+          "path": "frontend/src/pages/OverviewPage.tsx",
+          "operation": "create",
+          "description": "Create the Overview page and render the short abstract + abstract from the proposal content module; use shadcn-ui components to structure readable content blocks (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/BioPage.tsx",
+          "operation": "create",
+          "description": "Create the Bio page rendering proposal bio content; use shadcn-ui components for layout/typography (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/LearningOutcomesPage.tsx",
+          "operation": "create",
+          "description": "Create the Learning Outcomes page rendering proposal outcomes as a clear list; use shadcn-ui components for list/sections (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/TakeawaysPage.tsx",
+          "operation": "create",
+          "description": "Create the Takeaways page rendering proposal takeaways; use shadcn-ui components for consistent page sections (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/ActivitiesPage.tsx",
+          "operation": "create",
+          "description": "Create the Activities landing page summarizing Activity 1 and Activity 2 from the proposal content module and providing navigation to each activity screen; use shadcn-ui components for cards/CTAs (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/ReferencesPage.tsx",
+          "operation": "create",
+          "description": "Create the References page rendering the proposal references in English; use shadcn-ui components for consistent typography and spacing (Verify the component's usage instructions before implementing)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Implement Activity 1 as an interactive exercise with single-word input, reflection prompts, authenticated submit, and an aggregated patterns summary of top words with counts.",
+      "acceptanceCriteria": [
+        "A user can complete Activity 1 end-to-end and submit a response.",
+        "Submitted Activity 1 responses persist via backend storage and are visible after refresh.",
+        "The Activity 1 screen includes an aggregated patterns view that summarizes submissions (at minimum: top submitted words with counts).",
+        "If the user has not signed in, the UI clearly prompts them to sign in before submitting (or prevents submission with an explanatory message)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Activity1LeadershipWordPage.tsx",
+          "operation": "create",
+          "description": "Create the Activity 1 screen UI: enforce a single-word input validation, collect reflection prompts (why this word, who reflects it, how it shows resilience, one small action this week), show a submit/share action gated by sign-in, and render an aggregated patterns summary using backend word-count queries; use shadcn-ui components for form fields, buttons, alerts, and cards (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/hooks/useLeadershipWordActivity.ts",
+          "operation": "create",
+          "description": "Add React Query hooks that use useActor() to: (a) submit Activity 1 responses, and (b) query aggregated word counts/top words for the patterns summary; ensure queries invalidate/refetch after successful submit."
+        },
+        {
+          "path": "frontend/src/components/LeadershipWordPatternsSummary.tsx",
+          "operation": "create",
+          "description": "Create a reusable patterns summary component that displays top submitted words with counts from the Activity 1 aggregated query; use shadcn-ui components for a clean, readable summary presentation (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire Activity 1 route/navigation from the Activities page and/or app navigation so the Activity 1 screen is reachable and not an orphan view."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Implement Activity 2 as an interactive exercise with challenge selection, villain/hero responses, protective factor, micro-solution submission, and a community list of submitted micro-solutions.",
+      "acceptanceCriteria": [
+        "A user can complete Activity 2 end-to-end and submit a response.",
+        "Submitted Activity 2 responses persist via backend storage and are visible after refresh.",
+        "The Activity 2 community list shows submitted micro-solutions with their associated challenge and protective factor.",
+        "If the user has not signed in, the UI clearly prompts them to sign in before submitting (or prevents submission with an explanatory message)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
+          "operation": "create",
+          "description": "Create the Activity 2 screen UI: allow selecting a common challenge from the provided list (plus optional custom challenge), collect villain response, heroic response, choose a protective factor (support/mentorship/collaboration/custom), and create a single micro-solution; include submit/share gated by sign-in and render a community list of submitted micro-solutions; use shadcn-ui components for selects, inputs, cards, and list layout (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/hooks/useResilientLeadershipActivity.ts",
+          "operation": "create",
+          "description": "Add React Query hooks that use useActor() to: (a) submit Activity 2 responses, and (b) query the community micro-solution list; ensure the community list refetches after a successful submit."
+        },
+        {
+          "path": "frontend/src/components/MicroSolutionsCommunityList.tsx",
+          "operation": "create",
+          "description": "Create a reusable community list component rendering submitted micro-solutions with associated challenge and protective factor; use shadcn-ui components for consistent list/card styling (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire Activity 2 route/navigation from the Activities page and/or app navigation so the Activity 2 screen is reachable and not an orphan view."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Add Internet Identity sign-in/out UX in the app shell and gate Activity 1 and Activity 2 submissions behind authentication.",
+      "acceptanceCriteria": [
+        "There is a visible Sign in / Sign out control in the app shell.",
+        "When signed in, submissions are stored and attributed to the user’s Principal in the backend.",
+        "When signed out, the user cannot submit/share activity responses and sees a clear sign-in prompt."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AppShell.tsx",
+          "operation": "create",
+          "description": "Create a shared app shell component that includes a visible Sign in / Sign out control and the Institution Hero header (including logo); integrate with the existing Internet Identity context without modifying immutable hook files; use shadcn-ui components for buttons/menus/alerts (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/components/SignInGate.tsx",
+          "operation": "create",
+          "description": "Create a small wrapper component that disables/hides submit actions when not signed in and shows a clear sign-in prompt with a call-to-action that triggers Internet Identity login; use shadcn-ui components for alert messaging and buttons (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/Activity1LeadershipWordPage.tsx",
+          "operation": "modify",
+          "description": "Gate the Activity 1 submit/share action behind authentication using the sign-in gate component; show an explanatory message and a sign-in action when signed out; ensure submit calls are made via the authenticated actor when signed in."
+        },
+        {
+          "path": "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
+          "operation": "modify",
+          "description": "Gate the Activity 2 submit/share action behind authentication using the sign-in gate component; show an explanatory message and a sign-in action when signed out; ensure submit calls are made via the authenticated actor when signed in."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wrap routed pages with the shared app shell so the Sign in / Sign out controls are visible across the app and not tied to a single page."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Create a Session Outline view showing the workshop timeline with durations, formatted for facilitation and responsive on mobile/desktop.",
+      "acceptanceCriteria": [
+        "The session outline displays all agenda items in order with their minute durations.",
+        "The view is readable on mobile and desktop (responsive layout)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/SessionOutlinePage.tsx",
+          "operation": "create",
+          "description": "Create the Session Outline page that renders the timeline items in order with durations (Introduction 10, Activity 1 15, Activity 2 15, Conclusion 10, Q&A 10) using a responsive layout; use shadcn-ui components (e.g., cards/accordion) to format for facilitation readability (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the Session Outline page into the main navigation and routing so it is directly reachable."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Establish and apply a cohesive academic, cinematic-mentor-inspired theme (charcoal/ivory/gold/warm parchment), consistently across all core pages and components, avoiding a default blue/purple look.",
+      "acceptanceCriteria": [
+        "The app has a consistent, distinctive theme (not the unstyled template).",
+        "The chosen color palette is not primarily blue/purple.",
+        "All core pages (Overview/Bio/Outcomes/Takeaways/Activities/Session Outline/References) share the same design language."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Create global styling with a coherent theme using CSS variables compatible with the existing Tailwind + shadcn-ui setup (warm parchment background, charcoal text, ivory surfaces, gold accents; avoid blue/purple as primary); include base typography and spacing rules for consistent page rhythm."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Adjust Tailwind theme extensions as needed to support the Institution Hero design language (e.g., typography defaults, font families, and any additional semantic tokens that map to the new CSS variables) while keeping the palette aligned to charcoal/ivory/gold/warm parchment."
+        },
+        {
+          "path": "frontend/src/components/PageSection.tsx",
+          "operation": "create",
+          "description": "Create a shared layout/section component to standardize headings, spacing, and content width across all core pages; use shadcn-ui components where appropriate for consistent structure (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/OverviewPage.tsx",
+          "operation": "modify",
+          "description": "Align the Overview page layout and typography to the global theme and shared section patterns; ensure consistent visual language with the rest of the app using shadcn-ui components (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/BioPage.tsx",
+          "operation": "modify",
+          "description": "Align the Bio page layout and typography to the global theme and shared section patterns using shadcn-ui components (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/LearningOutcomesPage.tsx",
+          "operation": "modify",
+          "description": "Align the Learning Outcomes page layout and typography to the global theme and shared section patterns using shadcn-ui components (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/TakeawaysPage.tsx",
+          "operation": "modify",
+          "description": "Align the Takeaways page layout and typography to the global theme and shared section patterns using shadcn-ui components (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/ActivitiesPage.tsx",
+          "operation": "modify",
+          "description": "Align the Activities page layout and typography to the global theme and shared section patterns using shadcn-ui components (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/SessionOutlinePage.tsx",
+          "operation": "modify",
+          "description": "Align the Session Outline page layout and typography to the global theme and shared section patterns using shadcn-ui components (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/ReferencesPage.tsx",
+          "operation": "modify",
+          "description": "Align the References page layout and typography to the global theme and shared section patterns using shadcn-ui components (Verify the component's usage instructions before implementing)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Add the required generated images as static assets and render them in the UI (logo in header, hero banner on Overview).",
+      "acceptanceCriteria": [
+        "Generated images exist in frontend/public/assets/generated with the exact filenames specified.",
+        "The logo is displayed in the app shell/header.",
+        "The hero/banner image is displayed prominently on the landing/overview section.",
+        "Images are loaded directly as static assets (not streamed/proxied through the backend)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/institution-hero-logo.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated static logo asset at the exact path frontend/public/assets/generated/institution-hero-logo.dim_512x512.png for direct frontend rendering."
+        },
+        {
+          "path": "frontend/public/assets/generated/institution-hero-banner.dim_1600x600.png",
+          "operation": "create",
+          "description": "Add the generated static hero banner asset at the exact path frontend/public/assets/generated/institution-hero-banner.dim_1600x600.png for direct frontend rendering."
+        },
+        {
+          "path": "frontend/src/components/AppShell.tsx",
+          "operation": "modify",
+          "description": "Render the logo image from frontend/public/assets/generated/institution-hero-logo.dim_512x512.png in the app header next to the title; ensure it is referenced as a static public asset and styled consistently with the theme using shadcn-ui layout primitives (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/OverviewPage.tsx",
+          "operation": "modify",
+          "description": "Render the hero/banner image from frontend/public/assets/generated/institution-hero-banner.dim_1600x600.png prominently within the Overview section, integrated into the themed layout using shadcn-ui components for framing/spacing (Verify the component's usage instructions before implementing)."
+        }
+      ]
+    }
+  ]
+}
