@@ -1,6 +1,6 @@
 import PageSection from '../components/PageSection';
 import { proposalContent } from '../content/proposalContent';
-import { BookOpen, Users, Target } from 'lucide-react';
+import { Users, Target } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 
 export default function OverviewPage() {
@@ -37,7 +37,7 @@ export default function OverviewPage() {
           </div>
 
           {/* Quick Links */}
-          <div className="grid md:grid-cols-3 gap-6 my-12">
+          <div className="grid md:grid-cols-2 gap-6 my-12">
             <Link
               to="/activities"
               className="group p-6 rounded-lg border border-border bg-card hover:bg-accent transition-colors"
@@ -62,17 +62,6 @@ export default function OverviewPage() {
               <p className="text-sm text-muted-foreground">
                 Discover what you'll gain from this session
               </p>
-            </Link>
-
-            <Link
-              to="/session-outline"
-              className="group p-6 rounded-lg border border-border bg-card hover:bg-accent transition-colors"
-            >
-              <BookOpen className="h-8 w-8 text-primary mb-3" />
-              <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-                Session Outline
-              </h3>
-              <p className="text-sm text-muted-foreground">View the complete workshop timeline</p>
             </Link>
           </div>
         </div>

@@ -8,6 +8,17 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const QuoteGenre = IDL.Variant({
+  'starWars' : IDL.Null,
+  'batman' : IDL.Null,
+  'harryPotter' : IDL.Null,
+  'avengers' : IDL.Null,
+});
+export const Quote = IDL.Record({
+  'quote' : IDL.Text,
+  'genre' : QuoteGenre,
+  'attribution' : IDL.Text,
+});
 export const LeadershipWordSubmission = IDL.Record({
   'why' : IDL.Text,
   'roleModel' : IDL.Text,
@@ -34,6 +45,8 @@ export const ResilientLeadershipActivity = IDL.Record({
 });
 
 export const idlService = IDL.Service({
+  'getAllActivity1Quotes' : IDL.Func([], [IDL.Vec(Quote)], ['query']),
+  'getAllActivity2Quotes' : IDL.Func([], [IDL.Vec(Quote)], ['query']),
   'getAllLeadershipWordSubmissions' : IDL.Func(
       [],
       [IDL.Vec(IDL.Tuple(IDL.Principal, LeadershipWordSubmission))],
@@ -49,11 +62,15 @@ export const idlService = IDL.Service({
       [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))],
       ['query'],
     ),
+  'getNextActivity1Quote' : IDL.Func([], [IDL.Opt(Quote)], []),
+  'getNextActivity2Quote' : IDL.Func([], [IDL.Opt(Quote)], []),
   'getTopLeadershipWords' : IDL.Func(
       [],
       [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))],
       ['query'],
     ),
+  'populateActivity1Quotes' : IDL.Func([IDL.Vec(Quote)], [], []),
+  'populateActivity2Quotes' : IDL.Func([IDL.Vec(Quote)], [], []),
   'submitLeadershipWord' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
       [],
@@ -76,6 +93,17 @@ export const idlService = IDL.Service({
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const QuoteGenre = IDL.Variant({
+    'starWars' : IDL.Null,
+    'batman' : IDL.Null,
+    'harryPotter' : IDL.Null,
+    'avengers' : IDL.Null,
+  });
+  const Quote = IDL.Record({
+    'quote' : IDL.Text,
+    'genre' : QuoteGenre,
+    'attribution' : IDL.Text,
+  });
   const LeadershipWordSubmission = IDL.Record({
     'why' : IDL.Text,
     'roleModel' : IDL.Text,
@@ -102,6 +130,8 @@ export const idlFactory = ({ IDL }) => {
   });
   
   return IDL.Service({
+    'getAllActivity1Quotes' : IDL.Func([], [IDL.Vec(Quote)], ['query']),
+    'getAllActivity2Quotes' : IDL.Func([], [IDL.Vec(Quote)], ['query']),
     'getAllLeadershipWordSubmissions' : IDL.Func(
         [],
         [IDL.Vec(IDL.Tuple(IDL.Principal, LeadershipWordSubmission))],
@@ -117,11 +147,15 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))],
         ['query'],
       ),
+    'getNextActivity1Quote' : IDL.Func([], [IDL.Opt(Quote)], []),
+    'getNextActivity2Quote' : IDL.Func([], [IDL.Opt(Quote)], []),
     'getTopLeadershipWords' : IDL.Func(
         [],
         [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))],
         ['query'],
       ),
+    'populateActivity1Quotes' : IDL.Func([IDL.Vec(Quote)], [], []),
+    'populateActivity2Quotes' : IDL.Func([IDL.Vec(Quote)], [], []),
     'submitLeadershipWord' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
         [],

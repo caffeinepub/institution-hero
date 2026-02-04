@@ -1,118 +1,218 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 4,
-  "summary": "Build an app named \"Institution Hero\" based on the provided higher-education leadership/resilience proposal, incorporating the session content and activities as core app experiences.",
+  "projectStateVersion": 54,
+  "summary": "ICP canister-based React + Motoko web app for “Institution Hero”, gated by Internet Identity sign-in, using Shadcn UI, with content-driven pages plus interactive Activities (affirmation/feedback + micro-solution validation with pop-culture quotes and reference-aligned citations), and About the Author social profile buttons, alongside generated brand/hero assets.",
   "existing_features": [
     {
-      "id": "feature-create-the-core-app-information-architecture-and-pages-for-an-app-titled-institution-hero-using-the-provided-proposal-as-the-source-of-truth-for-all-content-bio-abstracts-learning-outcomes-takeaways-references-and-session-outline",
-      "title": "Create the core app information architecture and pages for an app titled “Institution Hero” using the provided proposal as the source of truth for all content (bio, abstracts, learning outcomes, takeaways, references, and session outline).",
-      "reqIds": [
-        "REQ-1"
+      "id": "IF-1",
+      "title": "ICP project scaffold (build template) with deploy/build scripts",
+      "synonyms": [
+        "build-template",
+        "Dockerfile",
+        "deploy.sh",
+        "icp.yaml"
       ],
+      "description": "Project includes standardized build template assets (Dockerfile, deploy script, ICP YAML config, workspace/package configs) to build and deploy the app.",
+      "reqIds": [],
       "version": 1
     },
     {
-      "id": "feature-implement-activity-1-your-leadership-word-as-an-interactive-in-app-exercise-with-1-a-single-word-input-2-reflection-prompts-why-this-word-who-reflects-it-how-it-shows-resilience-one-small-action-this-week-and-3-a-share-submit-action-that-saves-the-user-s-responses-and-shows-an-aggregated-patterns-summary-across-submissions-e-g-top-words-with-counts",
-      "title": "Implement Activity 1 (“Your Leadership Word”) as an interactive in-app exercise with: (1) a single-word input, (2) reflection prompts (why this word, who reflects it, how it shows resilience, one small action this week), and (3) a share/submit action that saves the user’s responses and shows an aggregated “patterns” summary across submissions (e.g., top words with counts).",
-      "reqIds": [
-        "REQ-2"
+      "id": "IF-2",
+      "title": "Motoko backend canister with Candid interface bindings",
+      "synonyms": [
+        "backend canister",
+        "Motoko",
+        "Candid",
+        "did bindings"
       ],
+      "description": "Backend canister implemented in Motoko with generated frontend declaration files (backend.did.* and backend.d.ts) and canister configuration.",
+      "reqIds": [],
       "version": 1
     },
     {
-      "id": "feature-implement-activity-2-resilient-leadership-for-campus-solutions-as-an-interactive-in-app-exercise-with-1-selecting-a-common-challenge-from-the-provided-list-plus-an-optional-custom-challenge-2-inputs-for-villain-response-and-heroic-response-3-selecting-a-protective-factor-support-mentorship-collaboration-or-a-custom-entry-and-4-creating-a-single-micro-solution-include-a-share-submit-action-and-a-community-list-view-that-displays-submitted-micro-solutions",
-      "title": "Implement Activity 2 (“Resilient Leadership for Campus Solutions”) as an interactive in-app exercise with: (1) selecting a common challenge from the provided list (plus an optional custom challenge), (2) inputs for villain response and heroic response, (3) selecting a protective factor (support, mentorship, collaboration, or a custom entry), and (4) creating a single micro-solution; include a share/submit action and a community list view that displays submitted micro-solutions.",
-      "reqIds": [
-        "REQ-3"
+      "id": "IF-3",
+      "title": "React frontend app shell with routing across multiple pages",
+      "synonyms": [
+        "AppShell",
+        "pages",
+        "routing"
       ],
+      "description": "Frontend includes App.tsx/AppShell and multiple routed pages such as Overview, Activities, Learning Outcomes, Session Outline, Takeaways, References, and Bio.",
+      "reqIds": [],
       "version": 1
     },
     {
-      "id": "feature-add-an-internet-identity-sign-in-out-ux-and-gate-submit-share-actions-for-activities-1-and-2-behind-authentication-associating-saved-submissions-with-the-authenticated-user-s-principal",
-      "title": "Add an Internet Identity sign-in/out UX and gate “submit/share” actions for Activities 1 and 2 behind authentication, associating saved submissions with the authenticated user’s Principal.",
+      "id": "IF-4",
+      "title": "Internet Identity authentication integration with sign-in gate",
+      "synonyms": [
+        "Internet Identity",
+        "auth",
+        "SignInGate",
+        "useInternetIdentity"
+      ],
+      "description": "Frontend includes hooks and UI to authenticate via Internet Identity and gate access to app content.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-5",
+      "title": "Content modules for proposal/learning materials",
+      "synonyms": [
+        "proposalContent",
+        "content-driven pages"
+      ],
+      "description": "Structured content is provided via frontend/src/content/proposalContent.ts and rendered in dedicated pages and sections.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-6",
+      "title": "UI component library integrated (Shadcn UI) with Tailwind setup",
+      "synonyms": [
+        "shadcn-ui",
+        "Tailwind",
+        "ui components"
+      ],
+      "description": "Large set of Shadcn UI components added under src/components/ui with Tailwind/Vite/PostCSS configuration and lint rules.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-7",
+      "title": "Leadership word patterns summary component",
+      "synonyms": [
+        "LeadershipWordPatternsSummary"
+      ],
+      "description": "Feature component to display a summarized view of leadership word patterns within the learning materials.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-8",
+      "title": "Micro-solutions community list component",
+      "synonyms": [
+        "MicroSolutionsCommunityList"
+      ],
+      "description": "Feature component to render a community list of micro-solutions as part of the learning content.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-9",
+      "title": "Frontend actor/query hooks for canister interaction",
+      "synonyms": [
+        "useActor",
+        "useQueries",
+        "backend.ts"
+      ],
+      "description": "Frontend includes hooks and utilities to create canister actors and manage queries against the backend canister.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-10",
+      "title": "Asset pipeline scripts and generated brand/hero images",
+      "synonyms": [
+        "resize-images",
+        "prune-unused-images",
+        "generated assets"
+      ],
+      "description": "Includes scripts to resize/prune images and generated hero banner/logo assets stored under public/assets/generated.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "feature-update-activity-1-frontend-so-the-get-a-word-of-affirmation-feedback-section-displays-a-canister-provided-next-quote-from-the-activity-1-pool-instead-of-using-the-current-deterministic-star-wars-only-quote-selector",
+      "title": "Update Activity 1 frontend so the “Get a Word of Affirmation” feedback section displays a canister-provided next quote (from the Activity 1 pool) instead of using the current deterministic Star Wars-only quote selector.",
       "reqIds": [
         "REQ-4"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-a-session-outline-view-that-presents-the-provided-timeline-introduction-activity-1-activity-2-conclusion-q-a-with-the-specified-durations-formatted-for-facilitating-the-workshop",
-      "title": "Create a “Session Outline” view that presents the provided timeline (Introduction, Activity 1, Activity 2, Conclusion, Q&A) with the specified durations, formatted for facilitating the workshop.",
+      "id": "feature-update-activity-2-frontend-so-the-validation-feedback-quote-displayed-after-validate-my-micro-solution-and-generate-another-is-retrieved-from-the-canister-s-activity-2-quote-pool-per-user-non-repeating-while-keeping-the-existing-citation-message-generation-behavior-intact-unless-it-must-change-to-accommodate-the-new-quote-source",
+      "title": "Update Activity 2 frontend so the validation feedback quote displayed after “Validate My Micro-Solution” and “Generate Another” is retrieved from the canister’s Activity 2 quote pool (per-user non-repeating), while keeping the existing citation/message generation behavior intact unless it must change to accommodate the new quote source.",
       "reqIds": [
         "REQ-5"
       ],
       "version": 1
     },
     {
-      "id": "feature-establish-a-coherent-visual-theme-for-institution-hero-and-apply-it-consistently-across-all-pages-typography-color-spacing-and-components-the-theme-should-feel-academic-and-cinematic-mentor-inspired-wisdom-resilience-avoiding-a-default-blue-purple-look",
-      "title": "Establish a coherent visual theme for Institution Hero and apply it consistently across all pages (typography, color, spacing, and components). The theme should feel academic and “cinematic mentor” inspired (wisdom/resilience), avoiding a default blue/purple look.",
+      "id": "feature-add-react-query-hooks-mutations-to-call-the-new-quote-endpoints-and-ensure-cache-invalidation-refresh-works-correctly-when-identity-changes-consistent-with-existing-useactor-react-query-patterns",
+      "title": "Add React Query hooks/mutations to call the new quote endpoints and ensure cache invalidation/refresh works correctly when identity changes (consistent with existing useActor + React Query patterns).",
       "reqIds": [
-        "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-the-required-generated-images-to-the-project-as-static-assets-and-render-them-in-the-ui-e-g-logo-in-header-hero-image-on-the-landing-overview-section-store-generated-images-under-frontend-public-assets-generated-and-reference-them-directly-from-the-frontend",
-      "title": "Add the required generated images to the project as static assets and render them in the UI (e.g., logo in header, hero image on the landing/overview section). Store generated images under frontend/public/assets/generated and reference them directly from the frontend.",
-      "reqIds": [
-        "REQ-8"
+        "REQ-6"
       ],
       "version": 1
     }
   ],
   "new_feature_requests": [
     {
-      "id": "AR-1",
-      "summary": "Create core app structure and content based on the provided proposal (bio, abstracts, learning outcomes, takeaways, references).",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
       "id": "AR-2",
-      "summary": "Implement Activity 1: \"Your Leadership Word\" as an interactive in-app exercise with reflection prompts and share-out/pattern summary.",
+      "summary": "Per signed-in user, cycle non-repeating feedback quotes for Activities 1 & 2 with persistence in Motoko canister: 100 quotes per franchise (Star Wars, Avengers, Batman, Harry Potter) per activity (400/activity), no repeats until pool exhausted then reset.",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Implement Activity 2: \"Resilient Leadership for Campus Solutions\" as an interactive in-app exercise (villain vs heroic responses, protective factors, micro-solution creation and sharing).",
-      "reqIds": [],
+      "summary": "Implement canister-side, per–signed-in user (Internet Identity Principal) quote cycling for Activity 1 and Activity 2 such that each user receives a non-repeating sequence of feedback quotes until the pool is exhausted, then the sequence resets and continues.",
+      "reqIds": [
+        "REQ-1"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-4",
-      "summary": "Include a session outline/timeline view (intro, activities, conclusion, Q&A) for facilitating the workshop content in the app.",
-      "reqIds": [],
+      "summary": "Add quote pools in the Motoko canister for Activities 1 and 2 with at least 400 quotes per activity: 100 each from Star Wars, Avengers, Batman, and Harry Potter (each activity maintains its own independent pool). Each quote must include quote text, attribution, and universe/franchise label.",
+      "reqIds": [
+        "REQ-2"
+      ],
       "status": "pending"
     },
     {
-      "id": "AR-10",
-      "summary": "Implement backend data models and APIs in the single Motoko actor to support storing and querying Activity 1 and Activity 2 submissions, including aggregated word counts for Activity 1 and listing Activity 2 micro-solutions.",
+      "id": "AR-5",
+      "summary": "Expose new Candid endpoints in backend/main.mo to fetch the next quote for a given activity for the calling user, and (if needed) fetch another next quote without submitting again (to support Activity 2’s “Generate Another” behavior).",
       "reqIds": [
-        "REQ-6"
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Ensure backward compatibility of existing stored Activity 1/2 submissions while adding new canister state for quote cycling; add backend/migration.mo only if required to preserve existing state on upgrade per the project’s conditional migration policy.",
+      "reqIds": [
+        "REQ-7"
       ],
       "status": "pending"
     }
   ],
-  "architectural_notes": [],
+  "architectural_notes": [
+    "Frontend is a React + Vite + Tailwind app using Shadcn UI components and custom ESLint rules.",
+    "Authentication is handled via Internet Identity with a SignInGate pattern and dedicated hooks.",
+    "Backend is an ICP Motoko canister with Candid interface and generated TypeScript bindings for the frontend.",
+    "Project includes a reusable build template with Docker/deploy scripts plus image pipeline utilities (resize/prune).",
+    "App includes interactive Activity 1/2 UI flows with participant inputs and generated feedback/validation text using themed quotes and reference-aligned citations.",
+    "About the Author section includes external social profile link buttons (LinkedIn, Instagram).",
+    "Slide/deck section is to be completely removed (routes, navigation links, components, and any related data) and slide-specific assets/content deleted; user may revisit later.",
+    "Activity 1/2 feedback quote rotation must be persisted per authenticated user in the Motoko canister so it survives reloads and is consistent across devices; enforce non-repeating quote selection until the per-user pool is exhausted, then allow reset."
+  ],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Minimal emblem logo: shield + open book + small star, flat vector, charcoal/ivory with gold accent (institution-hero-logo.dim_512x512.png)\n- Wide hero banner illustration: abstract campus silhouettes with a subtle light/dark (hero/villain) contrast, cinematic lighting, warm parchment background (institution-hero-banner.dim_1600x600.png)",
   "generatedImages": [
     {
-      "filename": "institution-hero-logo.dim_512x512.png",
-      "description": "Minimal emblem logo: shield + open book + small star, flat vector, charcoal/ivory with gold accent",
-      "targetWidth": 512,
-      "targetHeight": 512
-    },
-    {
-      "filename": "institution-hero-banner.dim_1600x600.png",
-      "description": "Wide hero banner illustration: abstract campus silhouettes with a subtle light/dark (hero/villain) contrast, cinematic lighting, warm parchment background",
+      "filename": "frontend/public/assets/generated/institution-hero-banner.dim_1600x600.png",
+      "description": "Generated institution hero banner image asset.",
       "targetWidth": 1600,
       "targetHeight": 600
+    },
+    {
+      "filename": "frontend/public/assets/generated/institution-hero-logo.dim_512x512.png",
+      "description": "Generated institution hero logo image asset.",
+      "targetWidth": 512,
+      "targetHeight": 512
     }
   ],
   "projectName": "Institution Hero",
-  "clarification_mode": "instant",
+  "clarification_mode": "pro",
   "clarification_rounds": 0
 }

@@ -1,88 +1,53 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-03T23:11:36.662Z",
-  "summary": "The diff adds a TanStack Router-based multi-page frontend with a consistent theme, Internet Identity sign-in/out UX, Activity 1 & 2 interactive pages (with gated submission), and a Motoko backend actor with submission/query APIs. However, some requirements cannot be verified from the provided diff (notably Session Outline/Takeaways pages), and Activity 2 submissions are not attributed to the caller Principal in the backend.",
+  "generatedAt": "2026-02-04T02:51:32.062Z",
+  "summary": "Diff adds backend quote types and two caller-based endpoints plus frontend mutations/pages to fetch and display quotes for Activities 1 and 2. However, the backend quote pools are not populated (remain empty), the cycling logic is simple index increment without any non-repeating “until exhausted then reset” enforcement beyond sequential iteration, and persistence/upgrade compatibility for the new quote-cycling state is not evidenced. React Query identity-change cache behavior is also not evidenced.",
   "missing_requirements": [
     {
-      "id": "REQ-4",
-      "requirement": "Associate saved submissions with the authenticated user’s Principal for Activities 1 and 2.",
-      "reason": "Activity 2 backend storage does not record the caller Principal; it stores only the activity content in a list without any Principal attribution.",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "requirement": "Create a “Session Outline” view that presents the provided timeline with specified durations, formatted for facilitating the workshop.",
-      "reason": "A Session Outline route is wired, but the actual SessionOutlinePage implementation/content (including agenda items and minute durations) is not shown in the diff summary, so it cannot be verified.",
-      "evidence": [
-        "frontend/src/App.tsx"
-      ]
-    },
-    {
       "id": "REQ-1",
-      "requirement": "Provide navigable pages for all required sections (including Takeaways and Session Outline) with English text reflecting the provided proposal content.",
-      "reason": "Routes are defined for Takeaways and Session Outline, but the actual page implementations/content are not included in the visible diff summary, so compliance with proposal-based content cannot be confirmed.",
-      "evidence": [
-        "frontend/src/App.tsx"
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "requirement": "Add the required generated images under frontend/public/assets/generated with the exact filenames specified.",
-      "reason": "The UI references the required filenames, but the actual image files are not present in the visible diff summary (likely omitted/truncated), so their existence cannot be verified.",
-      "evidence": [
-        "frontend/src/components/AppShell.tsx",
-        "frontend/src/pages/OverviewPage.tsx"
-      ]
-    }
-  ],
-  "hallucinated_features": [
-    {
-      "description": "Backend API to fetch all Leadership Word submissions including Principals (getAllLeadershipWordSubmissions).",
-      "reason": "Not requested by the BuildRequest/requirements; REQ-6 only requires aggregated word counts and Activity 2 micro-solution listing.",
+      "requirement": "Per-user (Principal) non-repeating quote cycling per activity, persisted in canister state across reloads/devices, resetting only after exhausting the pool.",
+      "reason": "The backend helper increments an index modulo list size, but there is no evidence the quote pools contain unique quotes or that cycling enforces non-repetition until exhaustion beyond simple sequential access. Additionally, the quote state uses non-`stable` `let` bindings; persistence across upgrade/devices is not evidenced in the diff (and pools are empty).",
       "evidence": [
         "backend/main.mo"
       ]
     },
     {
-      "description": "Backend API getTopLeadershipWords that duplicates word-count retrieval without implementing a distinct 'top' selection/sorting.",
-      "reason": "Not requested (REQ-6 only requires aggregated word counts; frontend can compute top words).",
+      "id": "REQ-2",
+      "requirement": "Provide >=400 quotes per activity (>=100 each from Star Wars, Avengers, Batman, Harry Potter), with quote text, attribution, and universe/franchise, and independent pools for Activity 1 vs Activity 2.",
+      "reason": "`activity1Quotes` and `activity2Quotes` are initialized as empty lists and there is no evidence of adding/populating >=400 quotes per activity in the canister.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "requirement": "Add React Query hooks/mutations for the quote endpoints with cache invalidation/refresh when identity changes, consistent with existing patterns; fail gracefully with English messaging when actor is not ready; switching identities yields independent quote cycles.",
+      "reason": "Hooks for fetching quotes were added as mutations, but there is no evidence of query keys or invalidation tied to identity changes (no queryKey usage for quotes, no invalidate/reset on actor/identity change). Graceful error messages for actor-not-ready are present, but the identity-change cache behavior is not evidenced.",
+      "evidence": [
+        "frontend/src/hooks/useQueries.ts"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "requirement": "Ensure upgrade/backward compatibility for existing stored Activity 1/2 submissions while adding quote-cycling state; add migration if required.",
+      "reason": "The diff shows new canister state for quotes (`activity1State`, `activity2State`) and quote pools, but no evidence of `stable` declarations, preupgrade/postupgrade handling, or a migration module/policy implementation to preserve existing state on upgrade.",
       "evidence": [
         "backend/main.mo"
       ]
     }
   ],
-  "confidence": 0.62,
+  "hallucinated_features": [],
+  "confidence": 0.74,
   "changed_files": [
-    "all_files_summary.json",
     "backend/main.mo",
     "frontend-file-summaries.txt",
-    "frontend/index.css",
-    "frontend/index.html",
-    "frontend/src/App.tsx",
-    "frontend/src/components/AppShell.tsx",
-    "frontend/src/components/LeadershipWordPatternsSummary.tsx",
-    "frontend/src/components/MicroSolutionsCommunityList.tsx",
-    "frontend/src/components/PageSection.tsx",
-    "frontend/src/components/SignInGate.tsx",
-    "frontend/src/content/proposalContent.ts",
-    "frontend/src/hooks/useActor.ts",
-    "frontend/src/hooks/useInternetIdentity.ts",
     "frontend/src/hooks/useQueries.ts",
-    "frontend/src/index.css",
-    "frontend/src/main.tsx",
-    "frontend/src/pages/ActivitiesPage.tsx",
     "frontend/src/pages/Activity1LeadershipWordPage.tsx",
     "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
-    "frontend/src/pages/BioPage.tsx",
-    "frontend/src/pages/LearningOutcomesPage.tsx",
-    "frontend/src/pages/OverviewPage.tsx",
-    "frontend/src/pages/ReferencesPage.tsx",
-    "frontend/src/pages/SessionOutlinePage.tsx",
-    "frontend/src/pages/TakeawaysPage.tsx",
-    "frontend/tailwind.config.js",
+    "frontend/src/utils/activity2Validation.ts",
+    "frontend/src/utils/quoteFormatting.ts",
+    "frontend/src/utils/userFacingError.ts",
     "project_state.json"
   ]
 }

@@ -4,25 +4,46 @@ import PageSection from '../components/PageSection';
 import SignInGate from '../components/SignInGate';
 import MicroSolutionsCommunityList from '../components/MicroSolutionsCommunityList';
 import { proposalContent } from '../content/proposalContent';
-import { useSubmitResilientLeadershipActivity } from '../hooks/useQueries';
-import { ChallengeType } from '../backend';
-import { Users, Send, CheckCircle } from 'lucide-react';
+import { useSubmitResilientLeadershipActivity, useGetNextActivity2Quote } from '../hooks/useQueries';
+import { useActor } from '../hooks/useActor';
+import { Users, Send, CheckCircle, Sparkles, RefreshCw, AlertCircle, Loader2 } from 'lucide-react';
+import { generateActivity2Validation } from '../utils/activity2Validation';
+import { formatQuoteGenre } from '../utils/quoteFormatting';
+import { ChallengeTypeKey, mapChallengeTypeKeyToEnum } from '../utils/challengeTypeMapping';
+import { toUserFacingError } from '../utils/userFacingError';
+import { Quote } from '../backend';
 
-const challengeOptions: { value: ChallengeType; label: string }[] = [
-  { value: ChallengeType.academicPressure, label: 'Academic Pressure' },
-  { value: ChallengeType.mentalHealth, label: 'Mental Health' },
-  { value: ChallengeType.financialStress, label: 'Financial Stress' },
-  { value: ChallengeType.onlineLearning, label: 'Online Learning' },
-  { value: ChallengeType.timeManagement, label: 'Time Management' },
-  { value: ChallengeType.bullying, label: 'Bullying' },
-  { value: ChallengeType.socialIsolation, label: 'Social Isolation' },
+const challengeOptions: { value: ChallengeTypeKey; label: string }[] = [
+  { value: 'academicPressure', label: 'Academic Pressure' },
+  { value: 'mentalHealth', label: 'Mental Health' },
+  { value: 'financialStress', label: 'Financial Stress' },
+  { value: 'onlineLearning', label: 'Online Learning' },
+  { value: 'timeManagement', label: 'Time Management' },
+  { value: 'bullying', label: 'Bullying' },
+  { value: 'socialIsolation', label: 'Social Isolation' },
 ];
 
 const protectiveFactorOptions = ['Support', 'Mentorship', 'Collaboration'];
 
+interface LastSubmission {
+  microSolution: string;
+  protectiveFactor: string;
+  villainResponse: string;
+  heroicResponse: string;
+  challengeType?: string;
+  customChallenge?: string;
+}
+
+interface ValidationResult {
+  citation: string;
+  message: string;
+  quote: Quote | null;
+}
+
 export default function Activity2ResilientLeadershipPage() {
   const navigate = useNavigate();
-  const [challengeType, setChallengeType] = useState<ChallengeType | ''>('');
+  const { actor, isFetching: isActorFetching } = useActor();
+  const [challengeTypeKey, setChallengeTypeKey] = useState<ChallengeTypeKey | ''>('');
   const [customChallenge, setCustomChallenge] = useState('');
   const [villainResponse, setVillainResponse] = useState('');
   const [heroicResponse, setHeroicResponse] = useState('');
@@ -30,28 +51,149 @@ export default function Activity2ResilientLeadershipPage() {
   const [customProtectiveFactor, setCustomProtectiveFactor] = useState('');
   const [microSolution, setMicroSolution] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [lastSubmission, setLastSubmission] = useState<LastSubmission | null>(null);
+  const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
+  const [challengeError, setChallengeError] = useState('');
+  const [submissionError, setSubmissionError] = useState<string>('');
+  const [quoteError, setQuoteError] = useState<string>('');
 
   const submitMutation = useSubmitResilientLeadershipActivity();
+  const getQuoteMutation = useGetNextActivity2Quote();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Clear any previous errors
+    setChallengeError('');
+    setSubmissionError('');
+
+    // Client-side validation: require at least one challenge input
+    const hasSelectedChallenge = challengeTypeKey !== '';
+    const hasCustomChallenge = customChallenge.trim() !== '';
+
+    if (!hasSelectedChallenge && !hasCustomChallenge) {
+      setChallengeError('Please select a challenge from the list or describe your own challenge.');
+      return;
+    }
+
+    // Check if actor is ready
+    if (!actor || isActorFetching) {
+      setSubmissionError('Connection is still initializing. Please wait a moment and try again.');
+      return;
+    }
 
     const finalProtectiveFactor =
       protectiveFactor === 'custom' ? customProtectiveFactor : protectiveFactor;
 
     try {
+      // Enforce mutual exclusivity: when a challenge type is selected, submit customChallenge as null
+      // When a custom challenge is provided, submit challengeType as null
+      const mappedChallengeType = hasSelectedChallenge ? mapChallengeTypeKeyToEnum(challengeTypeKey) : null;
+      const finalCustomChallenge = hasCustomChallenge && !hasSelectedChallenge ? customChallenge.trim() : null;
+
       await submitMutation.mutateAsync({
-        challengeType: challengeType || null,
-        customChallenge: customChallenge || null,
+        challengeType: mappedChallengeType,
+        customChallenge: finalCustomChallenge,
         villainResponse,
         heroicResponse,
         protectiveFactor: finalProtectiveFactor,
         microSolution,
       });
+      
+      // Store the submission for validation
+      setLastSubmission({
+        microSolution,
+        protectiveFactor: finalProtectiveFactor,
+        villainResponse,
+        heroicResponse,
+        challengeType: challengeTypeKey || undefined,
+        customChallenge: customChallenge || undefined,
+      });
+      
       setSubmitted(true);
+      setValidationResult(null);
+      setSubmissionError('');
     } catch (error) {
       console.error('Failed to submit:', error);
-      alert('Failed to submit your response. Please try again.');
+      setSubmissionError(toUserFacingError(error));
+    }
+  };
+
+  const handleValidate = async () => {
+    if (lastSubmission) {
+      setQuoteError('');
+      
+      const { citation, message } = generateActivity2Validation(lastSubmission);
+      
+      // Fetch quote from backend
+      try {
+        const fetchedQuote = await getQuoteMutation.mutateAsync();
+        setValidationResult({
+          citation,
+          message,
+          quote: fetchedQuote,
+        });
+        
+        if (!fetchedQuote) {
+          setQuoteError('No quote available at this time.');
+        }
+      } catch (error) {
+        console.error('Failed to fetch quote:', error);
+        setQuoteError(toUserFacingError(error));
+        setValidationResult({
+          citation,
+          message,
+          quote: null,
+        });
+      }
+    }
+  };
+
+  const handleGenerateAnother = async () => {
+    if (lastSubmission) {
+      setQuoteError('');
+      
+      const { citation, message } = generateActivity2Validation(lastSubmission);
+      
+      // Fetch next quote from backend
+      try {
+        const fetchedQuote = await getQuoteMutation.mutateAsync();
+        setValidationResult({
+          citation,
+          message,
+          quote: fetchedQuote,
+        });
+        
+        if (!fetchedQuote) {
+          setQuoteError('No quote available at this time.');
+        }
+      } catch (error) {
+        console.error('Failed to fetch quote:', error);
+        setQuoteError(toUserFacingError(error));
+      }
+    }
+  };
+
+  const handleChallengeChange = (value: string) => {
+    setChallengeTypeKey(value as ChallengeTypeKey | '');
+    // Clear error when user makes a selection
+    if (value || customChallenge.trim()) {
+      setChallengeError('');
+    }
+  };
+
+  const handleCustomChallengeChange = (value: string) => {
+    setCustomChallenge(value);
+    // Clear error when user types
+    if (value.trim() || challengeTypeKey) {
+      setChallengeError('');
+    }
+  };
+
+  const handleInputChange = () => {
+    // Clear submission error when user edits inputs
+    if (submissionError) {
+      setSubmissionError('');
     }
   };
 
@@ -64,6 +206,95 @@ export default function Activity2ResilientLeadershipPage() {
           <p className="text-lg text-muted-foreground mb-8">
             Your micro-solution has been shared with the community.
           </p>
+
+          {/* Validation Button and Result */}
+          {!validationResult ? (
+            <div className="mb-8">
+              <button
+                onClick={handleValidate}
+                disabled={getQuoteMutation.isPending}
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {getQuoteMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-5 w-5" />
+                    Validate My Micro-Solution
+                  </>
+                )}
+              </button>
+            </div>
+          ) : (
+            <div className="mb-8 rounded-lg border border-border bg-card p-6 text-left space-y-4">
+              <div className="flex items-start gap-3">
+                <Sparkles className="h-6 w-6 text-primary shrink-0 mt-1" />
+                <div className="flex-1">
+                  <h2 className="text-xl font-semibold text-foreground mb-3">
+                    Your Micro-Solution is Validated!
+                  </h2>
+                  
+                  <p className="text-muted-foreground mb-4">
+                    {validationResult.message}
+                  </p>
+
+                  {/* Quote */}
+                  {validationResult.quote && (
+                    <div className="rounded-lg bg-muted/50 p-4 mb-4 border-l-4 border-primary">
+                      <p className="text-foreground italic mb-2">
+                        "{validationResult.quote.quote}"
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        — {validationResult.quote.attribution} ({formatQuoteGenre(validationResult.quote.genre)})
+                      </p>
+                    </div>
+                  )}
+
+                  {quoteError && (
+                    <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20 mb-4">
+                      <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                      <p className="text-sm text-destructive">{quoteError}</p>
+                    </div>
+                  )}
+
+                  {/* Research Citation */}
+                  <div className="rounded-lg bg-accent/10 p-4 border border-accent/20">
+                    <p className="text-xs font-semibold text-accent-foreground mb-2">
+                      ALIGNED RESEARCH CITATION:
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {validationResult.citation}
+                    </p>
+                  </div>
+
+                  {/* Generate Another Button */}
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      onClick={handleGenerateAnother}
+                      disabled={getQuoteMutation.isPending}
+                      className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {getQuoteMutation.isPending ? (
+                        <>
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                          Loading...
+                        </>
+                      ) : (
+                        <>
+                          <RefreshCw className="h-3 w-3" />
+                          Generate Another
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="mb-12">
             <MicroSolutionsCommunityList />
           </div>
@@ -77,6 +308,9 @@ export default function Activity2ResilientLeadershipPage() {
       </PageSection>
     );
   }
+
+  const isActorReady = !!actor && !isActorFetching;
+  const isSubmitDisabled = submitMutation.isPending || !isActorReady;
 
   return (
     <PageSection>
@@ -101,6 +335,19 @@ export default function Activity2ResilientLeadershipPage() {
         </div>
 
         <SignInGate>
+          {/* Actor initialization message */}
+          {!isActorReady && (
+            <div className="mb-6 flex items-start gap-3 p-4 rounded-lg bg-muted border border-border">
+              <Loader2 className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5 animate-spin" />
+              <div>
+                <p className="text-sm font-medium text-foreground">Connecting...</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Please wait while we establish a secure connection.
+                </p>
+              </div>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="rounded-lg border border-border bg-card p-6 space-y-6">
               <div>
@@ -109,8 +356,11 @@ export default function Activity2ResilientLeadershipPage() {
                 </label>
                 <select
                   id="challengeType"
-                  value={challengeType}
-                  onChange={(e) => setChallengeType(e.target.value as ChallengeType)}
+                  value={challengeTypeKey}
+                  onChange={(e) => {
+                    handleChallengeChange(e.target.value);
+                    handleInputChange();
+                  }}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   <option value="">-- Select a challenge --</option>
@@ -130,11 +380,22 @@ export default function Activity2ResilientLeadershipPage() {
                   id="customChallenge"
                   type="text"
                   value={customChallenge}
-                  onChange={(e) => setCustomChallenge(e.target.value)}
+                  onChange={(e) => {
+                    handleCustomChallengeChange(e.target.value);
+                    handleInputChange();
+                  }}
                   placeholder="Describe a custom challenge..."
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               </div>
+
+              {/* Challenge validation error */}
+              {challengeError && (
+                <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                  <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                  <p className="text-sm text-destructive">{challengeError}</p>
+                </div>
+              )}
 
               <div>
                 <label htmlFor="villainResponse" className="block text-sm font-medium mb-2">
@@ -143,7 +404,10 @@ export default function Activity2ResilientLeadershipPage() {
                 <textarea
                   id="villainResponse"
                   value={villainResponse}
-                  onChange={(e) => setVillainResponse(e.target.value)}
+                  onChange={(e) => {
+                    setVillainResponse(e.target.value);
+                    handleInputChange();
+                  }}
                   placeholder="Describe a destructive or unhelpful response..."
                   required
                   rows={3}
@@ -158,7 +422,10 @@ export default function Activity2ResilientLeadershipPage() {
                 <textarea
                   id="heroicResponse"
                   value={heroicResponse}
-                  onChange={(e) => setHeroicResponse(e.target.value)}
+                  onChange={(e) => {
+                    setHeroicResponse(e.target.value);
+                    handleInputChange();
+                  }}
                   placeholder="Describe a constructive, resilient response..."
                   required
                   rows={3}
@@ -173,7 +440,10 @@ export default function Activity2ResilientLeadershipPage() {
                 <select
                   id="protectiveFactor"
                   value={protectiveFactor}
-                  onChange={(e) => setProtectiveFactor(e.target.value)}
+                  onChange={(e) => {
+                    setProtectiveFactor(e.target.value);
+                    handleInputChange();
+                  }}
                   required
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 >
@@ -196,7 +466,10 @@ export default function Activity2ResilientLeadershipPage() {
                     id="customProtectiveFactor"
                     type="text"
                     value={customProtectiveFactor}
-                    onChange={(e) => setCustomProtectiveFactor(e.target.value)}
+                    onChange={(e) => {
+                      setCustomProtectiveFactor(e.target.value);
+                      handleInputChange();
+                    }}
                     placeholder="Enter your protective factor..."
                     required
                     className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
@@ -211,7 +484,10 @@ export default function Activity2ResilientLeadershipPage() {
                 <textarea
                   id="microSolution"
                   value={microSolution}
-                  onChange={(e) => setMicroSolution(e.target.value)}
+                  onChange={(e) => {
+                    setMicroSolution(e.target.value);
+                    handleInputChange();
+                  }}
                   placeholder="Propose ONE small action a student leader could take..."
                   required
                   rows={3}
@@ -223,13 +499,33 @@ export default function Activity2ResilientLeadershipPage() {
               </div>
             </div>
 
+            {/* Submission error message */}
+            {submissionError && (
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20">
+                <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-destructive">Submission Failed</p>
+                  <p className="text-sm text-destructive/90 mt-1">{submissionError}</p>
+                </div>
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={submitMutation.isPending}
+              disabled={isSubmitDisabled}
               className="w-full flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Send className="h-4 w-4" />
-              {submitMutation.isPending ? 'Submitting...' : 'Share Your Micro-Solution'}
+              {submitMutation.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" />
+                  Share Your Micro-Solution
+                </>
+              )}
             </button>
           </form>
         </SignInGate>

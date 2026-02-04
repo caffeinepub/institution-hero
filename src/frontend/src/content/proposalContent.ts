@@ -49,7 +49,7 @@ export const proposalContent = {
       title: 'Your Leadership Word',
       goal: 'Help students quickly identify leadership values and see how diverse strengths contribute to a positive academic culture.',
       prompt: 'What ONE word describes the kind of leader you admire?',
-      examples: 'honest, brave, creative, patient, resilient, fair',
+      examples: 'honest, brave, creative, patient, resilient, fair, innovation, compassion, integrity, low-key iconic, low drama',
       reflectionPrompts: [
         'Why did you choose that word?',
         'Who in your life (teacher, coach, peer) reflects that word?',
@@ -85,25 +85,19 @@ export const proposalContent = {
     },
   },
 
-  sessionOutline: [
-    { title: 'Introduction', duration: 10 },
-    { title: 'Activity 1: Your Leadership Word', duration: 15 },
-    { title: 'Activity 2: Resilient Leadership for Campus Solutions', duration: 15 },
-    { title: 'Conclusion', duration: 10 },
-    { title: 'Q&A', duration: 10 },
-  ],
-
   references: [
     'Anastasiou, S. (2025). [Review of Counteracting toxic leadership in education: Transforming schools through emotional intelligence and ethical leadership]. Administrative Sciences, 15(8), 312. https://doi.org/10.3390/admsci15080312',
     'Bieńkowska, A., & Tworek, K. (2025). Fake leadership influence on organizational destruction in higher education institutions (HEIs). PLOS ONE, 20(4), e0321194. https://doi.org/10.1371/journal.pone.0321194',
     'Erickson, L. L. (2017). Cross-Cultural Investigation on Resiliency and Protective Factors in U.S. and Guatemala (Order No. 10635141). Available from ProQuest One Academic. (1961607035). https://tcsedsystem.idm.oclc.org/login?url=https://www.proquest.com/dissertations-theses/cross-cultural-investigation-on-resiliency/docview/1961607035/se-2',
-    'Fostering resilience among university students: The role of teaching and learning environments. (2025). Higher Education. https://doi.org/10.1007/s10734-025-01484-2',
+    'Wang, F., Huang, P., Xi, Y., & King, B.K. (2025). Fostering resilience among university students: The role of teaching and learning environments. (2025). Higher Education. https://doi.org/10.1007/s10734-025-01484-2',
     'Elliott, E. W., & Kiel, L. D. (1996). Chaos theory in the social sciences : foundations and applications. University of Michigan Press. https://doi.org/10.3998/mpub.14623',
-    'Ghamrawi, N., & Al-Harthi, A. (2024). Destructive leadership behaviors: The case of academic middle leaders in higher education. International Journal of Educational Research. https://doi.org/10.1016/j.ijer.2024.102382',
+    'Fazio, R. J., Rashid, T., & Hayward, H. (2008). Growth through loss and adversity: A choice worth making. In S. J. Lopez (Ed.), Positive psychology: Exploring the best in people, volume 3 (pp. 1–27). Westport, CT: Praeger.',
+    'Ghamrawi, N., Abu-Shawish, R. K., Shal, T., & Ghamrawi, N. A. R. (2024). Destructive leadership behaviors: The case of academic middle leaders in higher education. International Journal of Educational Research. https://doi.org/10.1016/j.ijer.2024.102382',
     'Jansen, A. L., & Wieland, A. (2024). Developing resilient leaders: A training for students. Journal of Leadership Education. https://doi.org/10.1108/JOLE-06-2024-0073',
     'Killingback, C., Tomlinson, A., & Stern, J. (2025). Compassionate pedagogy in higher education: A scoping review. Journal of University Teaching & Learning Practice, 22(1), 1–32. https://doi.org/10.53761/7yvrw787',
     'Masten, A. S. (2014). Ordinary magic: Resilience in development. The Guilford Press.',
     'McGrath, B., Erickson, L. L., & Mayes, F. (2022). Dislocation and social change. Routledge. https://doi.org/10.4324/9780367198459-REPRW107-1',
+    'Morris, L. (2021, November 8). When Leadership Fails [PowerPoint slide]. SlideShare. TCSPP_WLF_ Victims, Villains, Strategies & Self [1838].pdf. TCSPP_WLF_ Victims Villains Strategies Self_.pdf',
     'Niemiec, R. M., & Wedding, D. (2014). Positive psychology at the movies: Using films to build character strengths and well-being. Hogrefe Publishing.',
     'Northouse, P. G. (2022). Leadership: Theory and practice (9th ed.). SAGE.',
     'Ramamoorthi, B., Jäppinen, A.-K., & Taajamo, M. (2023). Manifestations of leadership identity development among multicultural higher education students. European Journal of Training and Development, 47(10), 147–162. https://doi.org/10.1108/EJTD-02-2023-0027',

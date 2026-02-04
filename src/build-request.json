@@ -1,194 +1,160 @@
 {
   "kind": "build_request",
-  "title": "Institution Hero: Workshop app for Heroes & Villains leadership activities",
-  "priority": "normal",
+  "title": "Per-user non-repeating franchise quote cycling for Activities 1 & 2 (persisted in Motoko)",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Create the core app information architecture and pages for an app titled “Institution Hero” using the provided proposal as the source of truth for all content (bio, abstracts, learning outcomes, takeaways, references, and session outline).",
-      "target": "frontend",
+      "text": "Implement canister-side, per–signed-in user (Internet Identity Principal) quote cycling for Activity 1 and Activity 2 such that each user receives a non-repeating sequence of feedback quotes until the pool is exhausted, then the sequence resets and continues.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-4",
+          "msg-5"
         ],
         "quotes": [
-          "I want to create an app titled Institution Hero\n use this proposal and its activites as foundation"
+          "1(each signed‑in user never repeats until exhaustion)",
+          "3Motoko canister so it survives reloads and works consistently across devices"
         ]
       },
       "acceptanceCriteria": [
-        "The app header/title displays “Institution Hero”.",
-        "There are navigable sections/pages for: Overview (abstract + short abstract), Bio, Learning Outcomes, Takeaways, Activities, Session Outline, and References.",
-        "All user-facing text is in English and directly reflects the provided proposal content (no placeholder lorem ipsum)."
+        "For a given Principal and activity (1 vs 2), repeated calls to the quote endpoint never return the same quote until all quotes in that activity’s pool have been returned at least once.",
+        "After all quotes in the pool have been used for that Principal+activity, the next call starts a fresh cycle (quotes may repeat from the beginning of the new cycle).",
+        "Quote cycling state is stored in canister state (not frontend-only) so it works across reloads/devices for the same signed-in user."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Implement Activity 1 (“Your Leadership Word”) as an interactive in-app exercise with: (1) a single-word input, (2) reflection prompts (why this word, who reflects it, how it shows resilience, one small action this week), and (3) a share/submit action that saves the user’s responses and shows an aggregated “patterns” summary across submissions (e.g., top words with counts).",
-      "target": "both",
+      "text": "Add quote pools in the Motoko canister for Activities 1 and 2 with at least 400 quotes per activity: 100 each from Star Wars, Avengers, Batman, and Harry Potter (each activity maintains its own independent pool). Each quote must include quote text, attribution, and universe/franchise label.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-4",
+          "msg-5"
         ],
         "quotes": [
-          "Activity 1. Your Leadership Word",
-          "What ONE word describes the kind of leader you admire?",
-          "Invite volunteers to share their word aloud.\nWhat are the patterns"
+          "use movie quotes from starwars, avengers, batman, and harrypotter.",
+          "cycle at least 100 quotes for each activity",
+          "2 if its possible 100 per franchise per activity (400 per activity)"
         ]
       },
       "acceptanceCriteria": [
-        "A user can complete Activity 1 end-to-end and submit a response.",
-        "Submitted Activity 1 responses persist via backend storage and are visible after refresh.",
-        "The Activity 1 screen includes an aggregated patterns view that summarizes submissions (at minimum: top submitted words with counts).",
-        "If the user has not signed in, the UI clearly prompts them to sign in before submitting (or prevents submission with an explanatory message)."
+        "Activity 1 quote pool contains >= 400 entries (>= 100 per franchise: Star Wars, Avengers, Batman, Harry Potter).",
+        "Activity 2 quote pool contains >= 400 entries (>= 100 per franchise: Star Wars, Avengers, Batman, Harry Potter).",
+        "Activity 1 and Activity 2 pools are independent (advancing a user’s Activity 1 quote cycle does not affect Activity 2, and vice versa).",
+        "Each quote returned to the frontend includes quote text, attribution, and universe/franchise."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Implement Activity 2 (“Resilient Leadership for Campus Solutions”) as an interactive in-app exercise with: (1) selecting a common challenge from the provided list (plus an optional custom challenge), (2) inputs for villain response and heroic response, (3) selecting a protective factor (support, mentorship, collaboration, or a custom entry), and (4) creating a single micro-solution; include a share/submit action and a community list view that displays submitted micro-solutions.",
-      "target": "both",
+      "text": "Expose new Candid endpoints in backend/main.mo to fetch the next quote for a given activity for the calling user, and (if needed) fetch another next quote without submitting again (to support Activity 2’s “Generate Another” behavior).",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-4",
+          "msg-5"
         ],
         "quotes": [
-          "Activity 2. Resilient Leadership for Campus Solutions",
-          "Present a Common Challenge",
-          "What would the villain response to this problem look like?\nWhat would the heroic response look like?\nWhich protective factor (support, mentorship, collaboration) helps solve it?",
-          "Create a Micro-Solution\nAsk students to propose ONE small action a student leader could take to improve the situation.",
-          "Share best\nShare the best micro-solution."
+          "cycle at least 100 quotes for each activity so no one get the same quote twice",
+          "Motoko canister so it survives reloads and works consistently across devices"
         ]
       },
       "acceptanceCriteria": [
-        "A user can complete Activity 2 end-to-end and submit a response.",
-        "Submitted Activity 2 responses persist via backend storage and are visible after refresh.",
-        "The Activity 2 community list shows submitted micro-solutions with their associated challenge and protective factor.",
-        "If the user has not signed in, the UI clearly prompts them to sign in before submitting (or prevents submission with an explanatory message)."
+        "Frontend can request a next quote for Activity 1 and Activity 2 via a dedicated canister method.",
+        "The method uses caller Principal for per-user tracking (no client-supplied user id).",
+        "The canister method returns a structured quote object (quote, attribution, universe/franchise) and advances that user’s cursor for that activity."
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Add an Internet Identity sign-in/out UX and gate “submit/share” actions for Activities 1 and 2 behind authentication, associating saved submissions with the authenticated user’s Principal.",
+      "text": "Update Activity 1 frontend so the “Get a Word of Affirmation” feedback section displays a canister-provided next quote (from the Activity 1 pool) instead of using the current deterministic Star Wars-only quote selector.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-4",
+          "msg-5"
         ],
         "quotes": [
-          "use this proposal and its activites as foundation"
+          "for activity 1 and 2 are you able to create multiple movie quotes for feedback sections",
+          "cycle at least 100 quotes for each activity so no one get the same quote twice"
         ]
       },
       "acceptanceCriteria": [
-        "There is a visible Sign in / Sign out control in the app shell.",
-        "When signed in, submissions are stored and attributed to the user’s Principal in the backend.",
-        "When signed out, the user cannot submit/share activity responses and sees a clear sign-in prompt."
+        "After a successful Activity 1 submission, when the user clicks the affirmation/feedback button, the displayed quote comes from the backend and is tied to the signed-in user’s Activity 1 quote cycle.",
+        "Reloading the page and requesting another quote continues the same user’s sequence (no repetition until exhaustion).",
+        "User-facing text remains in English."
       ]
     },
     {
       "id": "REQ-5",
-      "text": "Create a “Session Outline” view that presents the provided timeline (Introduction, Activity 1, Activity 2, Conclusion, Q&A) with the specified durations, formatted for facilitating the workshop.",
+      "text": "Update Activity 2 frontend so the validation feedback quote displayed after “Validate My Micro-Solution” and “Generate Another” is retrieved from the canister’s Activity 2 quote pool (per-user non-repeating), while keeping the existing citation/message generation behavior intact unless it must change to accommodate the new quote source.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-4",
+          "msg-5"
         ],
         "quotes": [
-          "Session Outline\n10 minutes Introduction \n15 minutes activity 1. Your Leadership Word\n15 minutes activity 2. Resilient Leadership for Campus Solutions\n10 minutes Conclusion\n10 minutes Q&A"
+          "for activity 1 and 2 are you able to create multiple movie quotes for feedback sections",
+          "cycle at least 100 quotes for each activity so no one get the same quote twice"
         ]
       },
       "acceptanceCriteria": [
-        "The session outline displays all agenda items in order with their minute durations.",
-        "The view is readable on mobile and desktop (responsive layout)."
+        "Clicking “Validate My Micro-Solution” fetches and displays a canister-provided quote from the Activity 2 pool for the signed-in user.",
+        "Clicking “Generate Another” fetches the next canister-provided quote for the signed-in user (no local deterministic reseeding for quotes).",
+        "The displayed citation and validation message still render correctly and in English."
       ]
     },
     {
       "id": "REQ-6",
-      "text": "Implement backend data models and APIs in the single Motoko actor to support storing and querying Activity 1 and Activity 2 submissions, including aggregated word counts for Activity 1 and listing Activity 2 micro-solutions.",
-      "target": "backend",
+      "text": "Add React Query hooks/mutations to call the new quote endpoints and ensure cache invalidation/refresh works correctly when identity changes (consistent with existing useActor + React Query patterns).",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-5"
         ],
         "quotes": [
-          "Invite volunteers to share their word aloud.\nWhat are the patterns",
-          "Share best\nShare the best micro-solution."
+          "Motoko canister so it survives reloads and works consistently across devices"
         ]
       },
       "acceptanceCriteria": [
-        "Backend exposes update calls to create Activity 1 submissions and Activity 2 submissions for the calling Principal.",
-        "Backend exposes query calls to: (a) return Activity 1 aggregated word counts, and (b) return a list of Activity 2 micro-solutions (most recent first or otherwise deterministic).",
-        "All backend logic is contained within the single actor (no additional services)."
+        "Quote-fetching uses the authenticated actor (Internet Identity) and fails gracefully with English error messaging when the actor is not ready.",
+        "Switching identities results in an independent quote cycle per Principal (a different user does not inherit another user’s cursor)."
       ]
     },
     {
       "id": "REQ-7",
-      "text": "Establish a coherent visual theme for Institution Hero and apply it consistently across all pages (typography, color, spacing, and components). The theme should feel academic and “cinematic mentor” inspired (wisdom/resilience), avoiding a default blue/purple look.",
-      "target": "frontend",
+      "text": "Ensure backward compatibility of existing stored Activity 1/2 submissions while adding new canister state for quote cycling; add backend/migration.mo only if required to preserve existing state on upgrade per the project’s conditional migration policy.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-5"
         ],
         "quotes": [
-          "Hero and Villains in Higher Education: Resilience and The Role of Next Generation Student Leaders",
-          "Much like cinematic mentors who exemplify wisdom, Yoda or Morpheus"
+          "Motoko canister so it survives reloads and works consistently across devices"
         ]
       },
       "acceptanceCriteria": [
-        "The app has a consistent, distinctive theme (not the unstyled template).",
-        "The chosen color palette is not primarily blue/purple.",
-        "All core pages (Overview/Bio/Outcomes/Takeaways/Activities/Session Outline/References) share the same design language."
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "text": "Add the required generated images to the project as static assets and render them in the UI (e.g., logo in header, hero image on the landing/overview section). Store generated images under frontend/public/assets/generated and reference them directly from the frontend.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "I want to create an app titled Institution Hero"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Generated images exist in frontend/public/assets/generated with the exact filenames specified.",
-        "The logo is displayed in the app shell/header.",
-        "The hero/banner image is displayed prominently on the landing/overview section.",
-        "Images are loaded directly as static assets (not streamed/proxied through the backend)."
+        "Existing endpoints (submitLeadershipWord, submitResilientLeadershipActivity, getLeadershipWordCounts, getAllMicroSolutions, getAllLeadershipWordSubmissions) continue to function as before.",
+        "If a canister upgrade is performed, prior stored submissions are not lost due to the quote feature changes (using migration where necessary)."
       ]
     }
   ],
   "constraints": [
-    "Use English for any user-facing text.",
-    "Backend must remain a single Motoko actor with all logic in backend/main.mo; only add backend/migration.mo if an upgrade-safe migration is actually required.",
-    "Do not edit files in frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui (compose these components instead).",
-    "No external databases or third-party auth providers; only Internet Identity for authentication."
+    "Backend must remain a single-actor Motoko canister (all logic in backend/main.mo).",
+    "Do not edit files under frontend/src/components/ui (Shadcn components are read-only); compose them instead if needed.",
+    "Do not edit immutable paths listed in SYSTEM_CONTEXT (e.g., frontend/src/hooks/useInternetIdentity.ts/tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx).",
+    "All user-facing text must be in English.",
+    "Quote non-repetition must be enforced per signed-in user (Principal) and per activity, not globally across all users."
   ],
   "nonGoals": [
-    "Do not implement real-time chat, WebSockets, or live session syncing.",
-    "Do not add payments, email/SMS, push notifications, or external social integrations.",
-    "Do not build complex moderation/admin dashboards unless explicitly requested later.",
-    "Do not add AI/LLM integrations."
+    "Do not implement global uniqueness of quotes across different users.",
+    "Do not add third-party quote APIs or external databases.",
+    "Do not change Activity 1/2 submission schemas unless required for quote delivery.",
+    "Do not introduce real-time features (WebSockets) or push notifications."
   ],
   "imageRequirements": {
-    "required": [
-      "Minimal emblem logo: shield + open book + small star, flat vector, charcoal/ivory with gold accent (institution-hero-logo.dim_512x512.png)",
-      "Wide hero banner illustration: abstract campus silhouettes with a subtle light/dark (hero/villain) contrast, cinematic lighting, warm parchment background (institution-hero-banner.dim_1600x600.png)"
-    ],
+    "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [
-      "Build an app titled “Institution Hero” that delivers an interactive workshop experience based on the provided higher-education leadership/resilience proposal."
-    ],
-    "goalsToRemove": [],
-    "preferencesToAdd": [
-      "User-facing text should be in English."
-    ],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

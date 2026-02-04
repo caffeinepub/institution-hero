@@ -24,6 +24,15 @@ export interface LeadershipWordSubmission {
   'actionStep' : string,
   'resilienceExample' : string,
 }
+export interface Quote {
+  'quote' : string,
+  'genre' : QuoteGenre,
+  'attribution' : string,
+}
+export type QuoteGenre = { 'starWars' : null } |
+  { 'batman' : null } |
+  { 'harryPotter' : null } |
+  { 'avengers' : null };
 export interface ResilientLeadershipActivity {
   'microSolution' : string,
   'customChallenge' : [] | [string],
@@ -33,13 +42,19 @@ export interface ResilientLeadershipActivity {
   'protectiveFactor' : string,
 }
 export interface _SERVICE {
+  'getAllActivity1Quotes' : ActorMethod<[], Array<Quote>>,
+  'getAllActivity2Quotes' : ActorMethod<[], Array<Quote>>,
   'getAllLeadershipWordSubmissions' : ActorMethod<
     [],
     Array<[Principal, LeadershipWordSubmission]>
   >,
   'getAllMicroSolutions' : ActorMethod<[], Array<ResilientLeadershipActivity>>,
   'getLeadershipWordCounts' : ActorMethod<[], Array<[string, bigint]>>,
+  'getNextActivity1Quote' : ActorMethod<[], [] | [Quote]>,
+  'getNextActivity2Quote' : ActorMethod<[], [] | [Quote]>,
   'getTopLeadershipWords' : ActorMethod<[], Array<[string, bigint]>>,
+  'populateActivity1Quotes' : ActorMethod<[Array<Quote>], undefined>,
+  'populateActivity2Quotes' : ActorMethod<[Array<Quote>], undefined>,
   'submitLeadershipWord' : ActorMethod<
     [string, string, string, string, string],
     undefined

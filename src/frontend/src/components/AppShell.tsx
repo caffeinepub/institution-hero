@@ -21,7 +21,6 @@ export default function AppShell({ children }: AppShellProps) {
     { to: '/learning-outcomes', label: 'Learning Outcomes' },
     { to: '/takeaways', label: 'Takeaways' },
     { to: '/activities', label: 'Activities' },
-    { to: '/session-outline', label: 'Session Outline' },
     { to: '/references', label: 'References' },
   ];
 

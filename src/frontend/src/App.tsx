@@ -8,7 +8,6 @@ import TakeawaysPage from './pages/TakeawaysPage';
 import ActivitiesPage from './pages/ActivitiesPage';
 import Activity1LeadershipWordPage from './pages/Activity1LeadershipWordPage';
 import Activity2ResilientLeadershipPage from './pages/Activity2ResilientLeadershipPage';
-import SessionOutlinePage from './pages/SessionOutlinePage';
 import ReferencesPage from './pages/ReferencesPage';
 
 // Layout component that wraps all routes with AppShell
@@ -67,12 +66,6 @@ const activity2Route = createRoute({
   component: Activity2ResilientLeadershipPage,
 });
 
-const sessionOutlineRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/session-outline',
-  component: SessionOutlinePage,
-});
-
 const referencesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/references',
@@ -88,7 +81,6 @@ const routeTree = rootRoute.addChildren([
   activitiesRoute,
   activity1Route,
   activity2Route,
-  sessionOutlineRoute,
   referencesRoute,
 ]);
 

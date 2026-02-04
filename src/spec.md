@@ -1,16 +1,15 @@
 # Specification
 
 ## Summary
-**Goal:** Build the “Institution Hero” workshop app with core content pages, a cohesive academic/cinematic-mentor theme, Internet Identity authentication, and two interactive activities with persistent submissions and basic community summaries.
+**Goal:** Provide per-signed-in-user (Internet Identity Principal), non-repeating feedback quote cycling for Activities 1 and 2, persisted in the Motoko canister and consistent across reloads/devices.
 
 **Planned changes:**
-- Create the core information architecture and navigable pages: Overview (abstract + short abstract), Bio, Learning Outcomes, Takeaways, Activities, Session Outline, and References, using the provided proposal content as the source of truth.
-- Implement Activity 1 (“Your Leadership Word”) with single-word input, reflection prompts, submit/share flow, persistent storage, and an aggregated patterns view (top words with counts).
-- Implement Activity 2 (“Resilient Leadership for Campus Solutions”) with challenge selection (including custom), villain/heroic responses, protective factor selection (including custom), micro-solution creation, submit/share flow, persistent storage, and a community list of submitted micro-solutions.
-- Add Internet Identity sign-in/out UI and gate Activity 1 and 2 submissions behind authentication, attributing submissions to the signed-in Principal.
-- Add a Session Outline view displaying the provided agenda items and durations in a responsive facilitation-friendly format.
-- Implement backend (single Motoko actor) data models and APIs to store Activity 1 and 2 submissions, query Activity 1 word-count aggregates, and list Activity 2 micro-solutions.
-- Apply a consistent “academic + cinematic mentor” visual theme across all pages (non blue/purple primary palette).
-- Add generated static images (logo + hero banner) under `frontend/public/assets/generated` and render them in the header and Overview/landing section.
+- Add separate backend quote pools for Activity 1 and Activity 2 with >= 400 quotes per activity (>= 100 each from Star Wars, Avengers, Batman, and Harry Potter), each quote including text, attribution, and franchise label.
+- Implement canister-side per-Principal, per-activity non-repeating quote cycling that resets after a user exhausts an activity’s quote pool.
+- Expose new Candid endpoints in `backend/main.mo` to fetch the next quote for Activity 1 and Activity 2 for the calling user (supporting Activity 2’s “Generate Another” behavior).
+- Update Activity 1 frontend to display the canister-provided next quote in the “Get a Word of Affirmation” feedback section (replacing the current deterministic Star Wars-only selector).
+- Update Activity 2 frontend so “Validate My Micro-Solution” and “Generate Another” display canister-provided quotes, while keeping existing citation/message generation behavior intact unless changes are required to support the new quote source.
+- Add React Query hooks/mutations to call the new quote endpoints, handling identity changes correctly and failing gracefully (English messaging) when the authenticated actor is not ready.
+- Preserve backward compatibility for existing Activity 1/2 stored submissions while adding new quote-cycling state; add `backend/migration.mo` only if needed to avoid losing existing state on upgrade.
 
-**User-visible outcome:** Users can navigate the full Institution Hero workshop content, sign in with Internet Identity, complete and submit both activities with responses saved across refresh, and view community patterns (top leadership words) and a list of shared micro-solutions.
+**User-visible outcome:** Signed-in users see feedback quotes in Activities 1 and 2 pulled from large multi-franchise pools, with quotes not repeating for that user within an activity until the pool is exhausted; quote sequences persist across reloads/devices and are independent per activity and per user.
