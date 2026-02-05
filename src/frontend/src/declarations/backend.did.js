@@ -8,6 +8,11 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
 export const QuoteGenre = IDL.Variant({
   'starWars' : IDL.Null,
   'batman' : IDL.Null,
@@ -43,8 +48,11 @@ export const ResilientLeadershipActivity = IDL.Record({
   'heroicResponse' : IDL.Text,
   'protectiveFactor' : IDL.Text,
 });
+export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 
 export const idlService = IDL.Service({
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'getAllActivity1Quotes' : IDL.Func([], [IDL.Vec(Quote)], ['query']),
   'getAllActivity2Quotes' : IDL.Func([], [IDL.Vec(Quote)], ['query']),
   'getAllLeadershipWordSubmissions' : IDL.Func(
@@ -57,20 +65,29 @@ export const idlService = IDL.Service({
       [IDL.Vec(ResilientLeadershipActivity)],
       ['query'],
     ),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getLeadershipWordCounts' : IDL.Func(
       [],
       [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))],
       ['query'],
     ),
-  'getNextActivity1Quote' : IDL.Func([], [IDL.Opt(Quote)], []),
-  'getNextActivity2Quote' : IDL.Func([], [IDL.Opt(Quote)], []),
+  'getNextActivity1Quote' : IDL.Func([], [Quote], []),
+  'getNextActivity2Quote' : IDL.Func([], [Quote], []),
   'getTopLeadershipWords' : IDL.Func(
       [],
       [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))],
       ['query'],
     ),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'populateActivity1Quotes' : IDL.Func([IDL.Vec(Quote)], [], []),
   'populateActivity2Quotes' : IDL.Func([IDL.Vec(Quote)], [], []),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'submitLeadershipWord' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
       [],
@@ -93,6 +110,11 @@ export const idlService = IDL.Service({
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
   const QuoteGenre = IDL.Variant({
     'starWars' : IDL.Null,
     'batman' : IDL.Null,
@@ -128,8 +150,11 @@ export const idlFactory = ({ IDL }) => {
     'heroicResponse' : IDL.Text,
     'protectiveFactor' : IDL.Text,
   });
+  const UserProfile = IDL.Record({ 'name' : IDL.Text });
   
   return IDL.Service({
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'getAllActivity1Quotes' : IDL.Func([], [IDL.Vec(Quote)], ['query']),
     'getAllActivity2Quotes' : IDL.Func([], [IDL.Vec(Quote)], ['query']),
     'getAllLeadershipWordSubmissions' : IDL.Func(
@@ -142,20 +167,29 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(ResilientLeadershipActivity)],
         ['query'],
       ),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getLeadershipWordCounts' : IDL.Func(
         [],
         [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))],
         ['query'],
       ),
-    'getNextActivity1Quote' : IDL.Func([], [IDL.Opt(Quote)], []),
-    'getNextActivity2Quote' : IDL.Func([], [IDL.Opt(Quote)], []),
+    'getNextActivity1Quote' : IDL.Func([], [Quote], []),
+    'getNextActivity2Quote' : IDL.Func([], [Quote], []),
     'getTopLeadershipWords' : IDL.Func(
         [],
         [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))],
         ['query'],
       ),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'populateActivity1Quotes' : IDL.Func([IDL.Vec(Quote)], [], []),
     'populateActivity2Quotes' : IDL.Func([IDL.Vec(Quote)], [], []),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'submitLeadershipWord' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
         [],

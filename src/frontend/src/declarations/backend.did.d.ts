@@ -41,7 +41,13 @@ export interface ResilientLeadershipActivity {
   'heroicResponse' : string,
   'protectiveFactor' : string,
 }
+export interface UserProfile { 'name' : string }
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
 export interface _SERVICE {
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'getAllActivity1Quotes' : ActorMethod<[], Array<Quote>>,
   'getAllActivity2Quotes' : ActorMethod<[], Array<Quote>>,
   'getAllLeadershipWordSubmissions' : ActorMethod<
@@ -49,12 +55,17 @@ export interface _SERVICE {
     Array<[Principal, LeadershipWordSubmission]>
   >,
   'getAllMicroSolutions' : ActorMethod<[], Array<ResilientLeadershipActivity>>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getLeadershipWordCounts' : ActorMethod<[], Array<[string, bigint]>>,
-  'getNextActivity1Quote' : ActorMethod<[], [] | [Quote]>,
-  'getNextActivity2Quote' : ActorMethod<[], [] | [Quote]>,
+  'getNextActivity1Quote' : ActorMethod<[], Quote>,
+  'getNextActivity2Quote' : ActorMethod<[], Quote>,
   'getTopLeadershipWords' : ActorMethod<[], Array<[string, bigint]>>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
   'populateActivity1Quotes' : ActorMethod<[Array<Quote>], undefined>,
   'populateActivity2Quotes' : ActorMethod<[Array<Quote>], undefined>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'submitLeadershipWord' : ActorMethod<
     [string, string, string, string, string],
     undefined

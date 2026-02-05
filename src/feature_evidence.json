@@ -2,60 +2,63 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-activity-1-frontend-so-the-get-a-word-of-affirmation-feedback-section-displays-a-canister-provided-next-quote-from-the-activity-1-pool-instead-of-using-the-current-deterministic-star-wars-only-quote-selector",
-      "featureTitle": "Update Activity 1 frontend so the “Get a Word of Affirmation” feedback section displays a canister-provided next quote (from the Activity 1 pool) instead of using the current deterministic Star Wars-only quote selector.",
+      "featureId": "feature-fully-replace-the-references-page-content-so-it-displays-the-updated-reference-list-exactly-as-shown-in-the-uploaded-image-preserving-the-same-order-and-formatting-including-punctuation-diacritics-bracketed-notes-and-urls-update-the-source-of-truth-for-the-references-page-to-match-this-list",
+      "featureTitle": "Fully replace the References page content so it displays the updated reference list exactly as shown in the uploaded image, preserving the same order and formatting (including punctuation, diacritics, bracketed notes, and URLs). Update the source of truth for the References page to match this list.",
       "files": [
-        "frontend/src/pages/Activity1LeadershipWordPage.tsx",
-        "frontend/src/utils/quoteFormatting.ts"
+        "frontend/src/content/proposalContent.ts",
+        "frontend/src/content/references.ts",
+        "frontend/src/pages/ReferencesPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-4"
+        "REQ-1"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-activity-2-frontend-so-the-validation-feedback-quote-displayed-after-validate-my-micro-solution-and-generate-another-is-retrieved-from-the-canister-s-activity-2-quote-pool-per-user-non-repeating-while-keeping-the-existing-citation-message-generation-behavior-intact-unless-it-must-change-to-accommodate-the-new-quote-source",
-      "featureTitle": "Update Activity 2 frontend so the validation feedback quote displayed after “Validate My Micro-Solution” and “Generate Another” is retrieved from the canister’s Activity 2 quote pool (per-user non-repeating), while keeping the existing citation/message generation behavior intact unless it must change to accommodate the new quote source.",
+      "featureId": "feature-update-activity-2-s-generated-validation-citation-selection-so-it-continues-to-return-citations-from-the-updated-references-list-after-the-replacement-without-relying-on-hard-coded-numeric-indices-that-would-break-when-reference-ordering-changes-the-citation-returned-to-the-ui-must-be-drawn-from-the-same-updated-reference-list-used-by-the-references-page",
+      "featureTitle": "Update Activity 2’s generated validation citation selection so it continues to return citations from the updated References list after the replacement, without relying on hard-coded numeric indices that would break when reference ordering changes. The citation returned to the UI must be drawn from the same updated reference list used by the References page.",
       "files": [
-        "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
-        "frontend/src/utils/activity2Validation.ts",
-        "frontend/src/utils/quoteFormatting.ts"
+        "frontend/src/content/references.ts",
+        "frontend/src/utils/activity2Validation.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-5"
+        "REQ-2"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-react-query-hooks-mutations-to-call-the-new-quote-endpoints-and-ensure-cache-invalidation-refresh-works-correctly-when-identity-changes-consistent-with-existing-useactor-react-query-patterns",
-      "featureTitle": "Add React Query hooks/mutations to call the new quote endpoints and ensure cache invalidation/refresh works correctly when identity changes (consistent with existing useActor + React Query patterns).",
+      "featureId": "feature-update-activity-1-s-generated-affirmation-messaging-so-any-in-text-citations-it-uses-are-consistent-with-and-present-in-the-updated-references-list-ensuring-activity-1-messaging-remains-aligned-with-the-updated-references-page-after-the-replacement",
+      "featureTitle": "Update Activity 1’s generated affirmation messaging so any in-text citations it uses are consistent with (and present in) the updated References list, ensuring Activity 1 messaging remains aligned with the updated References page after the replacement.",
       "files": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/utils/userFacingError.ts"
+        "frontend/src/content/references.ts",
+        "frontend/src/utils/activity1Affirmations.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-6"
+        "REQ-3"
       ],
       "confidence": "high"
     }

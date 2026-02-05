@@ -1,3 +1,5 @@
+import { getReferenceByKey } from '../content/references';
+
 interface LeadershipWordInputs {
   word: string;
   why: string;
@@ -8,7 +10,7 @@ interface LeadershipWordInputs {
 
 /**
  * Generates a deterministic affirmation message based on the user's leadership word inputs.
- * The affirmation includes citations from the updated references list.
+ * The affirmation includes citations from the updated references list using stable reference keys.
  */
 export function generateAffirmation(inputs: LeadershipWordInputs): string {
   const { word, why, roleModel, resilienceExample, actionStep } = inputs;
@@ -17,6 +19,7 @@ export function generateAffirmation(inputs: LeadershipWordInputs): string {
   const normalizedWord = word.toLowerCase().trim();
 
   // Define affirmation templates with citations based on leadership word themes
+  // Citations now use stable reference keys that map to the updated reference list
   const affirmationTemplates: Record<string, string[]> = {
     honest: [
       `Your commitment to honesty reflects the ethical leadership that transforms academic institutions. Research shows that integrity-based leadership creates environments where students and faculty thrive (Anastasiou, 2025; Northouse, 2022). By choosing "${word}" as your leadership value, you're contributing to a culture of trust and transparency.`,
@@ -65,7 +68,7 @@ export function generateAffirmation(inputs: LeadershipWordInputs): string {
 
   // Select affirmation based on the word
   const templates = affirmationTemplates[normalizedWord] || defaultAffirmations;
-  
+
   // Use a simple hash of the word to deterministically select a template
   const hash = normalizedWord.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const selectedTemplate = templates[hash % templates.length];

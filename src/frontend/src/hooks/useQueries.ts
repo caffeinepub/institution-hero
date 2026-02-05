@@ -114,12 +114,22 @@ export function useSubmitResilientLeadershipActivity() {
 export function useGetNextActivity1Quote() {
   const { actor } = useActor();
 
-  return useMutation<Quote | null, Error>({
+  return useMutation<Quote, Error>({
     mutationFn: async () => {
       if (!actor) {
         throw new Error('Actor not initialized');
       }
-      return actor.getNextActivity1Quote();
+      try {
+        return await actor.getNextActivity1Quote();
+      } catch (error) {
+        if (error instanceof Error) {
+          throw error;
+        }
+        if (typeof error === 'string') {
+          throw new Error(error);
+        }
+        throw new Error('Failed to fetch quote');
+      }
     },
   });
 }
@@ -127,12 +137,22 @@ export function useGetNextActivity1Quote() {
 export function useGetNextActivity2Quote() {
   const { actor } = useActor();
 
-  return useMutation<Quote | null, Error>({
+  return useMutation<Quote, Error>({
     mutationFn: async () => {
       if (!actor) {
         throw new Error('Actor not initialized');
       }
-      return actor.getNextActivity2Quote();
+      try {
+        return await actor.getNextActivity2Quote();
+      } catch (error) {
+        if (error instanceof Error) {
+          throw error;
+        }
+        if (typeof error === 'string') {
+          throw new Error(error);
+        }
+        throw new Error('Failed to fetch quote');
+      }
     },
   });
 }

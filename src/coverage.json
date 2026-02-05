@@ -1,103 +1,69 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-04T02:51:32.106Z",
+  "generatedAt": "2026-02-05T01:33:33.913Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 7,
+    "total": 3,
     "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Implement canister-side, per–signed-in user (Internet Identity Principal) quote cycling for Activity 1 and Activity 2 such that each user receives a non-repeating sequence of feedback quotes until the pool is exhausted, then the sequence resets and continues.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "summary": "Fully replace the References page content so it displays the updated reference list exactly as shown in the uploaded image, preserving the same order and formatting (including punctuation, diacritics, bracketed notes, and URLs). Update the source of truth for the References page to match this list.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/content/references.ts",
+          "frontend/src/content/proposalContent.ts",
+          "frontend/src/pages/ReferencesPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/content/references.ts",
+          "frontend/src/content/proposalContent.ts",
+          "frontend/src/pages/ReferencesPage.tsx"
+        ]
       },
       {
         "id": "REQ-2",
-        "summary": "Add quote pools in the Motoko canister for Activities 1 and 2 with at least 400 quotes per activity: 100 each from Star Wars, Avengers, Batman, and Harry Potter (each activity maintains its own independent pool). Each quote must include quote text, attribution, and universe/franchise label.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "summary": "Update Activity 2’s generated validation citation selection so it continues to return citations from the updated References list after the replacement, without relying on hard-coded numeric indices that would break when reference ordering changes. The citation returned to the UI must be drawn from the same updated reference list used by the References page.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/utils/activity2Validation.ts",
+          "frontend/src/content/references.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/utils/activity2Validation.ts",
+          "frontend/src/content/references.ts"
+        ]
       },
       {
         "id": "REQ-3",
-        "summary": "Expose new Candid endpoints in backend/main.mo to fetch the next quote for a given activity for the calling user, and (if needed) fetch another next quote without submitting again (to support Activity 2’s “Generate Another” behavior).",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Update Activity 1 frontend so the “Get a Word of Affirmation” feedback section displays a canister-provided next quote (from the Activity 1 pool) instead of using the current deterministic Star Wars-only quote selector.",
+        "summary": "Update Activity 1’s generated affirmation messaging so any in-text citations it uses are consistent with (and present in) the updated References list, ensuring Activity 1 messaging remains aligned with the updated References page after the replacement.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/Activity1LeadershipWordPage.tsx",
-          "frontend/src/utils/starWarsQuotes.ts",
-          "frontend/src/utils/quoteFormatting.ts"
+          "frontend/src/utils/activity1Affirmations.ts",
+          "frontend/src/content/references.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/Activity1LeadershipWordPage.tsx",
-          "frontend/src/utils/quoteFormatting.ts"
+          "frontend/src/utils/activity1Affirmations.ts",
+          "frontend/src/content/references.ts"
         ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Update Activity 2 frontend so the validation feedback quote displayed after “Validate My Micro-Solution” and “Generate Another” is retrieved from the canister’s Activity 2 quote pool (per-user non-repeating), while keeping the existing citation/message generation behavior intact unless it must change to accommodate the new quote source.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
-          "frontend/src/utils/activity2Validation.ts",
-          "frontend/src/utils/quoteFormatting.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
-          "frontend/src/utils/activity2Validation.ts",
-          "frontend/src/utils/quoteFormatting.ts"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Add React Query hooks/mutations to call the new quote endpoints and ensure cache invalidation/refresh works correctly when identity changes (consistent with existing useActor + React Query patterns).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/utils/userFacingError.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/utils/userFacingError.ts"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Ensure backward compatibility of existing stored Activity 1/2 submissions while adding new canister state for quote cycling; add backend/migration.mo only if required to preserve existing state on upgrade per the project’s conditional migration policy.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/Activity1LeadershipWordPage.tsx",
-    "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
+    "frontend/src/content/proposalContent.ts",
+    "frontend/src/content/references.ts",
+    "frontend/src/pages/ReferencesPage.tsx",
+    "frontend/src/utils/activity1Affirmations.ts",
     "frontend/src/utils/activity2Validation.ts",
-    "frontend/src/utils/quoteFormatting.ts",
-    "frontend/src/utils/userFacingError.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -1,77 +1,71 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Activity 1 & 2 canister-provided per-user quote cycling (frontend integration)",
+  "title": "Update References list and align Activity 1 & 2 citations to the new source of truth",
   "requirements": [
     {
-      "id": "REQ-4",
-      "summary": "Update Activity 1 to display the canister-provided next quote (per-user Activity 1 pool) instead of the deterministic Star Wars-only selector.",
+      "id": "REQ-1",
+      "summary": "Replace the References page source-of-truth and rendered content to match the 18-item reference list exactly (order and text) from the uploaded image.",
       "acceptanceCriteria": [
-        "After a successful Activity 1 submission, when the user clicks the affirmation/feedback button, the displayed quote comes from the backend and is tied to the signed-in user’s Activity 1 quote cycle.",
-        "Reloading the page and requesting another quote continues the same user’s sequence (no repetition until exhaustion).",
-        "User-facing text remains in English."
+        "The References page renders 18 references in the same order as the uploaded image.",
+        "The list includes the Fernweh Motive (n.d.) Vestrahorn Island entry and keeps Wang et al. (2025) as the final entry, matching the uploaded image.",
+        "Reference strings match the uploaded image text (including special characters like “Bieńkowska”, brackets, and full URLs)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/Activity1LeadershipWordPage.tsx",
-          "operation": "modify",
-          "description": "Replace the deterministic Star Wars quote selection with a call to a new React Query mutation hook that retrieves the next Activity 1 quote from the authenticated backend actor; render the returned quote with attribution and a franchise label derived from the backend quote genre; add loading/error handling in English and remove unused deterministic quote state."
-        },
-        {
-          "path": "frontend/src/utils/starWarsQuotes.ts",
-          "operation": "modify",
-          "description": "Stop using this module for Activity 1 feedback quotes by removing or deprecating the Activity 1 call sites; keep the module available only if still required elsewhere (verify no remaining imports are needed after Activity 1 and 2 updates)."
-        },
-        {
-          "path": "frontend/src/utils/quoteFormatting.ts",
+          "path": "frontend/src/content/references.ts",
           "operation": "create",
-          "description": "Add a small frontend utility to map backend Quote.genre (e.g., starWars/batman/harryPotter/avengers) into a user-facing English franchise label string suitable for displaying alongside quote attribution."
+          "description": "Create a dedicated References source-of-truth module exporting the updated 18-reference list exactly as shown in the uploaded image (same order and exact text), and (optionally) stable reference keys for reuse across Activity utilities."
+        },
+        {
+          "path": "frontend/src/content/proposalContent.ts",
+          "operation": "modify",
+          "description": "Update proposalContent so its references field is sourced from the new frontend/src/content/references.ts list (ensuring a single source of truth that matches the uploaded image exactly)."
+        },
+        {
+          "path": "frontend/src/pages/ReferencesPage.tsx",
+          "operation": "modify",
+          "description": "Update the References page to render the updated references list from the new source-of-truth (frontend/src/content/references.ts) and adjust rendering so the displayed list preserves the intended list formatting (order, punctuation, diacritics, bracketed notes, and URLs) without introducing additional reformatting."
         }
       ]
     },
     {
-      "id": "REQ-5",
-      "summary": "Update Activity 2 to fetch and display canister-provided quotes for both “Validate My Micro-Solution” and “Generate Another”, while preserving the existing citation and validation message behavior.",
+      "id": "REQ-2",
+      "summary": "Refactor Activity 2 validation citation selection to select citations from the updated References source-of-truth without hard-coded numeric indices.",
       "acceptanceCriteria": [
-        "Clicking “Validate My Micro-Solution” fetches and displays a canister-provided quote from the Activity 2 pool for the signed-in user.",
-        "Clicking “Generate Another” fetches the next canister-provided quote for the signed-in user (no local deterministic reseeding for quotes).",
-        "The displayed citation and validation message still render correctly and in English."
+        "Activity 2 validation always displays an 'ALIGNED RESEARCH CITATION' that is one of the entries shown on the References page.",
+        "Re-ordering the references array (as required by the uploaded image) does not cause out-of-range access or mismatched citations in Activity 2."
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
-          "operation": "modify",
-          "description": "Replace deterministic quote reseeding with calls to a new React Query mutation hook that fetches the next Activity 2 quote from the authenticated backend actor for both Validate and Generate Another; keep citation/message generation intact by computing them independently from the quote; add loading/error handling in English and remove the local quote seed state used only for deterministic quote selection."
-        },
         {
           "path": "frontend/src/utils/activity2Validation.ts",
           "operation": "modify",
-          "description": "Refactor validation generation so the citation selection and English validation message can be produced without choosing a deterministic local quote (e.g., export a helper that returns {citation, message} given the lastSubmission inputs, and allow the page to combine that with the canister-provided quote)."
+          "description": "Replace index-based citation selection with a stable-key or lookup-based approach that pulls the final citation string from the same updated reference list used by the References page (importing from frontend/src/content/references.ts), ensuring no out-of-range access and that the returned citation is always one of the displayed references."
         },
         {
-          "path": "frontend/src/utils/quoteFormatting.ts",
+          "path": "frontend/src/content/references.ts",
           "operation": "modify",
-          "description": "Extend the franchise label mapping utility (created for Activity 1) to support Activity 2 display formatting as well, ensuring the UI shows an English franchise label derived from backend Quote.genre."
+          "description": "Add/maintain stable reference keys (or an equivalent lookup helper) that Activity 2 can use for deterministic selection without numeric indices, while keeping the exported ordered 18-item reference list exactly matching the uploaded image."
         }
       ]
     },
     {
-      "id": "REQ-6",
-      "summary": "Add React Query mutations/hooks for next-quote retrieval and ensure correct behavior when identity changes using existing useActor + React Query patterns.",
+      "id": "REQ-3",
+      "summary": "Ensure Activity 1 affirmation messaging citations remain consistent with and present in the updated References list.",
       "acceptanceCriteria": [
-        "Quote-fetching uses the authenticated actor (Internet Identity) and fails gracefully with English error messaging when the actor is not ready.",
-        "Switching identities results in an independent quote cycle per Principal (a different user does not inherit another user’s cursor)."
+        "Activity 1 affirmation text does not cite works that are absent from the updated References page list.",
+        "After the References list replacement, Activity 1 continues to generate affirmations without errors and with citations aligned to the updated reference list."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/utils/activity1Affirmations.ts",
           "operation": "modify",
-          "description": "Add React Query mutations/hooks for fetching the next Activity 1 quote and next Activity 2 quote using the backend actor methods (getNextActivity1Quote/getNextActivity2Quote); ensure the hooks guard against actor-not-ready with clear English errors (integrating with existing error handling patterns) and use stable query keys that naturally separate by identity via the existing actor invalidation behavior."
+          "description": "Review and update Activity 1 affirmation templates so all in-text citations correspond to works present in the updated References source-of-truth (frontend/src/content/references.ts). If needed, switch any citation references to use the same stable reference identifiers used elsewhere to prevent drift after future list edits."
         },
         {
-          "path": "frontend/src/utils/userFacingError.ts",
+          "path": "frontend/src/content/references.ts",
           "operation": "modify",
-          "description": "Ensure quote-fetch related failures (e.g., actor not initialized/connection still initializing, or unexpected backend failures) normalize into clear English user-facing messages consistent with existing patterns."
+          "description": "If Activity 1 adopts stable reference identifiers, ensure the reference key catalog supports all works cited by Activity 1 affirmations while keeping the ordered 18-item reference list unchanged and exactly matching the uploaded image."
         }
       ]
     }

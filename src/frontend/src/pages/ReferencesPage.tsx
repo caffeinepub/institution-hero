@@ -1,5 +1,5 @@
 import PageSection from '../components/PageSection';
-import { proposalContent } from '../content/proposalContent';
+import { REFERENCES } from '../content/references';
 import { BookOpen } from 'lucide-react';
 
 export default function ReferencesPage() {
@@ -16,9 +16,9 @@ export default function ReferencesPage() {
         </p>
 
         <div className="space-y-4">
-          {proposalContent.references.map((reference, index) => (
-            <div key={index} className="p-4 rounded-lg border border-border bg-card">
-              <p className="text-sm text-foreground leading-relaxed">{reference}</p>
+          {REFERENCES.map((reference, index) => (
+            <div key={reference.key} className="p-4 rounded-lg border border-border bg-card">
+              <p className="text-sm text-foreground leading-relaxed">{reference.text}</p>
             </div>
           ))}
         </div>

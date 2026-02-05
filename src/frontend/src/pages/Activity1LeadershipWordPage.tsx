@@ -65,6 +65,12 @@ export default function Activity1LeadershipWordPage() {
   };
 
   const handleGenerateAffirmation = async () => {
+    // Check if actor is ready before fetching quote
+    if (!actor || isActorFetching) {
+      setQuoteError('Connection is still initializing. Please wait a moment and try again.');
+      return;
+    }
+
     setQuoteError('');
     
     const affirmation = generateAffirmation({
@@ -80,11 +86,7 @@ export default function Activity1LeadershipWordPage() {
     // Fetch quote from backend
     try {
       const fetchedQuote = await getQuoteMutation.mutateAsync();
-      if (fetchedQuote) {
-        setQuote(fetchedQuote);
-      } else {
-        setQuoteError('No quote available at this time.');
-      }
+      setQuote(fetchedQuote);
     } catch (error) {
       console.error('Failed to fetch quote:', error);
       setQuoteError(toUserFacingError(error));
@@ -101,6 +103,8 @@ export default function Activity1LeadershipWordPage() {
   };
 
   if (submitted) {
+    const isActorReady = !!actor && !isActorFetching;
+
     return (
       <PageSection>
         <div className="max-w-3xl mx-auto text-center">
@@ -114,7 +118,7 @@ export default function Activity1LeadershipWordPage() {
             <div className="mb-8">
               <button
                 onClick={handleGenerateAffirmation}
-                disabled={getQuoteMutation.isPending}
+                disabled={getQuoteMutation.isPending || !isActorReady}
                 className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {getQuoteMutation.isPending ? (

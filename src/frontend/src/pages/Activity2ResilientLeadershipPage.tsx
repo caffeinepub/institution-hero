@@ -120,6 +120,12 @@ export default function Activity2ResilientLeadershipPage() {
   };
 
   const handleValidate = async () => {
+    // Check if actor is ready before fetching quote
+    if (!actor || isActorFetching) {
+      setQuoteError('Connection is still initializing. Please wait a moment and try again.');
+      return;
+    }
+
     if (lastSubmission) {
       setQuoteError('');
       
@@ -133,10 +139,6 @@ export default function Activity2ResilientLeadershipPage() {
           message,
           quote: fetchedQuote,
         });
-        
-        if (!fetchedQuote) {
-          setQuoteError('No quote available at this time.');
-        }
       } catch (error) {
         console.error('Failed to fetch quote:', error);
         setQuoteError(toUserFacingError(error));
@@ -150,6 +152,12 @@ export default function Activity2ResilientLeadershipPage() {
   };
 
   const handleGenerateAnother = async () => {
+    // Check if actor is ready before fetching quote
+    if (!actor || isActorFetching) {
+      setQuoteError('Connection is still initializing. Please wait a moment and try again.');
+      return;
+    }
+
     if (lastSubmission) {
       setQuoteError('');
       
@@ -163,10 +171,6 @@ export default function Activity2ResilientLeadershipPage() {
           message,
           quote: fetchedQuote,
         });
-        
-        if (!fetchedQuote) {
-          setQuoteError('No quote available at this time.');
-        }
       } catch (error) {
         console.error('Failed to fetch quote:', error);
         setQuoteError(toUserFacingError(error));
@@ -198,6 +202,8 @@ export default function Activity2ResilientLeadershipPage() {
   };
 
   if (submitted) {
+    const isActorReady = !!actor && !isActorFetching;
+
     return (
       <PageSection>
         <div className="max-w-3xl mx-auto text-center">
@@ -212,7 +218,7 @@ export default function Activity2ResilientLeadershipPage() {
             <div className="mb-8">
               <button
                 onClick={handleValidate}
-                disabled={getQuoteMutation.isPending}
+                disabled={getQuoteMutation.isPending || !isActorReady}
                 className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {getQuoteMutation.isPending ? (
@@ -274,7 +280,7 @@ export default function Activity2ResilientLeadershipPage() {
                   <div className="mt-4 flex justify-end">
                     <button
                       onClick={handleGenerateAnother}
-                      disabled={getQuoteMutation.isPending}
+                      disabled={getQuoteMutation.isPending || !isActorReady}
                       className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {getQuoteMutation.isPending ? (

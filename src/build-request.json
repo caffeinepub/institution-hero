@@ -1,157 +1,69 @@
 {
   "kind": "build_request",
-  "title": "Per-user non-repeating franchise quote cycling for Activities 1 & 2 (persisted in Motoko)",
-  "priority": "high",
+  "title": "Replace References page list and align Activity 1 & 2 citations to the updated references",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Implement canister-side, per–signed-in user (Internet Identity Principal) quote cycling for Activity 1 and Activity 2 such that each user receives a non-repeating sequence of feedback quotes until the pool is exhausted, then the sequence resets and continues.",
-      "target": "backend",
+      "text": "Fully replace the References page content so it displays the updated reference list exactly as shown in the uploaded image, preserving the same order and formatting (including punctuation, diacritics, bracketed notes, and URLs). Update the source of truth for the References page to match this list.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4",
-          "msg-5"
+          "msg-10",
+          "msg-13"
         ],
         "quotes": [
-          "1(each signed‑in user never repeats until exhaustion)",
-          "3Motoko canister so it survives reloads and works consistently across devices"
+          "Fully replace the reference page. Have them in the same order and formatting."
         ]
       },
       "acceptanceCriteria": [
-        "For a given Principal and activity (1 vs 2), repeated calls to the quote endpoint never return the same quote until all quotes in that activity’s pool have been returned at least once.",
-        "After all quotes in the pool have been used for that Principal+activity, the next call starts a fresh cycle (quotes may repeat from the beginning of the new cycle).",
-        "Quote cycling state is stored in canister state (not frontend-only) so it works across reloads/devices for the same signed-in user."
+        "The References page renders 18 references in the same order as the uploaded image.",
+        "The list includes the Fernweh Motive (n.d.) Vestrahorn Island entry and keeps Wang et al. (2025) as the final entry, matching the uploaded image.",
+        "Reference strings match the uploaded image text (including special characters like “Bieńkowska”, brackets, and full URLs)."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add quote pools in the Motoko canister for Activities 1 and 2 with at least 400 quotes per activity: 100 each from Star Wars, Avengers, Batman, and Harry Potter (each activity maintains its own independent pool). Each quote must include quote text, attribution, and universe/franchise label.",
-      "target": "backend",
+      "text": "Update Activity 2’s generated validation citation selection so it continues to return citations from the updated References list after the replacement, without relying on hard-coded numeric indices that would break when reference ordering changes. The citation returned to the UI must be drawn from the same updated reference list used by the References page.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4",
-          "msg-5"
+          "msg-10"
         ],
         "quotes": [
-          "use movie quotes from starwars, avengers, batman, and harrypotter.",
-          "cycle at least 100 quotes for each activity",
-          "2 if its possible 100 per franchise per activity (400 per activity)"
+          "update the activity one and two messages with the updated reference page."
         ]
       },
       "acceptanceCriteria": [
-        "Activity 1 quote pool contains >= 400 entries (>= 100 per franchise: Star Wars, Avengers, Batman, Harry Potter).",
-        "Activity 2 quote pool contains >= 400 entries (>= 100 per franchise: Star Wars, Avengers, Batman, Harry Potter).",
-        "Activity 1 and Activity 2 pools are independent (advancing a user’s Activity 1 quote cycle does not affect Activity 2, and vice versa).",
-        "Each quote returned to the frontend includes quote text, attribution, and universe/franchise."
+        "Activity 2 validation always displays an 'ALIGNED RESEARCH CITATION' that is one of the entries shown on the References page.",
+        "Re-ordering the references array (as required by the uploaded image) does not cause out-of-range access or mismatched citations in Activity 2."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Expose new Candid endpoints in backend/main.mo to fetch the next quote for a given activity for the calling user, and (if needed) fetch another next quote without submitting again (to support Activity 2’s “Generate Another” behavior).",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-4",
-          "msg-5"
-        ],
-        "quotes": [
-          "cycle at least 100 quotes for each activity so no one get the same quote twice",
-          "Motoko canister so it survives reloads and works consistently across devices"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Frontend can request a next quote for Activity 1 and Activity 2 via a dedicated canister method.",
-        "The method uses caller Principal for per-user tracking (no client-supplied user id).",
-        "The canister method returns a structured quote object (quote, attribution, universe/franchise) and advances that user’s cursor for that activity."
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Update Activity 1 frontend so the “Get a Word of Affirmation” feedback section displays a canister-provided next quote (from the Activity 1 pool) instead of using the current deterministic Star Wars-only quote selector.",
+      "text": "Update Activity 1’s generated affirmation messaging so any in-text citations it uses are consistent with (and present in) the updated References list, ensuring Activity 1 messaging remains aligned with the updated References page after the replacement.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4",
-          "msg-5"
+          "msg-10"
         ],
         "quotes": [
-          "for activity 1 and 2 are you able to create multiple movie quotes for feedback sections",
-          "cycle at least 100 quotes for each activity so no one get the same quote twice"
+          "update the activity one and two messages with the updated reference page."
         ]
       },
       "acceptanceCriteria": [
-        "After a successful Activity 1 submission, when the user clicks the affirmation/feedback button, the displayed quote comes from the backend and is tied to the signed-in user’s Activity 1 quote cycle.",
-        "Reloading the page and requesting another quote continues the same user’s sequence (no repetition until exhaustion).",
-        "User-facing text remains in English."
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Update Activity 2 frontend so the validation feedback quote displayed after “Validate My Micro-Solution” and “Generate Another” is retrieved from the canister’s Activity 2 quote pool (per-user non-repeating), while keeping the existing citation/message generation behavior intact unless it must change to accommodate the new quote source.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4",
-          "msg-5"
-        ],
-        "quotes": [
-          "for activity 1 and 2 are you able to create multiple movie quotes for feedback sections",
-          "cycle at least 100 quotes for each activity so no one get the same quote twice"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Clicking “Validate My Micro-Solution” fetches and displays a canister-provided quote from the Activity 2 pool for the signed-in user.",
-        "Clicking “Generate Another” fetches the next canister-provided quote for the signed-in user (no local deterministic reseeding for quotes).",
-        "The displayed citation and validation message still render correctly and in English."
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Add React Query hooks/mutations to call the new quote endpoints and ensure cache invalidation/refresh works correctly when identity changes (consistent with existing useActor + React Query patterns).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "Motoko canister so it survives reloads and works consistently across devices"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Quote-fetching uses the authenticated actor (Internet Identity) and fails gracefully with English error messaging when the actor is not ready.",
-        "Switching identities results in an independent quote cycle per Principal (a different user does not inherit another user’s cursor)."
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Ensure backward compatibility of existing stored Activity 1/2 submissions while adding new canister state for quote cycling; add backend/migration.mo only if required to preserve existing state on upgrade per the project’s conditional migration policy.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "Motoko canister so it survives reloads and works consistently across devices"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Existing endpoints (submitLeadershipWord, submitResilientLeadershipActivity, getLeadershipWordCounts, getAllMicroSolutions, getAllLeadershipWordSubmissions) continue to function as before.",
-        "If a canister upgrade is performed, prior stored submissions are not lost due to the quote feature changes (using migration where necessary)."
+        "Activity 1 affirmation text does not cite works that are absent from the updated References page list.",
+        "After the References list replacement, Activity 1 continues to generate affirmations without errors and with citations aligned to the updated reference list."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single-actor Motoko canister (all logic in backend/main.mo).",
-    "Do not edit files under frontend/src/components/ui (Shadcn components are read-only); compose them instead if needed.",
-    "Do not edit immutable paths listed in SYSTEM_CONTEXT (e.g., frontend/src/hooks/useInternetIdentity.ts/tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx).",
-    "All user-facing text must be in English.",
-    "Quote non-repetition must be enforced per signed-in user (Principal) and per activity, not globally across all users."
+    "Do not edit files under frontend/immutablePaths (as specified in SYSTEM_CONTEXT).",
+    "Keep all user-facing text in English."
   ],
   "nonGoals": [
-    "Do not implement global uniqueness of quotes across different users.",
-    "Do not add third-party quote APIs or external databases.",
-    "Do not change Activity 1/2 submission schemas unless required for quote delivery.",
-    "Do not introduce real-time features (WebSockets) or push notifications."
+    "Do not introduce new activities or new content pages beyond updating references and citation alignment.",
+    "Do not change backend canister APIs or persistence for this request."
   ],
   "imageRequirements": {
     "required": [],
