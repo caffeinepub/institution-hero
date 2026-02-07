@@ -6,8 +6,8 @@ import LeadershipWordPatternsSummary from '../components/LeadershipWordPatternsS
 import { proposalContent } from '../content/proposalContent';
 import { useSubmitLeadershipWord, useGetNextActivity1Quote } from '../hooks/useQueries';
 import { useActor } from '../hooks/useActor';
-import { Sparkles, Send, CheckCircle, RefreshCw, AlertCircle, Loader2, Info } from 'lucide-react';
-import { generateAffirmation } from '../utils/activity1Affirmations';
+import { Sparkles, Send, CheckCircle, RefreshCw, AlertCircle, Loader2, Info, BookOpen } from 'lucide-react';
+import { generateAffirmation, AffirmationResult as AffirmationData } from '../utils/activity1Affirmations';
 import { toUserFacingError } from '../utils/userFacingError';
 import { hasVillainousInput } from '../utils/isVillainousInput';
 import { Quote } from '../backend';
@@ -21,8 +21,7 @@ interface LastSubmission {
 }
 
 interface AffirmationResult {
-  citation: string;
-  message: string;
+  affirmation: AffirmationData;
   quote: Quote | null;
 }
 
@@ -104,22 +103,20 @@ export default function Activity1LeadershipWordPage() {
         return;
       }
       
-      const message = generateAffirmation(lastSubmission);
+      const affirmation = generateAffirmation(lastSubmission);
       
       // Fetch quote from backend
       try {
         const fetchedQuote = await getQuoteMutation.mutateAsync();
         setAffirmationResult({
-          citation: message,
-          message: message,
+          affirmation,
           quote: fetchedQuote,
         });
       } catch (error) {
         console.error('Failed to fetch quote:', error);
         setQuoteError(toUserFacingError(error));
         setAffirmationResult({
-          citation: message,
-          message: message,
+          affirmation,
           quote: null,
         });
       }
@@ -148,14 +145,13 @@ export default function Activity1LeadershipWordPage() {
         return;
       }
       
-      const message = generateAffirmation(lastSubmission);
+      const affirmation = generateAffirmation(lastSubmission);
       
       // Fetch next quote from backend
       try {
         const fetchedQuote = await getQuoteMutation.mutateAsync();
         setAffirmationResult({
-          citation: message,
-          message: message,
+          affirmation,
           quote: fetchedQuote,
         });
       } catch (error) {
@@ -215,8 +211,21 @@ export default function Activity1LeadershipWordPage() {
                   </h2>
                   
                   <p className="text-muted-foreground mb-4">
-                    {affirmationResult.message}
+                    {affirmationResult.affirmation.message}
                   </p>
+
+                  {/* Academic Reference */}
+                  <div className="rounded-lg bg-muted/30 p-4 mb-4 border-l-4 border-accent">
+                    <div className="flex items-start gap-2 mb-2">
+                      <BookOpen className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                      <p className="text-xs font-semibold text-accent uppercase tracking-wide">
+                        Academic Reference
+                      </p>
+                    </div>
+                    <p className="text-sm text-foreground leading-relaxed">
+                      {affirmationResult.affirmation.reference.text}
+                    </p>
+                  </div>
 
                   {/* Quote */}
                   {affirmationResult.quote && (
@@ -463,7 +472,7 @@ export default function Activity1LeadershipWordPage() {
               ) : (
                 <>
                   <Send className="h-5 w-5" />
-                  Share Your Leadership Word For Feedback
+                  Submit My Leadership Word
                 </>
               )}
             </button>

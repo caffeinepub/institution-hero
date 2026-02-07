@@ -38,7 +38,6 @@ export default function AppShell() {
     { path: '/learning-outcomes', label: 'Learning Outcomes' },
     { path: '/takeaways', label: 'Takeaways' },
     { path: '/activities', label: 'Activities' },
-    { path: '/session-outline', label: 'Session Outline' },
     { path: '/slides', label: 'Slides' },
     { path: '/references', label: 'References' },
     { path: '/movie-references', label: 'Movie References' },

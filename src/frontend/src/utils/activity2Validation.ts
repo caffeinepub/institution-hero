@@ -1,4 +1,5 @@
-import { REFERENCES } from '../content/references';
+import { selectValidReferenceByHash } from './referenceSelection';
+import { ReferenceEntry } from '../content/references';
 
 interface Activity2Input {
   heroicResponse: string;
@@ -6,21 +7,24 @@ interface Activity2Input {
   microSolution: string;
 }
 
-interface ValidationResult {
-  citation: string;
+export interface ValidationResult {
   message: string;
+  reference: ReferenceEntry;
 }
 
-// Theme-to-reference mapping (using only heroic fields)
+// Theme-to-reference mapping (using only existing reference keys)
 const THEME_REFERENCES: Record<string, string[]> = {
-  resilience: ['masten2001', 'luthar2000', 'rutter2012'],
-  leadership: ['northouse2022', 'bass1985', 'burns1978'],
-  growth: ['dweck2006', 'yeager2012'],
-  support: ['cohen2004', 'thoits2011'],
-  mindfulness: ['kabatZinn2003', 'brown2007'],
-  identity: ['erikson1968', 'marcia1980'],
-  transformation: ['mezirow1991', 'kegan1982'],
-  community: ['putnam2000', 'erickson2015'],
+  resilience: ['erickson2017', 'wang2025', 'jansen2024'],
+  leadership: ['northouse2022', 'sunderman2024', 'ramamoorthi2023'],
+  growth: ['fazio2008', 'wang2025'],
+  support: ['waddington2025', 'killingback2025'],
+  mindfulness: ['killingback2025', 'waddington2025'],
+  identity: ['sunderman2024', 'ramamoorthi2023'],
+  transformation: ['mcgrath2022', 'elliott1996'],
+  community: ['erickson2015', 'ramamoorthi2023'],
+  destructive: ['erickson2015', 'ghamrawi2024', 'bienkowska2025'],
+  compassion: ['waddington2025', 'killingback2025'],
+  ethical: ['anastasiou2025', 'northouse2022'],
 };
 
 // Keywords for theme detection (only from heroic fields)
@@ -33,6 +37,9 @@ const THEME_KEYWORDS: Record<string, string[]> = {
   identity: ['identity', 'self', 'who i am', 'values', 'authentic', 'purpose'],
   transformation: ['transform', 'change', 'shift', 'transition', 'evolve', 'breakthrough'],
   community: ['community', 'together', 'collective', 'group', 'team', 'collaborate'],
+  destructive: ['toxic', 'negative', 'harmful', 'destructive', 'damage'],
+  compassion: ['compassion', 'empathy', 'care', 'kindness', 'understanding'],
+  ethical: ['ethical', 'moral', 'integrity', 'honest', 'fair', 'just'],
 };
 
 function detectThemes(input: Activity2Input): string[] {
@@ -48,18 +55,24 @@ function detectThemes(input: Activity2Input): string[] {
   return detectedThemes.length > 0 ? detectedThemes : ['resilience'];
 }
 
-function selectCitation(themes: string[]): string {
+function selectReference(input: Activity2Input, themes: string[]): ReferenceEntry {
+  // Collect candidate keys from detected themes
+  const candidateKeys: string[] = [];
   for (const theme of themes) {
     const refs = THEME_REFERENCES[theme];
     if (refs && refs.length > 0) {
-      const randomRef = refs[Math.floor(Math.random() * refs.length)];
-      const reference = REFERENCES.find((r) => r.key === randomRef);
-      if (reference) {
-        return reference.text;
-      }
+      candidateKeys.push(...refs);
     }
   }
-  return REFERENCES[0].text;
+
+  // If no candidates found, use default resilience references
+  if (candidateKeys.length === 0) {
+    candidateKeys.push(...(THEME_REFERENCES.resilience || []));
+  }
+
+  // Select a valid reference based on the input
+  const combinedInput = `${input.heroicResponse}${input.protectiveFactor}${input.microSolution}`;
+  return selectValidReferenceByHash(combinedInput, candidateKeys);
 }
 
 function generateMessage(input: Activity2Input, themes: string[]): string {
@@ -76,11 +89,11 @@ function generateMessage(input: Activity2Input, themes: string[]): string {
 
 export function generateActivity2Validation(input: Activity2Input): ValidationResult {
   const themes = detectThemes(input);
-  const citation = selectCitation(themes);
+  const reference = selectReference(input, themes);
   const message = generateMessage(input, themes);
 
   return {
-    citation,
     message,
+    reference,
   };
 }

@@ -1,33 +1,32 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Project to manage two activities with response validation rules (validate only Heroic responses; flag Villainous/negative responses with error code 000) and add a new \"Leadership Board\" tab displaying feedback in two columns (Leadership words, Community solutions).",
+  "summary": "Project to display user feedback from activities 1 and 2 on a leadership board in real time, without requiring a page refresh.",
   "architectural_notes": [
-    "Validation logic: accept/validate only Heroic responses; treat any Villainous/negative response as invalid and emit error code 000.",
-    "UI/data model includes a \"Leadership Board\" tab with two-column layout: (1) Leadership words, (2) Community solutions; feedback entries populate this tab."
+    "Leadership board should update in real time when activity 1 or 2 feedback is submitted (no manual refresh)."
   ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-update-activity-2-validation-so-that-only-the-heroic-response-can-be-validated-when-the-user-triggers-validation-validate-my-micro-solution-generate-another-do-not-use-the-villain-response-to-produce-any-validation-output",
-      "title": "Update Activity 2 validation so that only the Heroic response can be validated. When the user triggers validation (\"Validate My Micro-Solution\" / generate another), do not use the Villain response to produce any validation output.",
+      "id": "feature-make-the-leadership-board-update-automatically-while-the-page-is-open-so-new-activity-1-leadership-word-and-activity-2-micro-solution-submissions-appear-without-the-user-manually-refreshing-the-browser",
+      "title": "Make the Leadership Board update automatically while the page is open so new Activity 1 (leadership word) and Activity 2 (micro-solution) submissions appear without the user manually refreshing the browser.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-in-both-activities-block-validation-feedback-generation-when-the-user-input-is-villainous-negative-and-show-an-error-that-includes-error-code-000-do-not-produce-an-affirmation-validation-result-in-this-case",
-      "title": "In both activities, block validation/feedback generation when the user input is Villainous/negative and show an error that includes error code \"000\". Do not produce an affirmation/validation result in this case.",
+      "id": "feature-after-a-successful-activity-1-submission-update-the-cached-leadership-word-counts-immediately-so-any-mounted-leadership-board-summary-views-reflect-the-new-word-count-right-away-in-the-same-spa-session-without-waiting-for-the-next-refetch",
+      "title": "After a successful Activity 1 submission, update the cached Leadership Word counts immediately so any mounted Leadership Board/summary views reflect the new word count right away (in the same SPA session), without waiting for the next refetch.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-a-new-navigation-tab-labeled-leadership-board-that-routes-to-a-new-page-showing-community-feedback-in-a-2-column-layout-column-1-leadership-words-and-column-2-community-solutions",
-      "title": "Add a new navigation tab labeled \"Leadership Board\" that routes to a new page showing community feedback in a 2-column layout: Column 1 \"Leadership Words\" and Column 2 \"Community Solutions\".",
+      "id": "feature-after-a-successful-activity-2-submission-update-the-cached-community-solutions-list-immediately-so-any-mounted-leadership-board-solutions-views-reflect-the-new-micro-solution-right-away-in-the-same-spa-session-without-waiting-for-the-next-refetch",
+      "title": "After a successful Activity 2 submission, update the cached Community Solutions list immediately so any mounted Leadership Board/solutions views reflect the new micro-solution right away (in the same SPA session), without waiting for the next refetch.",
       "reqIds": [
         "REQ-3"
       ],
@@ -37,18 +36,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Update both activities validation: do not validate Villainous/negative responses; return error code 000 for any negative answers; validate only Heroic responses.",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Create a \"Leadership Board\" tab with two columns (Leadership words, Community solutions) and list the feedback in this tab.",
+      "summary": "Post feedback from activities 1 and 2 to the leadership board immediately as it is given to the user (no page refresh required).",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Block Villainous (negative) validations with error code 000; add Leadership Board tab with 2-column feedback",
+  "projectName": "Show Activity 1 & 2 feedback on Leadership Board immediately (no manual refresh)",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

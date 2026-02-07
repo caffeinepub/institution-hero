@@ -2,11 +2,13 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-activity-2-validation-so-that-only-the-heroic-response-can-be-validated-when-the-user-triggers-validation-validate-my-micro-solution-generate-another-do-not-use-the-villain-response-to-produce-any-validation-output",
-      "featureTitle": "Update Activity 2 validation so that only the Heroic response can be validated. When the user triggers validation (\"Validate My Micro-Solution\" / generate another), do not use the Villain response to produce any validation output.",
+      "featureId": "feature-make-the-leadership-board-update-automatically-while-the-page-is-open-so-new-activity-1-leadership-word-and-activity-2-micro-solution-submissions-appear-without-the-user-manually-refreshing-the-browser",
+      "featureTitle": "Make the Leadership Board update automatically while the page is open so new Activity 1 (leadership word) and Activity 2 (micro-solution) submissions appear without the user manually refreshing the browser.",
       "files": [
-        "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
-        "frontend/src/utils/activity2Validation.ts"
+        "frontend/src/components/LeadershipWordPatternsSummary.tsx",
+        "frontend/src/components/MicroSolutionsCommunityList.tsx",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/LeadershipBoardPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -22,12 +24,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-in-both-activities-block-validation-feedback-generation-when-the-user-input-is-villainous-negative-and-show-an-error-that-includes-error-code-000-do-not-produce-an-affirmation-validation-result-in-this-case",
-      "featureTitle": "In both activities, block validation/feedback generation when the user input is Villainous/negative and show an error that includes error code \"000\". Do not produce an affirmation/validation result in this case.",
+      "featureId": "feature-after-a-successful-activity-1-submission-update-the-cached-leadership-word-counts-immediately-so-any-mounted-leadership-board-summary-views-reflect-the-new-word-count-right-away-in-the-same-spa-session-without-waiting-for-the-next-refetch",
+      "featureTitle": "After a successful Activity 1 submission, update the cached Leadership Word counts immediately so any mounted Leadership Board/summary views reflect the new word count right away (in the same SPA session), without waiting for the next refetch.",
       "files": [
-        "frontend/src/pages/Activity1LeadershipWordPage.tsx",
-        "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
-        "frontend/src/utils/isVillainousInput.ts"
+        "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -43,12 +43,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-new-navigation-tab-labeled-leadership-board-that-routes-to-a-new-page-showing-community-feedback-in-a-2-column-layout-column-1-leadership-words-and-column-2-community-solutions",
-      "featureTitle": "Add a new navigation tab labeled \"Leadership Board\" that routes to a new page showing community feedback in a 2-column layout: Column 1 \"Leadership Words\" and Column 2 \"Community Solutions\".",
+      "featureId": "feature-after-a-successful-activity-2-submission-update-the-cached-community-solutions-list-immediately-so-any-mounted-leadership-board-solutions-views-reflect-the-new-micro-solution-right-away-in-the-same-spa-session-without-waiting-for-the-next-refetch",
+      "featureTitle": "After a successful Activity 2 submission, update the cached Community Solutions list immediately so any mounted Leadership Board/solutions views reflect the new micro-solution right away (in the same SPA session), without waiting for the next refetch.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/AppShell.tsx",
-        "frontend/src/pages/LeadershipBoardPage.tsx"
+        "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",

@@ -1,76 +1,70 @@
 {
   "kind": "build_request",
-  "title": "Block Villainous (negative) validations with error code 000; add Leadership Board tab with 2-column feedback",
+  "title": "Show Activity 1 & 2 feedback on Leadership Board immediately (no manual refresh)",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Update Activity 2 validation so that only the Heroic response can be validated. When the user triggers validation (\"Validate My Micro-Solution\" / generate another), do not use the Villain response to produce any validation output.",
+      "text": "Make the Leadership Board update automatically while the page is open so new Activity 1 (leadership word) and Activity 2 (micro-solution) submissions appear without the user manually refreshing the browser.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "only validate Heroic responses"
+          "Post feedback from activity 1 and 2 to leadership board simultaneously as it is given to the user.\n\nSo the feedback is shown on leadership board without having to refresh page"
         ]
       },
       "acceptanceCriteria": [
-        "In Activity 2, the generated validation message/citation is derived only from the Heroic response (and other non-villain fields as needed), and never from the Villain response text.",
-        "The UI still allows entering a Villain response as part of the submission form, but it is not used in the validation/feedback generation step."
+        "When the Leadership Board page is left open, it periodically refetches both leadership word counts and community solutions so newly submitted data appears without a full page reload.",
+        "The refresh mechanism does not require WebSockets or other real-time services; it works using client-side polling/refetch behavior.",
+        "The polling interval is reasonable (e.g., a few seconds) and does not cause visible UI flicker during background updates."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "In both activities, block validation/feedback generation when the user input is Villainous/negative and show an error that includes error code \"000\". Do not produce an affirmation/validation result in this case.",
+      "text": "After a successful Activity 1 submission, update the cached Leadership Word counts immediately so any mounted Leadership Board/summary views reflect the new word count right away (in the same SPA session), without waiting for the next refetch.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "in the both activities do not validate Villainous reponses ( any negative answers ) give an error code of 000 any negative answers",
-          "only validate Heroic responses"
+          "Post feedback from activity 1 and 2 to leadership board simultaneously as it is given to the user."
         ]
       },
       "acceptanceCriteria": [
-        "Activity 1: When the user requests feedback generation (affirmation), if the input is determined to be Villainous/negative, the UI shows an error containing \"000\" and does not display an affirmation result.",
-        "Activity 2: When the user requests validation (or generate another), if the input is determined to be Villainous/negative, the UI shows an error containing \"000\" and does not display a validation result.",
-        "The error message is user-facing English text and clearly states that only Heroic responses can be validated, including the literal code \"000\"."
+        "Submitting Activity 1 causes the leadership word counts UI (wherever currently mounted) to update immediately after the submission succeeds.",
+        "The cached update correctly increments the submitted word’s count (or adds it if it does not exist yet).",
+        "The existing invalidation behavior is preserved so the cache will still reconcile with the backend on subsequent refetches."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Add a new navigation tab labeled \"Leadership Board\" that routes to a new page showing community feedback in a 2-column layout: Column 1 \"Leadership Words\" and Column 2 \"Community Solutions\".",
+      "text": "After a successful Activity 2 submission, update the cached Community Solutions list immediately so any mounted Leadership Board/solutions views reflect the new micro-solution right away (in the same SPA session), without waiting for the next refetch.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "create a tab titled Leadership Board and use 2 columns",
-          "one column to be leadership words",
-          "two column community solutions",
-          "and list the feed back in the tab"
+          "Post feedback from activity 1 and 2 to leadership board simultaneously as it is given to the user."
         ]
       },
       "acceptanceCriteria": [
-        "A new \"Leadership Board\" link appears in the main navigation (desktop and mobile) alongside the existing nav items.",
-        "Navigating to the Leadership Board page shows two visible columns on desktop (stacking responsibly on small screens) with headings exactly \"Leadership Words\" and \"Community Solutions\".",
-        "The \"Leadership Words\" column renders the existing leadership word community feedback (using the existing leadership words summary / counts UI).",
-        "The \"Community Solutions\" column renders the existing community micro-solution feedback list (using the existing micro-solutions list UI)."
+        "Submitting Activity 2 causes the community solutions UI (wherever currently mounted) to include the new submission immediately after the submission succeeds.",
+        "The cached update includes the submitted fields needed by the list rendering (challenge type/custom challenge, microSolution, protectiveFactor).",
+        "The existing invalidation behavior is preserved so the cache will still reconcile with the backend on subsequent refetches."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/immutablePaths (e.g., frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui).",
-    "Backend must remain a single Motoko actor in backend/main.mo; only introduce migration.mo if persisted state schema changes (not required for purely UI/validation-logic changes).",
-    "Use English for any user-facing text."
+    "Do not modify any files under frontend/src/components/ui or any paths listed as immutable in SYSTEM_CONTEXT.",
+    "Respect the existing single-actor Motoko backend architecture; do not introduce additional backend services."
   ],
   "nonGoals": [
-    "Adding third-party authentication providers (only Internet Identity is supported).",
-    "Adding external databases or non-IC backend services.",
-    "Implementing real-time updates (e.g., WebSockets) for the Leadership Board."
+    "Implementing true push-based real-time updates (e.g., WebSockets, server-sent events).",
+    "Changing backend data models or adding new backend endpoints unless strictly required for the UI refresh behavior."
   ],
   "imageRequirements": {
     "required": [],

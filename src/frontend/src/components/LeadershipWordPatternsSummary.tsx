@@ -1,8 +1,18 @@
 import { useLeadershipWordCounts } from '../hooks/useQueries';
 import { BarChart3, TrendingUp } from 'lucide-react';
 
-export default function LeadershipWordPatternsSummary() {
-  const { data: wordCounts, isLoading } = useLeadershipWordCounts();
+interface LeadershipWordPatternsSummaryProps {
+  enablePolling?: boolean;
+  pollingIntervalMs?: number;
+}
+
+export default function LeadershipWordPatternsSummary({
+  enablePolling = false,
+  pollingIntervalMs = 3000,
+}: LeadershipWordPatternsSummaryProps) {
+  const { data: wordCounts, isLoading } = useLeadershipWordCounts(
+    enablePolling ? { refetchInterval: pollingIntervalMs } : undefined
+  );
 
   if (isLoading) {
     return (

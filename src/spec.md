@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Prevent Villainous/negative inputs from generating validation/feedback, ensure Activity 2 validations only use Heroic responses, and add a new Leadership Board page showing existing community feedback in two columns.
+**Goal:** Ensure the Leadership Board reflects new Activity 1 (leadership word) and Activity 2 (micro-solution) submissions automatically while the page remains open, without requiring a manual browser refresh.
 
 **Planned changes:**
-- Activity 2: Update validation generation so it uses only the Heroic response (and other non-villain fields as needed) and never the Villain response text.
-- Activity 1 & Activity 2: When the user requests feedback/validation and the input is determined to be Villainous/negative, block generation and show a user-facing English error message that includes the literal error code "000" (no affirmation/validation result shown).
-- Add a new main navigation tab "Leadership Board" that routes to a new page with a 2-column layout: "Leadership Words" and "Community Solutions".
-- On the Leadership Board page, render the existing leadership words community feedback UI in the first column and the existing community micro-solution feedback list UI in the second column, with responsive stacking on small screens.
+- Add client-side polling/refetch on the Leadership Board to periodically refresh leadership word counts and community solutions while the page is open, using a reasonable interval and avoiding visible UI flicker.
+- Update the cached leadership word counts immediately after a successful Activity 1 submission so any currently mounted Leadership Board/summary views reflect the new count right away, while preserving existing cache invalidation/reconciliation behavior.
+- Update the cached community solutions list immediately after a successful Activity 2 submission so any currently mounted Leadership Board/solutions views include the new micro-solution right away, while preserving existing cache invalidation/reconciliation behavior.
 
-**User-visible outcome:** Users can only generate feedback/validation for Heroic (non-negative) inputs; negative inputs show an error including code "000", and users can visit a new Leadership Board tab to view community feedback in two columns.
+**User-visible outcome:** Users can keep the Leadership Board open and see new Activity 1 and Activity 2 submissions appear automatically, and their own submissions show up immediately after they submit—without manually refreshing the page.

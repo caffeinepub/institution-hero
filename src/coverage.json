@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-07T05:43:22.494Z",
+  "generatedAt": "2026-02-07T06:53:51.839Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -12,45 +12,41 @@
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Update Activity 2 validation so that only the Heroic response can be validated. When the user triggers validation (\"Validate My Micro-Solution\" / generate another), do not use the Villain response to produce any validation output.",
+        "summary": "Make the Leadership Board update automatically while the page is open so new Activity 1 (leadership word) and Activity 2 (micro-solution) submissions appear without the user manually refreshing the browser.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/utils/activity2Validation.ts",
-          "frontend/src/pages/Activity2ResilientLeadershipPage.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/components/LeadershipWordPatternsSummary.tsx",
+          "frontend/src/components/MicroSolutionsCommunityList.tsx",
+          "frontend/src/pages/LeadershipBoardPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/utils/activity2Validation.ts",
-          "frontend/src/pages/Activity2ResilientLeadershipPage.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/components/LeadershipWordPatternsSummary.tsx",
+          "frontend/src/components/MicroSolutionsCommunityList.tsx",
+          "frontend/src/pages/LeadershipBoardPage.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "In both activities, block validation/feedback generation when the user input is Villainous/negative and show an error that includes error code \"000\". Do not produce an affirmation/validation result in this case.",
+        "summary": "After a successful Activity 1 submission, update the cached Leadership Word counts immediately so any mounted Leadership Board/summary views reflect the new word count right away (in the same SPA session), without waiting for the next refetch.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/utils/isVillainousInput.ts",
-          "frontend/src/pages/Activity1LeadershipWordPage.tsx",
-          "frontend/src/pages/Activity2ResilientLeadershipPage.tsx"
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/utils/isVillainousInput.ts",
-          "frontend/src/pages/Activity1LeadershipWordPage.tsx",
-          "frontend/src/pages/Activity2ResilientLeadershipPage.tsx"
+          "frontend/src/hooks/useQueries.ts"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Add a new navigation tab labeled \"Leadership Board\" that routes to a new page showing community feedback in a 2-column layout: Column 1 \"Leadership Words\" and Column 2 \"Community Solutions\".",
+        "summary": "After a successful Activity 2 submission, update the cached Community Solutions list immediately so any mounted Leadership Board/solutions views reflect the new micro-solution right away (in the same SPA session), without waiting for the next refetch.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/LeadershipBoardPage.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/components/AppShell.tsx"
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/LeadershipBoardPage.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/components/AppShell.tsx"
+          "frontend/src/hooks/useQueries.ts"
         ]
       }
     ]
@@ -60,16 +56,10 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/components/AppShell.tsx",
-    "frontend/src/pages/ActivitiesPage.tsx",
-    "frontend/src/pages/Activity1LeadershipWordPage.tsx",
-    "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
+    "frontend/src/components/LeadershipWordPatternsSummary.tsx",
+    "frontend/src/components/MicroSolutionsCommunityList.tsx",
+    "frontend/src/hooks/useQueries.ts",
     "frontend/src/pages/LeadershipBoardPage.tsx",
-    "frontend/src/pages/SessionOutlinePage.tsx",
-    "frontend/src/pages/SlidesPage.tsx",
-    "frontend/src/utils/activity2Validation.ts",
-    "frontend/src/utils/isVillainousInput.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

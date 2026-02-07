@@ -1,41 +1,27 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-07T05:43:22.491Z",
-  "summary": "REQ-3 appears implemented via a new /leadership-board route, a new LeadershipBoardPage with the required 2-column layout/headings, and a new \"Leadership Board\" nav link. REQ-1 appears implemented by generating Activity 2 validation using only heroic/protective/micro-solution fields and by storing only those fields for validation. REQ-2 is clearly implemented for Activity 1 (blocks affirmation generation with an English error containing code \"000\"); Activity 2’s blocking/error text is not fully verifiable due to truncation of the relevant section.",
+  "generatedAt": "2026-02-07T06:53:51.837Z",
+  "summary": "REQ-1 and REQ-2 appear implemented via React Query polling/refetch on the Leadership Board and an optimistic cache update for leadership word counts after Activity 1 submission. REQ-3 (optimistic cache update for the micro-solutions list after Activity 2 submission) cannot be confirmed from the provided diff summary because the relevant mutation hook implementation is truncated before any cache update/invalidation logic is shown.",
   "missing_requirements": [
     {
-      "id": "REQ-2",
-      "requirement": "Activity 2: When the user requests validation (or generate another), if the input is determined to be Villainous/negative, the UI shows an error containing \"000\" and does not display a validation result.",
-      "reason": "The Activity2ResilientLeadershipPage.tsx diff is truncated right after the villainous-input check begins, so the presence of the required user-facing error text including literal code \"000\" and the explicit prevention/clearing of any displayed validation result cannot be confirmed from the provided diff summary.",
+      "id": "REQ-3",
+      "requirement": "After a successful Activity 2 submission, update the cached Community Solutions list immediately so any mounted Leadership Board/solutions views reflect the new micro-solution right away (in the same SPA session), without waiting for the next refetch.",
+      "reason": "The diff shows polling support for fetching micro-solutions, but the Activity 2 submit mutation (useSubmitResilientLeadershipActivity) is truncated before any onSuccess handler that would setQueryData for ['microSolutions'] (and preserve invalidation) is visible. Therefore the immediate cached update behavior is not evidenced.",
       "evidence": [
-        "frontend/src/pages/Activity2ResilientLeadershipPage.tsx (truncated)"
+        "frontend/src/hooks/useQueries.ts (truncated, useSubmitResilientLeadershipActivity shown without onSuccess cache update)",
+        "frontend/src/components/MicroSolutionsCommunityList.tsx (polling added but not an immediate cache insert on submit)"
       ]
     }
   ],
-  "hallucinated_features": [
-    {
-      "description": "SessionOutlinePage and SlidesPage changed to placeholder components returning null.",
-      "reason": "These changes are unrelated to REQ-1/REQ-2/REQ-3 (validation blocking and Leadership Board tab/page) and were not requested in the BuildRequest.",
-      "evidence": [
-        "frontend/src/pages/SessionOutlinePage.tsx",
-        "frontend/src/pages/SlidesPage.tsx"
-      ]
-    }
-  ],
-  "confidence": 0.62,
+  "hallucinated_features": [],
+  "confidence": 0.63,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
-    "frontend/src/components/AppShell.tsx",
-    "frontend/src/pages/ActivitiesPage.tsx",
-    "frontend/src/pages/Activity1LeadershipWordPage.tsx",
-    "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
+    "frontend/src/components/LeadershipWordPatternsSummary.tsx",
+    "frontend/src/components/MicroSolutionsCommunityList.tsx",
+    "frontend/src/hooks/useQueries.ts",
     "frontend/src/pages/LeadershipBoardPage.tsx",
-    "frontend/src/pages/SessionOutlinePage.tsx",
-    "frontend/src/pages/SlidesPage.tsx",
-    "frontend/src/utils/activity2Validation.ts",
-    "frontend/src/utils/isVillainousInput.ts",
     "project_state.json"
   ]
 }

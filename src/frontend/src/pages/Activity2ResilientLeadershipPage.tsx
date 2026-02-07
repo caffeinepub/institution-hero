@@ -6,13 +6,22 @@ import MicroSolutionsCommunityList from '../components/MicroSolutionsCommunityLi
 import { proposalContent } from '../content/proposalContent';
 import { useSubmitResilientLeadershipActivity, useGetNextActivity2Quote } from '../hooks/useQueries';
 import { useActor } from '../hooks/useActor';
-import { Users, Send, CheckCircle, Sparkles, RefreshCw, AlertCircle, Loader2, Info } from 'lucide-react';
-import { generateActivity2Validation } from '../utils/activity2Validation';
-import { formatQuoteGenre } from '../utils/quoteFormatting';
-import { ChallengeTypeKey, mapChallengeTypeKeyToEnum } from '../utils/challengeTypeMapping';
+import { Shield, Send, CheckCircle, RefreshCw, AlertCircle, Loader2, Info, BookOpen } from 'lucide-react';
+import { generateActivity2Validation, ValidationResult as ValidationData } from '../utils/activity2Validation';
 import { toUserFacingError } from '../utils/userFacingError';
 import { hasVillainousInput } from '../utils/isVillainousInput';
+import { mapChallengeTypeKeyToEnum } from '../utils/challengeTypeMapping';
 import { Quote } from '../backend';
+
+const CHALLENGE_OPTIONS = [
+  { value: 'academicPressure', label: 'Academic Pressure' },
+  { value: 'mentalHealth', label: 'Mental Health' },
+  { value: 'financialStress', label: 'Financial Stress' },
+  { value: 'onlineLearning', label: 'Online Learning' },
+  { value: 'timeManagement', label: 'Time Management' },
+  { value: 'bullying', label: 'Bullying' },
+  { value: 'socialIsolation', label: 'Social Isolation' },
+];
 
 interface LastSubmission {
   heroicResponse: string;
@@ -21,25 +30,14 @@ interface LastSubmission {
 }
 
 interface ValidationResult {
-  citation: string;
-  message: string;
+  validation: ValidationData;
   quote: Quote | null;
 }
-
-const CHALLENGE_OPTIONS: ChallengeTypeKey[] = [
-  'academicPressure',
-  'mentalHealth',
-  'financialStress',
-  'onlineLearning',
-  'timeManagement',
-  'bullying',
-  'socialIsolation',
-];
 
 export default function Activity2ResilientLeadershipPage() {
   const navigate = useNavigate();
   const { actor, isFetching: isActorFetching } = useActor();
-  const [challengeType, setChallengeType] = useState<ChallengeTypeKey | null>(null);
+  const [challengeType, setChallengeType] = useState<string | null>(null);
   const [customChallenge, setCustomChallenge] = useState('');
   const [villainResponse, setVillainResponse] = useState('');
   const [heroicResponse, setHeroicResponse] = useState('');
@@ -67,10 +65,10 @@ export default function Activity2ResilientLeadershipPage() {
     }
 
     try {
-      const challengeTypeEnum = challengeType ? mapChallengeTypeKeyToEnum(challengeType) : null;
+      const challengeEnum = challengeType ? mapChallengeTypeKeyToEnum(challengeType as any) : null;
 
       await submitMutation.mutateAsync({
-        challengeType: challengeTypeEnum,
+        challengeType: challengeEnum,
         customChallenge: customChallenge || null,
         villainResponse,
         heroicResponse,
@@ -78,7 +76,7 @@ export default function Activity2ResilientLeadershipPage() {
         microSolution,
       });
 
-      // Store the submission for validation (only heroic fields)
+      // Store the submission for validation
       setLastSubmission({
         heroicResponse,
         protectiveFactor,
@@ -94,7 +92,7 @@ export default function Activity2ResilientLeadershipPage() {
     }
   };
 
-  const handleValidate = async () => {
+  const handleGetValidation = async () => {
     // Check if actor is ready before fetching quote
     if (!actor || isActorFetching) {
       setQuoteError('Connection is still initializing. Please wait a moment and try again.');
@@ -104,13 +102,13 @@ export default function Activity2ResilientLeadershipPage() {
     if (lastSubmission) {
       setQuoteError('');
 
-      // Check for villainous input in heroic fields only
+      // Check for villainous input in heroic fields
       if (hasVillainousInput(
         lastSubmission.heroicResponse,
         lastSubmission.protectiveFactor,
         lastSubmission.microSolution
       )) {
-        setQuoteError('Error 000: Only Heroic responses can be validated. Please ensure your input reflects positive leadership qualities and solutions.');
+        setQuoteError('Error 000: Only Heroic responses can be validated. Please ensure your input reflects positive leadership qualities.');
         return;
       }
 
@@ -120,16 +118,14 @@ export default function Activity2ResilientLeadershipPage() {
       try {
         const fetchedQuote = await getQuoteMutation.mutateAsync();
         setValidationResult({
-          citation: validation.citation,
-          message: validation.message,
+          validation,
           quote: fetchedQuote,
         });
       } catch (error) {
         console.error('Failed to fetch quote:', error);
         setQuoteError(toUserFacingError(error));
         setValidationResult({
-          citation: validation.citation,
-          message: validation.message,
+          validation,
           quote: null,
         });
       }
@@ -146,13 +142,13 @@ export default function Activity2ResilientLeadershipPage() {
     if (lastSubmission) {
       setQuoteError('');
 
-      // Check for villainous input in heroic fields only
+      // Check for villainous input in heroic fields
       if (hasVillainousInput(
         lastSubmission.heroicResponse,
         lastSubmission.protectiveFactor,
         lastSubmission.microSolution
       )) {
-        setQuoteError('Error 000: Only Heroic responses can be validated. Please ensure your input reflects positive leadership qualities and solutions.');
+        setQuoteError('Error 000: Only Heroic responses can be validated. Please ensure your input reflects positive leadership qualities.');
         return;
       }
 
@@ -162,8 +158,7 @@ export default function Activity2ResilientLeadershipPage() {
       try {
         const fetchedQuote = await getQuoteMutation.mutateAsync();
         setValidationResult({
-          citation: validation.citation,
-          message: validation.message,
+          validation,
           quote: fetchedQuote,
         });
       } catch (error) {
@@ -196,7 +191,7 @@ export default function Activity2ResilientLeadershipPage() {
           {!validationResult ? (
             <div className="mb-8">
               <button
-                onClick={handleValidate}
+                onClick={handleGetValidation}
                 disabled={getQuoteMutation.isPending || !isActorReady}
                 className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -207,7 +202,7 @@ export default function Activity2ResilientLeadershipPage() {
                   </>
                 ) : (
                   <>
-                    <Sparkles className="h-5 w-5" />
+                    <Shield className="h-5 w-5" />
                     Validate My Micro-Solution
                   </>
                 )}
@@ -216,15 +211,28 @@ export default function Activity2ResilientLeadershipPage() {
           ) : (
             <div className="mb-8 rounded-lg border border-border bg-card p-6 text-left space-y-4">
               <div className="flex items-start gap-3">
-                <Sparkles className="h-6 w-6 text-primary shrink-0 mt-1" />
+                <Shield className="h-6 w-6 text-primary shrink-0 mt-1" />
                 <div className="flex-1">
                   <h2 className="text-xl font-semibold text-foreground mb-3">
                     Your Micro-Solution is Validated!
                   </h2>
 
                   <p className="text-muted-foreground mb-4">
-                    {validationResult.message}
+                    {validationResult.validation.message}
                   </p>
+
+                  {/* Academic Reference */}
+                  <div className="rounded-lg bg-muted/30 p-4 mb-4 border-l-4 border-accent">
+                    <div className="flex items-start gap-2 mb-2">
+                      <BookOpen className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                      <p className="text-xs font-semibold text-accent uppercase tracking-wide">
+                        Academic Reference
+                      </p>
+                    </div>
+                    <p className="text-sm text-foreground leading-relaxed">
+                      {validationResult.validation.reference.text}
+                    </p>
+                  </div>
 
                   {/* Quote */}
                   {validationResult.quote && (
@@ -303,7 +311,7 @@ export default function Activity2ResilientLeadershipPage() {
     <PageSection>
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
-          <Users className="h-10 w-10 text-primary" />
+          <Shield className="h-10 w-10 text-primary" />
           <div>
             <h1 className="text-4xl font-bold text-foreground">
               {proposalContent.activities.activity2.title}
@@ -312,34 +320,16 @@ export default function Activity2ResilientLeadershipPage() {
           </div>
         </div>
 
-        <div className="rounded-lg border border-border bg-muted/50 p-6 mb-8">
-          <h2 className="text-lg font-semibold mb-3">Common Campus Challenges</h2>
-          <p className="text-muted-foreground mb-4">
-            Select a challenge or describe your own, then explore both villain and heroic responses.
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            {CHALLENGE_OPTIONS.map((challenge) => (
-              <button
-                key={challenge}
-                type="button"
-                onClick={() => {
-                  setChallengeType(challenge);
-                  handleInputChange();
-                }}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  challengeType === challenge
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-card text-foreground hover:bg-muted border border-border'
-                }`}
-              >
-                {challenge
-                  .replace(/([A-Z])/g, ' $1')
-                  .trim()
-                  .split(' ')
-                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                  .join(' ')}
-              </button>
-            ))}
+        <div className="rounded-lg border border-border bg-muted/50 p-6 mb-4">
+          <h2 className="text-lg font-semibold mb-3">Activity Instructions</h2>
+          <p className="text-muted-foreground mb-4">{proposalContent.activities.activity2.description}</p>
+          <div>
+            <p className="text-sm font-medium mb-2">Common Challenges:</p>
+            <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+              {proposalContent.activities.activity2.commonChallenges.map((challenge, index) => (
+                <li key={index}>{challenge}</li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -367,8 +357,30 @@ export default function Activity2ResilientLeadershipPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="rounded-lg border border-border bg-card p-6 space-y-6">
               <div>
+                <label htmlFor="challengeType" className="block text-sm font-medium mb-2">
+                  Select a Leadership Challenge
+                </label>
+                <select
+                  id="challengeType"
+                  value={challengeType || ''}
+                  onChange={(e) => {
+                    setChallengeType(e.target.value || null);
+                    handleInputChange();
+                  }}
+                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                >
+                  <option value="">-- Select a challenge --</option>
+                  {CHALLENGE_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
                 <label htmlFor="customChallenge" className="block text-sm font-medium mb-2">
-                  Describe Your Challenge (Optional)
+                  Or describe your own challenge
                 </label>
                 <textarea
                   id="customChallenge"
@@ -377,8 +389,8 @@ export default function Activity2ResilientLeadershipPage() {
                     setCustomChallenge(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="If none of the above fit, describe your specific challenge..."
-                  rows={2}
+                  placeholder="Describe a specific leadership challenge you're facing..."
+                  rows={3}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
                 />
               </div>
@@ -388,7 +400,7 @@ export default function Activity2ResilientLeadershipPage() {
                   Villain Response <span className="text-destructive">*</span>
                 </label>
                 <p className="text-xs text-muted-foreground mb-2">
-                  How might someone respond negatively or destructively to this challenge?
+                  What would a destructive response look like?
                 </p>
                 <textarea
                   id="villainResponse"
@@ -397,7 +409,7 @@ export default function Activity2ResilientLeadershipPage() {
                     setVillainResponse(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="e.g., Give up, blame others, avoid responsibility..."
+                  placeholder="Describe a negative or destructive way to respond..."
                   required
                   rows={3}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
@@ -409,7 +421,7 @@ export default function Activity2ResilientLeadershipPage() {
                   Heroic Response <span className="text-destructive">*</span>
                 </label>
                 <p className="text-xs text-muted-foreground mb-2">
-                  How can you respond with resilience and leadership?
+                  What would a resilient, constructive response look like?
                 </p>
                 <textarea
                   id="heroicResponse"
@@ -418,7 +430,7 @@ export default function Activity2ResilientLeadershipPage() {
                     setHeroicResponse(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="e.g., Seek support, develop a plan, take responsibility..."
+                  placeholder="Describe a positive, resilient way to respond..."
                   required
                   rows={3}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
@@ -430,19 +442,19 @@ export default function Activity2ResilientLeadershipPage() {
                   Protective Factor <span className="text-destructive">*</span>
                 </label>
                 <p className="text-xs text-muted-foreground mb-2">
-                  What strength or resource helps you respond heroically?
+                  What resource or strength helps you respond resiliently?
                 </p>
-                <input
+                <textarea
                   id="protectiveFactor"
-                  type="text"
                   value={protectiveFactor}
                   onChange={(e) => {
                     setProtectiveFactor(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="e.g., Social support, self-awareness, growth mindset..."
+                  placeholder="E.g., support network, mindfulness practice, problem-solving skills..."
                   required
-                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  rows={3}
+                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
                 />
               </div>
 
@@ -451,7 +463,7 @@ export default function Activity2ResilientLeadershipPage() {
                   Micro-Solution <span className="text-destructive">*</span>
                 </label>
                 <p className="text-xs text-muted-foreground mb-2">
-                  What's one small, concrete action you can take?
+                  What small, actionable step can you take today?
                 </p>
                 <textarea
                   id="microSolution"
@@ -460,7 +472,7 @@ export default function Activity2ResilientLeadershipPage() {
                     setMicroSolution(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="e.g., Schedule 15 minutes daily for self-care, reach out to one friend..."
+                  placeholder="Describe one concrete action you can take..."
                   required
                   rows={3}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
@@ -468,7 +480,6 @@ export default function Activity2ResilientLeadershipPage() {
               </div>
             </div>
 
-            {/* Submission error */}
             {submissionError && (
               <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
                 <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
@@ -489,7 +500,7 @@ export default function Activity2ResilientLeadershipPage() {
               ) : (
                 <>
                   <Send className="h-5 w-5" />
-                  Share Your Micro-Solution
+                  Submit My Micro-Solution For Feedback
                 </>
               )}
             </button>

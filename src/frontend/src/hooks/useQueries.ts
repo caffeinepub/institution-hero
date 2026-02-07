@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { ChallengeType, Quote } from '../backend';
+import { ChallengeType, Quote, ResilientLeadershipActivity } from '../backend';
 
-export function useLeadershipWordCounts() {
+export function useLeadershipWordCounts(options?: { refetchInterval?: number }) {
   const { actor, isFetching } = useActor();
 
   return useQuery<[string, bigint][]>({
@@ -12,6 +12,9 @@ export function useLeadershipWordCounts() {
       return actor.getLeadershipWordCounts();
     },
     enabled: !!actor && !isFetching,
+    refetchInterval: options?.refetchInterval,
+    refetchIntervalInBackground: !!options?.refetchInterval,
+    placeholderData: (previousData) => previousData,
   });
 }
 
@@ -38,22 +41,47 @@ export function useSubmitLeadershipWord() {
       }
       return actor.submitLeadershipWord(word, why, roleModel, resilienceExample, actionStep);
     },
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
+      // Optimistically update the cache
+      queryClient.setQueryData<[string, bigint][]>(
+        ['leadershipWordCounts'],
+        (oldData) => {
+          if (!oldData) return [[variables.word, BigInt(1)]];
+          
+          // Find if the word already exists
+          const existingIndex = oldData.findIndex(([w]) => w === variables.word);
+          
+          if (existingIndex >= 0) {
+            // Increment existing word count
+            const newData = [...oldData];
+            newData[existingIndex] = [variables.word, oldData[existingIndex][1] + BigInt(1)];
+            return newData;
+          } else {
+            // Add new word with count 1
+            return [...oldData, [variables.word, BigInt(1)]];
+          }
+        }
+      );
+      
+      // Still invalidate to reconcile with backend
       queryClient.invalidateQueries({ queryKey: ['leadershipWordCounts'] });
     },
   });
 }
 
-export function useMicroSolutions() {
+export function useMicroSolutions(options?: { refetchInterval?: number }) {
   const { actor, isFetching } = useActor();
 
-  return useQuery({
+  return useQuery<ResilientLeadershipActivity[]>({
     queryKey: ['microSolutions'],
     queryFn: async () => {
       if (!actor) return [];
       return actor.getAllMicroSolutions();
     },
     enabled: !!actor && !isFetching,
+    refetchInterval: options?.refetchInterval,
+    refetchIntervalInBackground: !!options?.refetchInterval,
+    placeholderData: (previousData) => previousData,
   });
 }
 
@@ -105,7 +133,26 @@ export function useSubmitResilientLeadershipActivity() {
         throw new Error('Failed to submit resilient leadership activity');
       }
     },
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
+      // Optimistically update the cache
+      queryClient.setQueryData<ResilientLeadershipActivity[]>(
+        ['microSolutions'],
+        (oldData) => {
+          const newSolution: ResilientLeadershipActivity = {
+            challengeType: variables.challengeType || undefined,
+            customChallenge: variables.customChallenge || undefined,
+            villainResponse: variables.villainResponse,
+            heroicResponse: variables.heroicResponse,
+            protectiveFactor: variables.protectiveFactor,
+            microSolution: variables.microSolution,
+          };
+          
+          if (!oldData) return [newSolution];
+          return [...oldData, newSolution];
+        }
+      );
+      
+      // Still invalidate to reconcile with backend
       queryClient.invalidateQueries({ queryKey: ['microSolutions'] });
     },
   });

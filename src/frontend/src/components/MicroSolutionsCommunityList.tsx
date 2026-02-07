@@ -12,8 +12,18 @@ const challengeLabels: Record<ChallengeType, string> = {
   [ChallengeType.socialIsolation]: 'Social Isolation',
 };
 
-export default function MicroSolutionsCommunityList() {
-  const { data: solutions, isLoading } = useMicroSolutions();
+interface MicroSolutionsCommunityListProps {
+  enablePolling?: boolean;
+  pollingIntervalMs?: number;
+}
+
+export default function MicroSolutionsCommunityList({
+  enablePolling = false,
+  pollingIntervalMs = 3000,
+}: MicroSolutionsCommunityListProps) {
+  const { data: solutions, isLoading } = useMicroSolutions(
+    enablePolling ? { refetchInterval: pollingIntervalMs } : undefined
+  );
 
   if (isLoading) {
     return (
