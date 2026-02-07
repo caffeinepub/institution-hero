@@ -1,268 +1,30 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Institution Hero is an ICP (Internet Computer) web application with a Motoko backend canister and a React (Vite) frontend. It presents content-driven workshop/proposal pages (overview, bio, learning outcomes, takeaways, references) and two authenticated interactive activities: (1) submit a single “leadership word” with reflections, view community word-count patterns, then receive a generated affirmation plus a rotating pop-culture quote; and (2) submit a resilient leadership “micro-solution” for a campus challenge, view community micro-solutions, then receive a validation message with a research citation plus a rotating pop-culture quote. Authentication uses Internet Identity; backend authorization uses an admin-token bootstrapped role system.",
+  "summary": "Activity 1 (Your Leadership Word) content and UI text updates requested.",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "IF-1",
-      "title": "React frontend with multi-page routing and shared AppShell layout",
-      "synonyms": [
-        "TanStack Router",
-        "AppShell",
-        "Layout routing"
-      ],
-      "description": "Provides client-side routing for Overview, Bio, Learning Outcomes, Takeaways, References, and Activities pages; wraps all routes in a shared AppShell with responsive header/nav and footer.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-2",
-      "title": "Tailwind + theme token styling with light/dark mode",
-      "synonyms": [
-        "Tailwind CSS",
-        "shadcn-ui style system",
-        "next-themes"
-      ],
-      "description": "Implements a Tailwind-based design system using CSS variables for colors/radii and supports light/dark themes via next-themes ThemeProvider.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-3",
-      "title": "Internet Identity authentication provider and login/logout UX",
-      "synonyms": [
-        "@dfinity/auth-client",
-        "InternetIdentityProvider",
-        "useInternetIdentity"
-      ],
-      "description": "Implements authentication via Internet Identity, persisting delegation across reloads, exposing login/logout/status flags via context, and providing sign-in/out controls in the AppShell.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-4",
-      "title": "Protected-content gating for authenticated participation",
-      "synonyms": [
-        "SignInGate",
-        "auth-required activities"
-      ],
-      "description": "Wraps interactive activity forms behind a sign-in gate that prompts unauthenticated users to login before submitting or viewing community contributions.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-5",
-      "title": "Backend actor creation per identity with authorization initialization",
-      "synonyms": [
-        "useActor",
-        "createActorWithConfig",
-        "_initializeAccessControlWithSecret"
-      ],
-      "description": "Creates an authenticated canister actor using the current Internet Identity, calls backend access-control initialization with a user-provided secret, and invalidates/refetches React Query caches when the identity/actor changes.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-6",
-      "title": "URL-hash secret parameter handling for admin token bootstrapping",
-      "synonyms": [
-        "getSecretParameter",
-        "urlParams",
-        "sessionStorage secret persistence"
-      ],
-      "description": "Reads sensitive parameters from the URL hash fragment, stores them in sessionStorage, and clears them from the URL to reduce leakage; used to pass the admin bootstrap token to the canister init call.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-7",
-      "title": "Motoko access control with admin/user/guest roles and role management APIs",
-      "synonyms": [
-        "authorization/access-control.mo",
-        "MixinAuthorization.mo",
-        "admin token bootstrap"
-      ],
-      "description": "Backend enforces role-based permissions; first eligible caller can become admin if they provide the correct secret matching CAFFEINE_ADMIN_TOKEN; exposes methods to initialize auth, query caller role, check admin, and assign roles (admin-only).",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-8",
-      "title": "User profile storage and retrieval with permissions",
-      "synonyms": [
-        "getCallerUserProfile",
-        "getUserProfile",
-        "saveCallerUserProfile"
-      ],
-      "description": "Allows authenticated users to save and retrieve their own profile; admins can view other users’ profiles; all operations are permission-checked in the canister.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-9",
-      "title": "Activity 1 backend: leadership word submission and aggregation",
-      "synonyms": [
-        "submitLeadershipWord",
-        "getLeadershipWordCounts",
-        "leadershipWordCounts store"
-      ],
-      "description": "Authenticated users can submit a leadership word plus reflections; backend stores per-user submissions and increments a global word count map retrievable by users.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-10",
-      "title": "Activity 1 frontend: single-word form, submission handling, and post-submit affirmation + quote",
-      "synonyms": [
-        "Activity1LeadershipWordPage",
-        "generateAffirmation",
-        "useSubmitLeadershipWord",
-        "useGetNextActivity1Quote"
-      ],
-      "description": "Provides an authenticated form that validates a single word, submits to the canister, then generates a deterministic, citation-backed affirmation message and fetches a rotating quote from the backend with user-friendly loading/error states.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-11",
-      "title": "Community leadership word patterns visualization",
-      "synonyms": [
-        "LeadershipWordPatternsSummary",
-        "top words chart"
-      ],
-      "description": "Fetches leadership word counts and displays the top words as a simple bar visualization with loading and empty states.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-12",
-      "title": "Activity 2 backend: resilient leadership micro-solution submissions and retrieval",
-      "synonyms": [
-        "submitResilientLeadershipActivity",
-        "getAllMicroSolutions",
-        "ResilientLeadershipActivity"
-      ],
-      "description": "Authenticated users can submit a resilient leadership activity containing an optional challenge type/custom challenge plus villain/heroic responses, protective factor, and a micro-solution; submissions are stored and retrievable as a list for community display.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-13",
-      "title": "Activity 2 frontend: challenge validation, mutual exclusivity, submission flow, and post-submit validation + quote",
-      "synonyms": [
-        "Activity2ResilientLeadershipPage",
-        "generateActivity2Validation",
-        "challengeTypeMapping",
-        "useSubmitResilientLeadershipActivity",
-        "useGetNextActivity2Quote"
-      ],
-      "description": "Implements Activity 2 UI with client-side validation requiring either a selected challenge or custom challenge, ensures null/undefined normalization for optional backend fields, submits to the canister, then generates a validation message + aligned citation and fetches rotating quotes with clear loading/error states.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-14",
-      "title": "Community micro-solutions list UI",
-      "synonyms": [
-        "MicroSolutionsCommunityList",
-        "challenge labels"
-      ],
-      "description": "Displays a scrollable list of community-submitted micro-solutions with human-readable challenge labels and protective factors, including loading and empty states.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-15",
-      "title": "Per-user rotating quote retrieval for both activities (backend) with defaults",
-      "synonyms": [
-        "QuoteGenre",
-        "Quote",
-        "getNextActivity1Quote",
-        "getNextActivity2Quote",
-        "activity1State",
-        "activity2State"
-      ],
-      "description": "Provides per-principal quote cycling for Activity 1 and Activity 2 using an index map keyed by Principal; if admin-populated quote pools are empty, falls back to small built-in default quote lists to ensure a quote can still be returned.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-16",
-      "title": "Admin quote management endpoints",
-      "synonyms": [
-        "populateActivity1Quotes",
-        "populateActivity2Quotes",
-        "getAllActivity1Quotes",
-        "getAllActivity2Quotes"
-      ],
-      "description": "Allows admins to populate quote pools for each activity; users can query the current quote pools (falling back to defaults if not populated). Populating quotes resets per-user rotation state.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-17",
-      "title": "Frontend React Query hooks for all canister operations with cache invalidation",
-      "synonyms": [
-        "useQueries",
-        "useMutation",
-        "useQueryClient"
-      ],
-      "description": "Implements typed React Query hooks to fetch leadership word counts and micro-solutions, submit Activity 1/2 data, and fetch next quotes; invalidates relevant caches on successful submissions.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-18",
-      "title": "User-facing error normalization utilities",
-      "synonyms": [
-        "toUserFacingError",
-        "normalized error messaging"
-      ],
-      "description": "Converts unknown errors (strings, traps, fetch/network failures) into clear English messages for display in activity UI flows, including quote-fetch errors and actor-not-ready messages.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-19",
-      "title": "Quote genre formatting for UI display",
-      "synonyms": [
-        "formatQuoteGenre",
-        "QuoteGenre to label"
-      ],
-      "description": "Maps backend QuoteGenre variants to user-facing franchise labels (Star Wars, Avengers, Batman, Harry Potter).",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-20",
-      "title": "Content-driven informational pages",
-      "synonyms": [
-        "proposalContent",
-        "Overview/Bio/LearningOutcomes/Takeaways/References"
-      ],
-      "description": "Renders structured workshop/proposal content (abstracts, bio, outcomes, takeaways, activity descriptions, and references) from a centralized content module across dedicated pages.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "feature-fully-replace-the-references-page-content-so-it-displays-the-updated-reference-list-exactly-as-shown-in-the-uploaded-image-preserving-the-same-order-and-formatting-including-punctuation-diacritics-bracketed-notes-and-urls-update-the-source-of-truth-for-the-references-page-to-match-this-list",
-      "title": "Fully replace the References page content so it displays the updated reference list exactly as shown in the uploaded image, preserving the same order and formatting (including punctuation, diacritics, bracketed notes, and URLs). Update the source of truth for the References page to match this list.",
+      "id": "feature-update-activity-1-your-leadership-word-example-words-list-to-exactly-ethical-visionary-authentic-resilient-empathetic-principled-transformational-courageous-accountable-inclusive-decisive-adaptable-humble-inspiring-grounded",
+      "title": "Update Activity 1 (Your Leadership Word) example words list to exactly: ethical, visionary, authentic, resilient, empathetic, principled, transformational, courageous, accountable, inclusive, decisive, adaptable, humble, inspiring, grounded.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-activity-2-s-generated-validation-citation-selection-so-it-continues-to-return-citations-from-the-updated-references-list-after-the-replacement-without-relying-on-hard-coded-numeric-indices-that-would-break-when-reference-ordering-changes-the-citation-returned-to-the-ui-must-be-drawn-from-the-same-updated-reference-list-used-by-the-references-page",
-      "title": "Update Activity 2’s generated validation citation selection so it continues to return citations from the updated References list after the replacement, without relying on hard-coded numeric indices that would break when reference ordering changes. The citation returned to the UI must be drawn from the same updated reference list used by the References page.",
+      "id": "feature-on-the-activity-1-your-leadership-word-page-add-the-following-anonymous-information-notice-as-user-facing-text-your-information-is-anonymous-the-only-information-we-see-is-what-is-on-the-top-leadership-word-community-patterns-board",
+      "title": "On the Activity 1 (Your Leadership Word) page, add the following anonymous-information notice as user-facing text: \"Your information is anonymous the only information we see is what is on the top leadership word community patterns board\".",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-activity-1-s-generated-affirmation-messaging-so-any-in-text-citations-it-uses-are-consistent-with-and-present-in-the-updated-references-list-ensuring-activity-1-messaging-remains-aligned-with-the-updated-references-page-after-the-replacement",
-      "title": "Update Activity 1’s generated affirmation messaging so any in-text citations it uses are consistent with (and present in) the updated References list, ensuring Activity 1 messaging remains aligned with the updated References page after the replacement.",
+      "id": "feature-update-the-activity-1-submit-button-label-from-share-your-leadership-word-to-exactly-share-your-leadership-word-for-feedback-when-not-in-the-submitting-loading-state",
+      "title": "Update the Activity 1 submit button label from \"Share Your Leadership Word\" to exactly \"Share Your leadership word For Feedback\" (when not in the submitting/loading state).",
       "reqIds": [
         "REQ-3"
       ],
@@ -272,43 +34,24 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Replace the References page with the new provided list (same order/formatting) and update Activity 1 & 2 generated messages to use the updated reference list for citations.",
+      "summary": "Update Activity 1 'Your Leadership Word' example words list to: ethical, visionary, authentic, resilient, empathetic, principled, transformational, courageous, accountable, inclusive, decisive, adaptable, humble, inspiring, grounded.",
       "reqIds": [],
-      "status": "in_progress"
+      "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Ensure Activities 1 & 2 always return a quote for signed-in users with per-user non-repeating quote cycling persisted in the Motoko canister (reset after exhaustion), across Star Wars/Avengers/Batman/Harry Potter pools.",
+      "summary": "Add copy in Activity 1 stating: 'Your information is anonymous the only information we see is what is on the top leadership word community patterns board'.",
       "reqIds": [],
-      "status": "in_progress"
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Update Activity 1 button label from 'Share Your leadership word' to 'Share Your leadership word For Feedback'.",
+      "reqIds": [],
+      "status": "pending"
     }
   ],
-  "architectural_notes": [
-    "Frontend uses TanStack Router for routing and React Query (@tanstack/react-query) for canister data fetching, caching, and mutation workflows.",
-    "Authentication is handled via Internet Identity (AuthClient) exposed through a React Context provider/hook, with UI gating via a SignInGate component.",
-    "Canister interaction is wrapped behind a dedicated actor hook (useActor) that recreates the actor per identity principal and invalidates/refetches dependent queries on identity changes.",
-    "Backend uses a Motoko actor with an access-control module and an authorization mixin; first-time role assignment is bootstrapped via an environment admin token and a user-provided secret.",
-    "Activities rely on backend persistence for submissions (leadership words and resilient leadership activities) and per-principal quote rotation state (activity1State/activity2State).",
-    "Quote UX is handled by explicit quote-fetch mutations (not auto-queries) with normalized, user-facing error messaging to avoid confusing fallback states.",
-    "Presentation content is centralized in a single proposalContent module and rendered across multiple pages for consistency.",
-    "Styling is Tailwind + shadcn-ui patterns, with CSS-variable-based design tokens and light/dark theme support via next-themes.",
-    "Quote/citation content should be centralized so the References page and Activity 1/2 feedback messages share the same source-of-truth list and formatting.",
-    "Per-user quote rotation must be persisted in the Motoko canister keyed by Principal, with safe initialization and an exhaustion/reset strategy to prevent repeats until the pool is fully used."
-  ],
-  "known_issues": [
-    "Backend stores (leadership submissions, activities, quote pools, per-user quote rotation state, user roles/profiles) are not declared as stable and there are no preupgrade/postupgrade hooks in main.mo, so canister upgrades may wipe state despite the presence of a migration module.",
-    "Access control initialization traps if CAFFEINE_ADMIN_TOKEN is not set in the canister environment; this can hard-fail actor initialization flows.",
-    "AccessControl.getUserRole traps with \"User is not registered\" if a principal has not been initialized; correct operation depends on the frontend always calling _initializeAccessControlWithSecret after login.",
-    "Quote rotation uses the saved index directly (quotes.at(currentIndex)); if the quote pool size changes while a user has a stored index, it may become out of range unless List.at is bounds-safe in the used library implementation.",
-    "getTopLeadershipWords returns the full entries array and does not actually sort or enforce “top” selection (the compare helper module is unused).",
-    "There appear to be two different index.css contents in the repository snapshot; if both exist in the real tree or are merged incorrectly, theme tokens could be inconsistent at runtime.",
-    "Admin token handling relies on a URL-hash “secret” that is copied into sessionStorage; this is convenient but can still be sensitive if mishandled (e.g., shared device/session).",
-    "Activities 1 & 2 quote retrieval can fall back to a 'not available at this time' message, suggesting quote pool initialization/availability or rotation-state handling is unreliable and needs to be made robust across reloads."
-  ],
-  "isFixRequest": true,
-  "generatedImages": [],
-  "gameProjectType": "none",
-  "projectName": "Institution Hero",
+  "projectName": "Activity 1 (Your Leadership Word) copy and button label updates",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

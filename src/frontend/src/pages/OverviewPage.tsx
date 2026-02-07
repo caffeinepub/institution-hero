@@ -19,9 +19,12 @@ export default function OverviewPage() {
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-3">
               {proposalContent.subtitle}
             </h1>
-            <p className="text-lg text-muted-foreground">
-              {proposalContent.author} • {proposalContent.organization}
-            </p>
+            <div className="text-lg text-muted-foreground">
+              <p className="font-semibold">Michael Viernes</p>
+              <p className="text-base">
+                The Chicago School - Foundation for International Education - Student Global Leadership Conference - 2026
+              </p>
+            </div>
           </div>
         </div>
       </div>

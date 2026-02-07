@@ -9,6 +9,7 @@ import ActivitiesPage from './pages/ActivitiesPage';
 import Activity1LeadershipWordPage from './pages/Activity1LeadershipWordPage';
 import Activity2ResilientLeadershipPage from './pages/Activity2ResilientLeadershipPage';
 import ReferencesPage from './pages/ReferencesPage';
+import MovieReferencesPage from './pages/MovieReferencesPage';
 
 // Layout component that wraps all routes with AppShell
 function Layout() {
@@ -72,6 +73,12 @@ const referencesRoute = createRoute({
   component: ReferencesPage,
 });
 
+const movieReferencesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/movie-references',
+  component: MovieReferencesPage,
+});
+
 // Create route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -82,6 +89,7 @@ const routeTree = rootRoute.addChildren([
   activity1Route,
   activity2Route,
   referencesRoute,
+  movieReferencesRoute,
 ]);
 
 // Create router

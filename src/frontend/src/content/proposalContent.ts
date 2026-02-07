@@ -51,7 +51,7 @@ export const proposalContent = {
       title: 'Your Leadership Word',
       goal: 'Help students quickly identify leadership values and see how diverse strengths contribute to a positive academic culture.',
       prompt: 'What ONE word describes the kind of leader you admire?',
-      examples: 'honest, brave, creative, patient, resilient, fair, innovation, compassion, integrity, low-key iconic, low drama',
+      examples: 'ethical, visionary, authentic, resilient, empathetic, principled, transformational, courageous, accountable, inclusive, decisive, adaptable, humble, inspiring, grounded',
       reflectionPrompts: [
         'Why did you choose that word?',
         'Who in your life (teacher, coach, peer) reflects that word?',
@@ -59,7 +59,7 @@ export const proposalContent = {
         'What is one small action YOU can take this week that matches your leadership word?',
       ],
       description:
-        'This reflective activity draws on leadership identity development and resilience frameworks, emphasizing values clarification, relational learning, and adaptive capacity (Jansen & Wieland, 2024; Masten, 2014; Northouse, 2022; Sunderman & Orsini, 2024; Waddington & Bonaparte, 2025; Killingback et al., 2025).',
+        'This reflective activity draws on leadership identity development and resilience frameworks, emphasizing values clarification, relational learning, and adaptive capacity (Jansen & Wieland, 2024; Northouse, 2022; Sunderman & Orsini, 2024; Waddington & Bonaparte, 2025; Killingback et al., 2025).',
     },
     activity2: {
       title: 'Resilient Leadership for Campus Solutions',
@@ -83,7 +83,7 @@ export const proposalContent = {
         'Organize a 10-minute planning meeting',
       ],
       description:
-        'Activity 2 was designed to engage students in applying principles of resilience, ethical leadership, and systems thinking to common academic challenges. Drawing on resilience theory (Erickson, 2017; Masten, 2014), research on compassionate pedagogy (Killingback et al., 2025), and systems perspectives informed by chaos theory (Elliott & Kiel, 1996), the activity encourages students to identify protective factors and develop small, values-driven leadership actions that promote inclusion and stability.',
+        'Activity 2 was designed to engage students in applying principles of resilience, ethical leadership, and systems thinking to common academic challenges. Drawing on resilience theory (Erickson, 2017), research on compassionate pedagogy (Killingback et al., 2025), and systems perspectives informed by chaos theory (Elliott & Kiel, 1996), the activity encourages students to identify protective factors and develop small, values-driven leadership actions that promote inclusion and stability.',
     },
   },
 

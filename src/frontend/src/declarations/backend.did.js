@@ -15,11 +15,17 @@ export const UserRole = IDL.Variant({
 });
 export const QuoteGenre = IDL.Variant({
   'starWars' : IDL.Null,
+  'transformers' : IDL.Null,
   'batman' : IDL.Null,
-  'harryPotter' : IDL.Null,
+  'threeKings' : IDL.Null,
+  'kingsman' : IDL.Null,
+  'darkKnightTrilogy' : IDL.Null,
   'avengers' : IDL.Null,
+  'infinite' : IDL.Null,
+  'warDogs' : IDL.Null,
 });
 export const Quote = IDL.Record({
+  'movieReference' : IDL.Text,
   'quote' : IDL.Text,
   'genre' : QuoteGenre,
   'attribution' : IDL.Text,
@@ -117,11 +123,17 @@ export const idlFactory = ({ IDL }) => {
   });
   const QuoteGenre = IDL.Variant({
     'starWars' : IDL.Null,
+    'transformers' : IDL.Null,
     'batman' : IDL.Null,
-    'harryPotter' : IDL.Null,
+    'threeKings' : IDL.Null,
+    'kingsman' : IDL.Null,
+    'darkKnightTrilogy' : IDL.Null,
     'avengers' : IDL.Null,
+    'infinite' : IDL.Null,
+    'warDogs' : IDL.Null,
   });
   const Quote = IDL.Record({
+    'movieReference' : IDL.Text,
     'quote' : IDL.Text,
     'genre' : QuoteGenre,
     'attribution' : IDL.Text,

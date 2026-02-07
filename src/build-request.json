@@ -1,69 +1,68 @@
 {
   "kind": "build_request",
-  "title": "Replace References page list and align Activity 1 & 2 citations to the updated references",
+  "title": "Activity 1 (Your Leadership Word) copy and button label updates",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Fully replace the References page content so it displays the updated reference list exactly as shown in the uploaded image, preserving the same order and formatting (including punctuation, diacritics, bracketed notes, and URLs). Update the source of truth for the References page to match this list.",
+      "text": "Update Activity 1 (Your Leadership Word) example words list to exactly: ethical, visionary, authentic, resilient, empathetic, principled, transformational, courageous, accountable, inclusive, decisive, adaptable, humble, inspiring, grounded.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-10",
-          "msg-13"
+          "msg-2"
         ],
         "quotes": [
-          "Fully replace the reference page. Have them in the same order and formatting."
+          "update examples to \nethical\nvisionary\nauthentic\nresilient\nempathetic\nprincipled\ntransformational\ncourageous\naccountable\ninclusive\ndecisive\nadaptable\nhumble\ninspiring\ngrounded"
         ]
       },
       "acceptanceCriteria": [
-        "The References page renders 18 references in the same order as the uploaded image.",
-        "The list includes the Fernweh Motive (n.d.) Vestrahorn Island entry and keeps Wang et al. (2025) as the final entry, matching the uploaded image.",
-        "Reference strings match the uploaded image text (including special characters like “Bieńkowska”, brackets, and full URLs)."
+        "On the Activity 1 page, the 'Examples:' line displays the updated list in the same order provided by the user.",
+        "The examples content is sourced consistently from the Activity 1 content (proposalContent.activities.activity1.examples) so it is not duplicated in multiple places."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Update Activity 2’s generated validation citation selection so it continues to return citations from the updated References list after the replacement, without relying on hard-coded numeric indices that would break when reference ordering changes. The citation returned to the UI must be drawn from the same updated reference list used by the References page.",
+      "text": "On the Activity 1 (Your Leadership Word) page, add the following anonymous-information notice as user-facing text: \"Your information is anonymous the only information we see is what is on the top leadership word community patterns board\".",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-10"
+          "msg-2"
         ],
         "quotes": [
-          "update the activity one and two messages with the updated reference page."
+          "and add \n\nYour information is anonymous the only information we see is what is on the top leadership word community patterns board"
         ]
       },
       "acceptanceCriteria": [
-        "Activity 2 validation always displays an 'ALIGNED RESEARCH CITATION' that is one of the entries shown on the References page.",
-        "Re-ordering the references array (as required by the uploaded image) does not cause out-of-range access or mismatched citations in Activity 2."
+        "The anonymous-information notice appears on Activity 1 in a readable location near the community patterns context (e.g., near the prompt area and/or near the community patterns board section).",
+        "The notice text matches exactly (including capitalization) as provided by the user."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Update Activity 1’s generated affirmation messaging so any in-text citations it uses are consistent with (and present in) the updated References list, ensuring Activity 1 messaging remains aligned with the updated References page after the replacement.",
+      "text": "Update the Activity 1 submit button label from \"Share Your Leadership Word\" to exactly \"Share Your leadership word For Feedback\" (when not in the submitting/loading state).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-10"
+          "msg-2"
         ],
         "quotes": [
-          "update the activity one and two messages with the updated reference page."
+          "update Share Your leadership word button to say  Share Your leadership word For Feedback"
         ]
       },
       "acceptanceCriteria": [
-        "Activity 1 affirmation text does not cite works that are absent from the updated References page list.",
-        "After the References list replacement, Activity 1 continues to generate affirmations without errors and with citations aligned to the updated reference list."
+        "When the submit button is enabled and not submitting, its label reads exactly: \"Share Your leadership word For Feedback\".",
+        "When submitting, the loading label \"Submitting...\" remains unchanged."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/immutablePaths (as specified in SYSTEM_CONTEXT).",
-    "Keep all user-facing text in English."
+    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Use English for all user-facing text."
   ],
   "nonGoals": [
-    "Do not introduce new activities or new content pages beyond updating references and citation alignment.",
-    "Do not change backend canister APIs or persistence for this request."
+    "Do not change backend data models, storage, or submission behavior for Activity 1.",
+    "Do not change Activity 2 content or UI.",
+    "Do not change the post-submission thank-you screen text unless required by the three requested changes."
   ],
   "imageRequirements": {
     "required": [],

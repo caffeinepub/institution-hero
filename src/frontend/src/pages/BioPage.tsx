@@ -9,7 +9,12 @@ export default function BioPage() {
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
           <GraduationCap className="h-10 w-10 text-primary" />
-          <h1 className="text-4xl font-bold text-foreground">About the Author</h1>
+          <div>
+            <h1 className="text-4xl font-bold text-foreground">Michael Viernes</h1>
+            <p className="text-lg text-muted-foreground mt-2">
+              The Chicago School - Foundation for International Education - Student Global Leadership Conference - 2026
+            </p>
+          </div>
         </div>
 
         <div className="rounded-lg border border-border bg-card p-8 mb-8">
@@ -37,6 +42,15 @@ export default function BioPage() {
             >
               <SiInstagram className="h-4 w-4" />
               <span className="font-medium">Instagram</span>
+            </a>
+
+            <a
+              href="https://div52.net/members/join/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-accent text-accent-foreground hover:bg-accent/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <span className="font-medium">APA Division 52</span>
             </a>
           </div>
         </div>

@@ -105,6 +105,7 @@ export interface ResilientLeadershipActivity {
     protectiveFactor: string;
 }
 export interface Quote {
+    movieReference: string;
     quote: string;
     genre: QuoteGenre;
     attribution: string;
@@ -123,9 +124,14 @@ export enum ChallengeType {
 }
 export enum QuoteGenre {
     starWars = "starWars",
+    transformers = "transformers",
     batman = "batman",
-    harryPotter = "harryPotter",
-    avengers = "avengers"
+    threeKings = "threeKings",
+    kingsman = "kingsman",
+    darkKnightTrilogy = "darkKnightTrilogy",
+    avengers = "avengers",
+    infinite = "infinite",
+    warDogs = "warDogs"
 }
 export enum UserRole {
     admin = "admin",
@@ -472,15 +478,18 @@ function from_candid_record_n10(_uploadFile: (file: ExternalBlob) => Promise<Uin
     };
 }
 function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    movieReference: string;
     quote: string;
     genre: _QuoteGenre;
     attribution: string;
 }): {
+    movieReference: string;
     quote: string;
     genre: QuoteGenre;
     attribution: string;
 } {
     return {
+        movieReference: value.movieReference,
         quote: value.quote,
         genre: from_candid_QuoteGenre_n6(_uploadFile, _downloadFile, value.genre),
         attribution: value.attribution
@@ -515,13 +524,23 @@ function from_candid_variant_n17(_uploadFile: (file: ExternalBlob) => Promise<Ui
 function from_candid_variant_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     starWars: null;
 } | {
+    transformers: null;
+} | {
     batman: null;
 } | {
-    harryPotter: null;
+    threeKings: null;
+} | {
+    kingsman: null;
+} | {
+    darkKnightTrilogy: null;
 } | {
     avengers: null;
+} | {
+    infinite: null;
+} | {
+    warDogs: null;
 }): QuoteGenre {
-    return "starWars" in value ? QuoteGenre.starWars : "batman" in value ? QuoteGenre.batman : "harryPotter" in value ? QuoteGenre.harryPotter : "avengers" in value ? QuoteGenre.avengers : value;
+    return "starWars" in value ? QuoteGenre.starWars : "transformers" in value ? QuoteGenre.transformers : "batman" in value ? QuoteGenre.batman : "threeKings" in value ? QuoteGenre.threeKings : "kingsman" in value ? QuoteGenre.kingsman : "darkKnightTrilogy" in value ? QuoteGenre.darkKnightTrilogy : "avengers" in value ? QuoteGenre.avengers : "infinite" in value ? QuoteGenre.infinite : "warDogs" in value ? QuoteGenre.warDogs : value;
 }
 function from_candid_vec_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Quote>): Array<Quote> {
     return value.map((x)=>from_candid_Quote_n4(_uploadFile, _downloadFile, x));
@@ -548,15 +567,18 @@ function to_candid_opt_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Arr
     return value === null ? candid_none() : candid_some(value);
 }
 function to_candid_record_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    movieReference: string;
     quote: string;
     genre: QuoteGenre;
     attribution: string;
 }): {
+    movieReference: string;
     quote: string;
     genre: _QuoteGenre;
     attribution: string;
 } {
     return {
+        movieReference: value.movieReference,
         quote: value.quote,
         genre: to_candid_QuoteGenre_n21(_uploadFile, _downloadFile, value.genre),
         attribution: value.attribution
@@ -580,20 +602,40 @@ function to_candid_variant_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8
 function to_candid_variant_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: QuoteGenre): {
     starWars: null;
 } | {
+    transformers: null;
+} | {
     batman: null;
 } | {
-    harryPotter: null;
+    threeKings: null;
+} | {
+    kingsman: null;
+} | {
+    darkKnightTrilogy: null;
 } | {
     avengers: null;
+} | {
+    infinite: null;
+} | {
+    warDogs: null;
 } {
     return value == QuoteGenre.starWars ? {
         starWars: null
+    } : value == QuoteGenre.transformers ? {
+        transformers: null
     } : value == QuoteGenre.batman ? {
         batman: null
-    } : value == QuoteGenre.harryPotter ? {
-        harryPotter: null
+    } : value == QuoteGenre.threeKings ? {
+        threeKings: null
+    } : value == QuoteGenre.kingsman ? {
+        kingsman: null
+    } : value == QuoteGenre.darkKnightTrilogy ? {
+        darkKnightTrilogy: null
     } : value == QuoteGenre.avengers ? {
         avengers: null
+    } : value == QuoteGenre.infinite ? {
+        infinite: null
+    } : value == QuoteGenre.warDogs ? {
+        warDogs: null
     } : value;
 }
 function to_candid_variant_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ChallengeType): {

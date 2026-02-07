@@ -250,11 +250,16 @@ export default function Activity2ResilientLeadershipPage() {
                   {/* Quote */}
                   {validationResult.quote && (
                     <div className="rounded-lg bg-muted/50 p-4 mb-4 border-l-4 border-primary">
-                      <p className="text-foreground italic mb-2">
+                      <p className="text-foreground italic mb-3">
                         "{validationResult.quote.quote}"
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        — {validationResult.quote.attribution} ({formatQuoteGenre(validationResult.quote.genre)})
+                      {validationResult.quote.attribution && (
+                        <p className="text-sm text-muted-foreground mb-1">
+                          — {validationResult.quote.attribution}
+                        </p>
+                      )}
+                      <p className="text-xs text-muted-foreground font-medium">
+                        Source: {validationResult.quote.movieReference}
                       </p>
                     </div>
                   )}

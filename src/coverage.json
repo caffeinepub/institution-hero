@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-05T01:33:33.913Z",
+  "generatedAt": "2026-02-07T05:04:22.944Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -12,58 +12,48 @@
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Fully replace the References page content so it displays the updated reference list exactly as shown in the uploaded image, preserving the same order and formatting (including punctuation, diacritics, bracketed notes, and URLs). Update the source of truth for the References page to match this list.",
+        "summary": "Update Activity 1 (Your Leadership Word) example words list to exactly: ethical, visionary, authentic, resilient, empathetic, principled, transformational, courageous, accountable, inclusive, decisive, adaptable, humble, inspiring, grounded.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/content/references.ts",
           "frontend/src/content/proposalContent.ts",
-          "frontend/src/pages/ReferencesPage.tsx"
+          "frontend/src/pages/Activity1LeadershipWordPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/content/references.ts",
           "frontend/src/content/proposalContent.ts",
-          "frontend/src/pages/ReferencesPage.tsx"
+          "frontend/src/pages/Activity1LeadershipWordPage.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Update Activity 2’s generated validation citation selection so it continues to return citations from the updated References list after the replacement, without relying on hard-coded numeric indices that would break when reference ordering changes. The citation returned to the UI must be drawn from the same updated reference list used by the References page.",
+        "summary": "On the Activity 1 (Your Leadership Word) page, add the following anonymous-information notice as user-facing text: \"Your information is anonymous the only information we see is what is on the top leadership word community patterns board\".",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/utils/activity2Validation.ts",
-          "frontend/src/content/references.ts"
+          "frontend/src/pages/Activity1LeadershipWordPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/utils/activity2Validation.ts",
-          "frontend/src/content/references.ts"
+          "frontend/src/pages/Activity1LeadershipWordPage.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Update Activity 1’s generated affirmation messaging so any in-text citations it uses are consistent with (and present in) the updated References list, ensuring Activity 1 messaging remains aligned with the updated References page after the replacement.",
+        "summary": "Update the Activity 1 submit button label from \"Share Your Leadership Word\" to exactly \"Share Your leadership word For Feedback\" (when not in the submitting/loading state).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/utils/activity1Affirmations.ts",
-          "frontend/src/content/references.ts"
+          "frontend/src/pages/Activity1LeadershipWordPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/utils/activity1Affirmations.ts",
-          "frontend/src/content/references.ts"
+          "frontend/src/pages/Activity1LeadershipWordPage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
     "build-request.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/content/proposalContent.ts",
-    "frontend/src/content/references.ts",
-    "frontend/src/pages/ReferencesPage.tsx",
-    "frontend/src/utils/activity1Affirmations.ts",
-    "frontend/src/utils/activity2Validation.ts",
+    "frontend/src/pages/Activity1LeadershipWordPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

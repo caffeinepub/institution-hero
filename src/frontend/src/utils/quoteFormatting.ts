@@ -11,8 +11,18 @@ export function formatQuoteGenre(genre: QuoteGenre): string {
       return 'Avengers';
     case QuoteGenre.batman:
       return 'Batman';
-    case QuoteGenre.harryPotter:
-      return 'Harry Potter';
+    case QuoteGenre.darkKnightTrilogy:
+      return 'The Dark Knight Trilogy';
+    case QuoteGenre.infinite:
+      return 'Infinite';
+    case QuoteGenre.kingsman:
+      return 'Kingsman';
+    case QuoteGenre.threeKings:
+      return 'Three Kings';
+    case QuoteGenre.transformers:
+      return 'Transformers';
+    case QuoteGenre.warDogs:
+      return 'War Dogs';
     default:
       return 'Unknown';
   }

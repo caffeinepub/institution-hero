@@ -28,7 +28,7 @@ function selectAlignedCitation(inputs: Activity2Inputs): string {
   const citationThemes: Record<string, string[]> = {
     // Leadership and resilience
     leadership: ['erickson2017', 'jansen2024', 'northouse2022', 'ramamoorthi2023', 'sunderman2024'],
-    resilience: ['erickson2017', 'masten2014', 'jansen2024', 'wang2025'],
+    resilience: ['erickson2017', 'jansen2024', 'wang2025'],
 
     // Support and mentorship
     support: ['erickson2017', 'killingback2025', 'mcgrath2022', 'waddington2025'],
@@ -43,14 +43,15 @@ function selectAlignedCitation(inputs: Activity2Inputs): string {
     // Ethical and moral
     ethical: ['anastasiou2025', 'bienkowska2025', 'ghamrawi2024', 'northouse2022'],
     integrity: ['anastasiou2025', 'bienkowska2025', 'ghamrawi2024', 'northouse2022'],
+    destructive: ['erickson2015', 'bienkowska2025', 'ghamrawi2024'],
 
     // Development and growth
-    development: ['erickson2017', 'jansen2024', 'masten2014', 'sunderman2024'],
-    growth: ['erickson2017', 'jansen2024', 'masten2014', 'sunderman2024'],
+    development: ['erickson2017', 'jansen2024', 'sunderman2024', 'wang2025'],
+    growth: ['erickson2017', 'jansen2024', 'fazio2008', 'wang2025'],
 
     // Challenges and adversity
-    challenge: ['erickson2017', 'elliott1996', 'jansen2024', 'masten2014', 'wang2025'],
-    adversity: ['erickson2017', 'fazio2008', 'masten2014', 'northouse2022'],
+    challenge: ['erickson2017', 'elliott1996', 'jansen2024', 'wang2025'],
+    adversity: ['erickson2017', 'fazio2008', 'northouse2022', 'wang2025'],
 
     // Community and connection
     community: ['erickson2017', 'killingback2025', 'mcgrath2022', 'ramamoorthi2023'],
@@ -66,7 +67,7 @@ function selectAlignedCitation(inputs: Activity2Inputs): string {
   }
 
   // If no matches, use a default set focused on resilience and leadership
-  const finalKeys = matchedKeys.length > 0 ? matchedKeys : ['erickson2017', 'jansen2024', 'masten2014', 'northouse2022'];
+  const finalKeys = matchedKeys.length > 0 ? matchedKeys : ['erickson2017', 'jansen2024', 'northouse2022', 'wang2025'];
 
   // Remove duplicates
   const uniqueKeys = Array.from(new Set(finalKeys));
@@ -90,7 +91,7 @@ export function generateActivity2Validation(inputs: Activity2Inputs): Validation
   const citation = selectAlignedCitation(inputs);
 
   // Generate validation message
-  const message = `Your micro-solution demonstrates the kind of heroic leadership that transforms challenges into opportunities for growth. By proposing "${inputs.microSolution.substring(0, 100)}${inputs.microSolution.length > 100 ? '...' : ''}", you're embodying the protective power of ${inputs.protectiveFactor.toLowerCase()} to create positive change in your academic community.`;
+  const message = `Your micro-solution demonstrates the kind of heroic leadership that transforms challenges into opportunities for growth. By proposing "${inputs.microSolution.substring(0, 100)}${inputs.microSolution.length > 100 ? '...' : ''}", you're embodying the protective power of ${inputs.protectiveFactor.toLowerCase()} to create positive change in your academic community. This approach reflects the resilience and ethical leadership that strengthens institutional culture and supports student well-being.`;
 
   return {
     citation,

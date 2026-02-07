@@ -11,6 +11,8 @@ import Runtime "mo:core/Runtime";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
+
+
 actor {
   // Initialize the access control system
   let accessControlState = AccessControl.initState();
@@ -48,16 +50,23 @@ actor {
     microSolution : Text;
   };
 
-  type QuoteGenre = {
+  public type QuoteGenre = {
     #starWars;
     #avengers;
     #batman;
-    #harryPotter;
+    #darkKnightTrilogy;
+    #infinite;
+    #kingsman;
+    #threeKings;
+    #transformers;
+    #warDogs;
   };
 
-  type Quote = {
+  // Extended quote type with movie reference
+  public type Quote = {
     quote : Text;
     attribution : Text;
+    movieReference : Text;
     genre : QuoteGenre;
   };
 
@@ -290,44 +299,134 @@ actor {
     };
   };
 
-  // Default Quotes
+  // Default Quotes with Movie References
   func getDefaultActivity1Quotes() : List.List<Quote> {
-    let defaultQuotes = List.empty<Quote>();
-    defaultQuotes.add({
+    let quotes = List.empty<Quote>();
+    quotes.add({
       quote = "Do or do not. There is no try.";
       attribution = "Yoda";
+      movieReference = "Star Wars: The Empire Strikes Back";
       genre = #starWars;
     });
-    defaultQuotes.add({
+    quotes.add({
       quote = "With great power comes great responsibility.";
       attribution = "Uncle Ben";
+      movieReference = "Spiderman (Marvel Universe)";
       genre = #avengers;
     });
-    defaultQuotes.add({
+    quotes.add({
       quote = "It's not who I am underneath, but what I do that defines me.";
       attribution = "Batman";
+      movieReference = "Batman Begins (The Dark Knight Trilogy)";
       genre = #batman;
     });
-    defaultQuotes;
+    quotes.add({
+      quote = "A leader must have vision, even when the world is chaotic.";
+      attribution = "Nick Fury (Inspired)";
+      movieReference = "The Avengers (2012)";
+      genre = #avengers;
+    });
+    quotes.add({
+      quote = "Don't let fear guide you. Guide your fear.";
+      attribution = "Luke Skywalker (Inspired)";
+      movieReference = "Star Wars: Return of the Jedi";
+      genre = #starWars;
+    });
+    quotes.add({
+      quote = "Resilience is standing up after the fall, not the absence of it.";
+      attribution = "Bruce Wayne (Inspired)";
+      movieReference = "The Dark Knight Rises";
+      genre = #darkKnightTrilogy;
+    });
+    quotes.add({
+      quote = "A true leader makes tough decisions for the greater good.";
+      attribution = "Galahad (Inspired)";
+      movieReference = "Kingsman: The Secret Service";
+      genre = #kingsman;
+    });
+    quotes.add({
+      quote = "Infinite possibilities exist for those who believe.";
+      attribution = "Evan McCauley (Inspired)";
+      movieReference = "Infinite (2021)";
+      genre = #infinite;
+    });
+    quotes.add({
+      quote = "Sometimes you have to break the rules to do the right thing.";
+      attribution = "Cade Yeager (Inspired)";
+      movieReference = "Transformers: The Last Knight";
+      genre = #transformers;
+    });
+    quotes.add({
+      quote = "Even in chaos, order can be found through leadership.";
+      attribution = "Sam Witwicky (Inspired)";
+      movieReference = "Transformers Series";
+      genre = #transformers;
+    });
+    quotes;
   };
 
   func getDefaultActivity2Quotes() : List.List<Quote> {
-    let defaultQuotes = List.empty<Quote>();
-    defaultQuotes.add({
+    let quotes = List.empty<Quote>();
+    quotes.add({
       quote = "Happiness can be found even in the darkest of times, if one only remembers to turn on the light.";
       attribution = "Albus Dumbledore";
-      genre = #harryPotter;
-    });
-    defaultQuotes.add({
-      quote = "Fear is the path to the dark side. Fear leads to anger, anger leads to hate, hate leads to suffering.";
-      attribution = "Yoda";
+      movieReference = "Harry Potter and the Prisoner of Azkaban";
       genre = #starWars;
     });
-    defaultQuotes.add({
+    quotes.add({
+      quote = "Fear is the path to the dark side. Fear leads to anger, anger leads to hate, hate leads to suffering.";
+      attribution = "Yoda";
+      movieReference = "Star Wars: The Phantom Menace";
+      genre = #starWars;
+    });
+    quotes.add({
       quote = "I can do this all day.";
       attribution = "Captain America";
+      movieReference = "Captain America: The First Avenger";
       genre = #avengers;
     });
-    defaultQuotes;
+    quotes.add({
+      quote = "Courage is not the absence of fear, but the triumph over it.";
+      attribution = "Wonder Woman (Inspired)";
+      movieReference = "Wonder Woman (DC Universe)";
+      genre = #avengers;
+    });
+    quotes.add({
+      quote = "A resilient mind is sharper than the strongest sword.";
+      attribution = "James Bond (Inspired)";
+      movieReference = "James Bond Series";
+      genre = #kingsman;
+    });
+    quotes.add({
+      quote = "Resourcefulness is the key to rising above challenges.";
+      attribution = "Danny Ocean (Inspired)";
+      movieReference = "Ocean's Eleven";
+      genre = #kingsman; // Closest fit
+    });
+    quotes.add({
+      quote = "Balance is found by accepting both light and shadow within.";
+      attribution = "Anakin Skywalker (Inspired)";
+      movieReference = "Star Wars: Revenge of the Sith";
+      genre = #starWars;
+    });
+    quotes.add({
+      quote = "Great power rests in the hands of those who accept responsibility.";
+      attribution = "Tony Stark (Inspired)";
+      movieReference = "Iron Man";
+      genre = #avengers;
+    });
+    quotes.add({
+      quote = "Adapt and overcome, for every end is a new beginning.";
+      attribution = "Diana Prince (Inspired)";
+      movieReference = "Wonder Woman (DC Universe)";
+      genre = #avengers; // Closest fit
+    });
+    quotes.add({
+      quote = "A leader's true value lies in the hope they bring to others.";
+      attribution = "Optimus Prime (Inspired)";
+      movieReference = "Transformers Series";
+      genre = #transformers;
+    });
+    quotes;
   };
 };

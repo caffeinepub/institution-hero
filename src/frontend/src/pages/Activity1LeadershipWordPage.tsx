@@ -6,7 +6,7 @@ import LeadershipWordPatternsSummary from '../components/LeadershipWordPatternsS
 import { proposalContent } from '../content/proposalContent';
 import { useSubmitLeadershipWord, useGetNextActivity1Quote } from '../hooks/useQueries';
 import { useActor } from '../hooks/useActor';
-import { MessageSquare, Send, CheckCircle, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
+import { MessageSquare, Send, CheckCircle, Sparkles, AlertCircle, Loader2, Info } from 'lucide-react';
 import { generateAffirmation } from '../utils/activity1Affirmations';
 import { formatQuoteGenre } from '../utils/quoteFormatting';
 import { toUserFacingError } from '../utils/userFacingError';
@@ -149,11 +149,16 @@ export default function Activity1LeadershipWordPage() {
               {quote && (
                 <div className="p-6 rounded-lg border border-border bg-muted/50 text-left">
                   <div className="rounded-lg bg-background/50 p-4 border-l-4 border-primary">
-                    <p className="text-foreground italic mb-2">
+                    <p className="text-foreground italic mb-3">
                       "{quote.quote}"
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      — {quote.attribution} ({formatQuoteGenre(quote.genre)})
+                    {quote.attribution && (
+                      <p className="text-sm text-muted-foreground mb-1">
+                        — {quote.attribution}
+                      </p>
+                    )}
+                    <p className="text-xs text-muted-foreground font-medium">
+                      Source: {quote.movieReference}
                     </p>
                   </div>
                 </div>
@@ -204,6 +209,15 @@ export default function Activity1LeadershipWordPage() {
           <p className="text-sm text-muted-foreground">
             Examples: {proposalContent.activities.activity1.examples}
           </p>
+        </div>
+
+        <div className="rounded-lg border border-border bg-card p-4 mb-8">
+          <div className="flex items-start gap-3">
+            <Info className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+            <p className="text-sm text-muted-foreground">
+              Your information is anonymous the only information we see is what is on the top leadership word community patterns board
+            </p>
+          </div>
         </div>
 
         <SignInGate>
@@ -270,7 +284,7 @@ export default function Activity1LeadershipWordPage() {
                     setRoleModel(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="Teacher, coach, peer, family member..."
+                  placeholder="Teacher, coach, peer..."
                   required
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 />
@@ -287,7 +301,7 @@ export default function Activity1LeadershipWordPage() {
                     setResilienceExample(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="Describe how this quality demonstrates resilience..."
+                  placeholder="Describe the connection..."
                   required
                   rows={3}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
@@ -296,8 +310,7 @@ export default function Activity1LeadershipWordPage() {
 
               <div>
                 <label htmlFor="actionStep" className="block text-sm font-medium mb-2">
-                  What's one small action YOU can take this week that matches your leadership word?{' '}
-                  <span className="text-destructive">*</span>
+                  What is one small action YOU can take this week? <span className="text-destructive">*</span>
                 </label>
                 <textarea
                   id="actionStep"
@@ -306,22 +319,18 @@ export default function Activity1LeadershipWordPage() {
                     setActionStep(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="Your commitment for this week..."
+                  placeholder="Your action step..."
                   required
-                  rows={2}
+                  rows={3}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
                 />
               </div>
             </div>
 
-            {/* Submission error message */}
             {submissionError && (
-              <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20">
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
                 <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-destructive">Submission Failed</p>
-                  <p className="text-sm text-destructive/90 mt-1">{submissionError}</p>
-                </div>
+                <p className="text-sm text-destructive">{submissionError}</p>
               </div>
             )}
 
@@ -338,7 +347,7 @@ export default function Activity1LeadershipWordPage() {
               ) : (
                 <>
                   <Send className="h-4 w-4" />
-                  Share Your Leadership Word
+                  Share Your leadership word For Feedback
                 </>
               )}
             </button>

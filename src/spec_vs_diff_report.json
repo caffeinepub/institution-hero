@@ -1,59 +1,15 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-05T01:33:33.893Z",
-  "summary": "Implemented a new shared references module and wired the References page and Activity 2 citation selection to use it. However, the diff is truncated so the exact 18-item reference list/order/format cannot be fully verified, and Activity 1 still appears to use hard-coded in-text citations rather than deriving citations from the updated references source. The diff summary also indicates multiple unrelated UI/routing/auth/quote-handling changes not requested.",
-  "missing_requirements": [
-    {
-      "id": "REQ-1",
-      "requirement": "Fully replace the References page content so it displays the updated reference list exactly as shown in the uploaded image (18 references, exact order/formatting, includes Fernweh Motive entry, ends with Wang et al. (2025)).",
-      "reason": "A new references source file was added and the References page maps over it, but the references list is truncated in the diff summary, so it cannot be confirmed that it contains exactly 18 entries, preserves the precise uploaded-image order/formatting, includes the required Fernweh Motive entry in the right place, and keeps Wang et al. (2025) as the final entry.",
-      "evidence": [
-        "frontend/src/content/references.ts (truncated)",
-        "frontend/src/pages/ReferencesPage.tsx"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "requirement": "Update Activity 1’s generated affirmation messaging so any in-text citations it uses are consistent with (and present in) the updated References list.",
-      "reason": "Activity 1 affirmation templates still embed citation strings directly (e.g., \"Anastasiou, 2025; Northouse, 2022\", \"Waddington & Bonaparte, 2025\", \"Sunderman & Orsini, 2024\") rather than selecting/deriving them from the updated References source. Because the updated references list is also truncated, the diff does not demonstrate that all cited works are present in the updated References list or that citations remain aligned after the replacement.",
-      "evidence": [
-        "frontend/src/utils/activity1Affirmations.ts (truncated)",
-        "frontend/src/content/references.ts (truncated)"
-      ]
-    }
-  ],
-  "hallucinated_features": [
-    {
-      "description": "Removed a Slides route / navigation link and other routing/navigation changes unrelated to references/citation alignment.",
-      "reason": "Not requested (non-goals restrict scope to updating references and aligning Activity 1 & 2 citations).",
-      "evidence": [
-        "frontend-file-summaries.txt (mentions App.tsx routes and AppShell navigation changes)"
-      ]
-    },
-    {
-      "description": "Changed Activity 1 and Activity 2 quote-fetch gating/behavior (e.g., actor readiness gating, removing fallback \"not available\" message) and updated React Query typing/error normalization.",
-      "reason": "Not requested and outside the references/citation alignment scope; may be considered backend/behavioral changes even if only frontend-side.",
-      "evidence": [
-        "frontend-file-summaries.txt (mentions useQueries.ts typing changes and Activity1/Activity2 pages quote gating changes)"
-      ]
-    },
-    {
-      "description": "Removed/altered Overview page content cards (e.g., Session Outline quick-link card removed) and other unrelated page content adjustments.",
-      "reason": "Not requested; scope is limited to References page and Activity 1/2 citation alignment.",
-      "evidence": [
-        "frontend-file-summaries.txt (mentions OverviewPage changes)"
-      ]
-    }
-  ],
-  "confidence": 0.62,
+  "generatedAt": "2026-02-07T05:04:22.942Z",
+  "summary": "Diff indicates Activity 1 content/UI text updates were made: the Activity 1 examples list was updated in proposalContent, and Activity 1 page UI was updated to include the anonymity notice and change the submit button label while preserving the \"Submitting...\" loading label.",
+  "missing_requirements": [],
+  "hallucinated_features": [],
+  "confidence": 0.72,
   "changed_files": [
     "frontend-file-summaries.txt",
     "frontend/src/content/proposalContent.ts",
-    "frontend/src/content/references.ts",
-    "frontend/src/pages/ReferencesPage.tsx",
-    "frontend/src/utils/activity1Affirmations.ts",
-    "frontend/src/utils/activity2Validation.ts",
+    "frontend/src/pages/Activity1LeadershipWordPage.tsx",
     "project_state.json"
   ]
 }

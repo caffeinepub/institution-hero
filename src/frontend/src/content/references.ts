@@ -9,7 +9,7 @@ export interface ReferenceEntry {
 }
 
 /**
- * Complete reference list in the exact order and formatting from the uploaded image.
+ * Complete reference list in the exact order and formatting provided by the user.
  * Each entry has a stable key for programmatic access while maintaining display order.
  */
 export const REFERENCES: ReferenceEntry[] = [
@@ -20,6 +20,10 @@ export const REFERENCES: ReferenceEntry[] = [
   {
     key: 'bienkowska2025',
     text: 'Bieńkowska, A., & Tworek, K. (2025). Fake leadership influence on organizational destruction in higher education institutions (HEIs). PLOS ONE, 20(4), e0321194. https://doi.org/10.1371/journal.pone.0321194',
+  },
+  {
+    key: 'erickson2015',
+    text: 'Erickson, A., Shaw, B., Murray, J., & Branch, S. (2015). Destructive leadership. Organizational Dynamics, 44(4), 266–272. https://doi.org/10.1016/j.orgdyn.2015.09.003',
   },
   {
     key: 'erickson2017',
@@ -48,10 +52,6 @@ export const REFERENCES: ReferenceEntry[] = [
   {
     key: 'killingback2025',
     text: 'Killingback, C., Tomlinson, A., & Stern, J. (2025). Compassionate pedagogy in higher education: A scoping review. Journal of University Teaching & Learning Practice, 22(1), 1–32. https://doi.org/10.53761/7yvrw787',
-  },
-  {
-    key: 'masten2014',
-    text: 'Masten, A. S. (2014). Ordinary magic: Resilience in development. The Guilford Press.',
   },
   {
     key: 'mcgrath2022',
@@ -102,7 +102,7 @@ export function getReferencesByKeys(keys: string[]): ReferenceEntry[] {
 }
 
 /**
- * Get the ordered list of reference texts for display (maintains exact order from image)
+ * Get the ordered list of reference texts for display (maintains exact order from user)
  */
 export function getOrderedReferenceTexts(): string[] {
   return REFERENCES.map((ref) => ref.text);

@@ -22,6 +22,7 @@ export default function AppShell({ children }: AppShellProps) {
     { to: '/takeaways', label: 'Takeaways' },
     { to: '/activities', label: 'Activities' },
     { to: '/references', label: 'References' },
+    { to: '/movie-references', label: 'Movie References' },
   ];
 
   const handleAuthAction = () => {

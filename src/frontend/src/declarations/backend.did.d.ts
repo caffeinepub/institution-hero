@@ -25,14 +25,20 @@ export interface LeadershipWordSubmission {
   'resilienceExample' : string,
 }
 export interface Quote {
+  'movieReference' : string,
   'quote' : string,
   'genre' : QuoteGenre,
   'attribution' : string,
 }
 export type QuoteGenre = { 'starWars' : null } |
+  { 'transformers' : null } |
   { 'batman' : null } |
-  { 'harryPotter' : null } |
-  { 'avengers' : null };
+  { 'threeKings' : null } |
+  { 'kingsman' : null } |
+  { 'darkKnightTrilogy' : null } |
+  { 'avengers' : null } |
+  { 'infinite' : null } |
+  { 'warDogs' : null };
 export interface ResilientLeadershipActivity {
   'microSolution' : string,
   'customChallenge' : [] | [string],

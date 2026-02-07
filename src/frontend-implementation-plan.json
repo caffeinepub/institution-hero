@@ -1,71 +1,55 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Update References list and align Activity 1 & 2 citations to the new source of truth",
+  "title": "Activity 1 copy updates (examples list, anonymity notice, submit button label)",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Replace the References page source-of-truth and rendered content to match the 18-item reference list exactly (order and text) from the uploaded image.",
+      "summary": "Update Activity 1 example words list in proposal content to the exact provided sequence and keep the Activity 1 page sourcing it from proposalContent.",
       "acceptanceCriteria": [
-        "The References page renders 18 references in the same order as the uploaded image.",
-        "The list includes the Fernweh Motive (n.d.) Vestrahorn Island entry and keeps Wang et al. (2025) as the final entry, matching the uploaded image.",
-        "Reference strings match the uploaded image text (including special characters like “Bieńkowska”, brackets, and full URLs)."
+        "On the Activity 1 page, the 'Examples:' line displays the updated list in the same order provided by the user.",
+        "The examples content is sourced consistently from the Activity 1 content (proposalContent.activities.activity1.examples) so it is not duplicated in multiple places."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/content/references.ts",
-          "operation": "create",
-          "description": "Create a dedicated References source-of-truth module exporting the updated 18-reference list exactly as shown in the uploaded image (same order and exact text), and (optionally) stable reference keys for reuse across Activity utilities."
-        },
-        {
           "path": "frontend/src/content/proposalContent.ts",
           "operation": "modify",
-          "description": "Update proposalContent so its references field is sourced from the new frontend/src/content/references.ts list (ensuring a single source of truth that matches the uploaded image exactly)."
+          "description": "Replace proposalContent.activities.activity1.examples with exactly: \"ethical, visionary, authentic, resilient, empathetic, principled, transformational, courageous, accountable, inclusive, decisive, adaptable, humble, inspiring, grounded.\" (including punctuation and order)."
         },
         {
-          "path": "frontend/src/pages/ReferencesPage.tsx",
+          "path": "frontend/src/pages/Activity1LeadershipWordPage.tsx",
           "operation": "modify",
-          "description": "Update the References page to render the updated references list from the new source-of-truth (frontend/src/content/references.ts) and adjust rendering so the displayed list preserves the intended list formatting (order, punctuation, diacritics, bracketed notes, and URLs) without introducing additional reformatting."
+          "description": "Ensure the Activity 1 page continues to render the examples line directly from proposalContent.activities.activity1.examples (no hardcoded/duplicated examples elsewhere)."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Refactor Activity 2 validation citation selection to select citations from the updated References source-of-truth without hard-coded numeric indices.",
+      "summary": "Add the exact anonymous-information notice text to the Activity 1 page near the community patterns context.",
       "acceptanceCriteria": [
-        "Activity 2 validation always displays an 'ALIGNED RESEARCH CITATION' that is one of the entries shown on the References page.",
-        "Re-ordering the references array (as required by the uploaded image) does not cause out-of-range access or mismatched citations in Activity 2."
+        "The anonymous-information notice appears on Activity 1 in a readable location near the community patterns context (e.g., near the prompt area and/or near the community patterns board section).",
+        "The notice text matches exactly (including capitalization) as provided by the user."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/utils/activity2Validation.ts",
+          "path": "frontend/src/pages/Activity1LeadershipWordPage.tsx",
           "operation": "modify",
-          "description": "Replace index-based citation selection with a stable-key or lookup-based approach that pulls the final citation string from the same updated reference list used by the References page (importing from frontend/src/content/references.ts), ensuring no out-of-range access and that the returned citation is always one of the displayed references."
-        },
-        {
-          "path": "frontend/src/content/references.ts",
-          "operation": "modify",
-          "description": "Add/maintain stable reference keys (or an equivalent lookup helper) that Activity 2 can use for deterministic selection without numeric indices, while keeping the exported ordered 18-item reference list exactly matching the uploaded image."
+          "description": "Add the user-facing notice text exactly as: \"Your information is anonymous the only information we see is what is on the top leadership word community patterns board\" and place it in a readable location near the community patterns section (e.g., above the LeadershipWordPatternsSummary section and/or near the prompt area)."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Ensure Activity 1 affirmation messaging citations remain consistent with and present in the updated References list.",
+      "summary": "Update the Activity 1 submit button label to the exact requested text when not submitting, keeping the submitting label unchanged.",
       "acceptanceCriteria": [
-        "Activity 1 affirmation text does not cite works that are absent from the updated References page list.",
-        "After the References list replacement, Activity 1 continues to generate affirmations without errors and with citations aligned to the updated reference list."
+        "When the submit button is enabled and not submitting, its label reads exactly: \"Share Your leadership word For Feedback\".",
+        "When submitting, the loading label \"Submitting...\" remains unchanged."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/utils/activity1Affirmations.ts",
+          "path": "frontend/src/pages/Activity1LeadershipWordPage.tsx",
           "operation": "modify",
-          "description": "Review and update Activity 1 affirmation templates so all in-text citations correspond to works present in the updated References source-of-truth (frontend/src/content/references.ts). If needed, switch any citation references to use the same stable reference identifiers used elsewhere to prevent drift after future list edits."
-        },
-        {
-          "path": "frontend/src/content/references.ts",
-          "operation": "modify",
-          "description": "If Activity 1 adopts stable reference identifiers, ensure the reference key catalog supports all works cited by Activity 1 affirmations while keeping the ordered 18-item reference list unchanged and exactly matching the uploaded image."
+          "description": "Change the non-loading submit button label from \"Share Your Leadership Word\" to exactly \"Share Your leadership word For Feedback\" while leaving the pending state label \"Submitting...\" unchanged."
         }
       ]
     }

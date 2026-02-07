@@ -2,12 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-fully-replace-the-references-page-content-so-it-displays-the-updated-reference-list-exactly-as-shown-in-the-uploaded-image-preserving-the-same-order-and-formatting-including-punctuation-diacritics-bracketed-notes-and-urls-update-the-source-of-truth-for-the-references-page-to-match-this-list",
-      "featureTitle": "Fully replace the References page content so it displays the updated reference list exactly as shown in the uploaded image, preserving the same order and formatting (including punctuation, diacritics, bracketed notes, and URLs). Update the source of truth for the References page to match this list.",
+      "featureId": "feature-update-activity-1-your-leadership-word-example-words-list-to-exactly-ethical-visionary-authentic-resilient-empathetic-principled-transformational-courageous-accountable-inclusive-decisive-adaptable-humble-inspiring-grounded",
+      "featureTitle": "Update Activity 1 (Your Leadership Word) example words list to exactly: ethical, visionary, authentic, resilient, empathetic, principled, transformational, courageous, accountable, inclusive, decisive, adaptable, humble, inspiring, grounded.",
       "files": [
         "frontend/src/content/proposalContent.ts",
-        "frontend/src/content/references.ts",
-        "frontend/src/pages/ReferencesPage.tsx"
+        "frontend/src/pages/Activity1LeadershipWordPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -23,11 +22,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-activity-2-s-generated-validation-citation-selection-so-it-continues-to-return-citations-from-the-updated-references-list-after-the-replacement-without-relying-on-hard-coded-numeric-indices-that-would-break-when-reference-ordering-changes-the-citation-returned-to-the-ui-must-be-drawn-from-the-same-updated-reference-list-used-by-the-references-page",
-      "featureTitle": "Update Activity 2’s generated validation citation selection so it continues to return citations from the updated References list after the replacement, without relying on hard-coded numeric indices that would break when reference ordering changes. The citation returned to the UI must be drawn from the same updated reference list used by the References page.",
+      "featureId": "feature-on-the-activity-1-your-leadership-word-page-add-the-following-anonymous-information-notice-as-user-facing-text-your-information-is-anonymous-the-only-information-we-see-is-what-is-on-the-top-leadership-word-community-patterns-board",
+      "featureTitle": "On the Activity 1 (Your Leadership Word) page, add the following anonymous-information notice as user-facing text: \"Your information is anonymous the only information we see is what is on the top leadership word community patterns board\".",
       "files": [
-        "frontend/src/content/references.ts",
-        "frontend/src/utils/activity2Validation.ts"
+        "frontend/src/pages/Activity1LeadershipWordPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -43,11 +41,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-activity-1-s-generated-affirmation-messaging-so-any-in-text-citations-it-uses-are-consistent-with-and-present-in-the-updated-references-list-ensuring-activity-1-messaging-remains-aligned-with-the-updated-references-page-after-the-replacement",
-      "featureTitle": "Update Activity 1’s generated affirmation messaging so any in-text citations it uses are consistent with (and present in) the updated References list, ensuring Activity 1 messaging remains aligned with the updated References page after the replacement.",
+      "featureId": "feature-update-the-activity-1-submit-button-label-from-share-your-leadership-word-to-exactly-share-your-leadership-word-for-feedback-when-not-in-the-submitting-loading-state",
+      "featureTitle": "Update the Activity 1 submit button label from \"Share Your Leadership Word\" to exactly \"Share Your leadership word For Feedback\" (when not in the submitting/loading state).",
       "files": [
-        "frontend/src/content/references.ts",
-        "frontend/src/utils/activity1Affirmations.ts"
+        "frontend/src/pages/Activity1LeadershipWordPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",

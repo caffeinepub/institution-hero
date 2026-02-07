@@ -23,6 +23,7 @@ export interface ResilientLeadershipActivity {
     protectiveFactor: string;
 }
 export interface Quote {
+    movieReference: string;
     quote: string;
     genre: QuoteGenre;
     attribution: string;
@@ -41,9 +42,14 @@ export enum ChallengeType {
 }
 export enum QuoteGenre {
     starWars = "starWars",
+    transformers = "transformers",
     batman = "batman",
-    harryPotter = "harryPotter",
-    avengers = "avengers"
+    threeKings = "threeKings",
+    kingsman = "kingsman",
+    darkKnightTrilogy = "darkKnightTrilogy",
+    avengers = "avengers",
+    infinite = "infinite",
+    warDogs = "warDogs"
 }
 export enum UserRole {
     admin = "admin",
