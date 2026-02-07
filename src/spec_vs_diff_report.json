@@ -1,15 +1,41 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-07T05:04:22.942Z",
-  "summary": "Diff indicates Activity 1 content/UI text updates were made: the Activity 1 examples list was updated in proposalContent, and Activity 1 page UI was updated to include the anonymity notice and change the submit button label while preserving the \"Submitting...\" loading label.",
-  "missing_requirements": [],
-  "hallucinated_features": [],
-  "confidence": 0.72,
+  "generatedAt": "2026-02-07T05:43:22.491Z",
+  "summary": "REQ-3 appears implemented via a new /leadership-board route, a new LeadershipBoardPage with the required 2-column layout/headings, and a new \"Leadership Board\" nav link. REQ-1 appears implemented by generating Activity 2 validation using only heroic/protective/micro-solution fields and by storing only those fields for validation. REQ-2 is clearly implemented for Activity 1 (blocks affirmation generation with an English error containing code \"000\"); Activity 2’s blocking/error text is not fully verifiable due to truncation of the relevant section.",
+  "missing_requirements": [
+    {
+      "id": "REQ-2",
+      "requirement": "Activity 2: When the user requests validation (or generate another), if the input is determined to be Villainous/negative, the UI shows an error containing \"000\" and does not display a validation result.",
+      "reason": "The Activity2ResilientLeadershipPage.tsx diff is truncated right after the villainous-input check begins, so the presence of the required user-facing error text including literal code \"000\" and the explicit prevention/clearing of any displayed validation result cannot be confirmed from the provided diff summary.",
+      "evidence": [
+        "frontend/src/pages/Activity2ResilientLeadershipPage.tsx (truncated)"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "SessionOutlinePage and SlidesPage changed to placeholder components returning null.",
+      "reason": "These changes are unrelated to REQ-1/REQ-2/REQ-3 (validation blocking and Leadership Board tab/page) and were not requested in the BuildRequest.",
+      "evidence": [
+        "frontend/src/pages/SessionOutlinePage.tsx",
+        "frontend/src/pages/SlidesPage.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.62,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/content/proposalContent.ts",
+    "frontend/src/App.tsx",
+    "frontend/src/components/AppShell.tsx",
+    "frontend/src/pages/ActivitiesPage.tsx",
     "frontend/src/pages/Activity1LeadershipWordPage.tsx",
+    "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
+    "frontend/src/pages/LeadershipBoardPage.tsx",
+    "frontend/src/pages/SessionOutlinePage.tsx",
+    "frontend/src/pages/SlidesPage.tsx",
+    "frontend/src/utils/activity2Validation.ts",
+    "frontend/src/utils/isVillainousInput.ts",
     "project_state.json"
   ]
 }

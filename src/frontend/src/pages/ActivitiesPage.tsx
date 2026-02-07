@@ -34,7 +34,7 @@ export default function ActivitiesPage() {
               </p>
               <p className="text-muted-foreground mb-6">{proposalContent.activities.activity1.description}</p>
               <Link
-                to="/activities/leadership-word"
+                to="/activity-1"
                 className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors w-full justify-center"
               >
                 Start Activity 1
@@ -60,7 +60,7 @@ export default function ActivitiesPage() {
               </p>
               <p className="text-muted-foreground mb-6">{proposalContent.activities.activity2.description}</p>
               <Link
-                to="/activities/resilient-leadership"
+                to="/activity-2"
                 className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors w-full justify-center"
               >
                 Start Activity 2

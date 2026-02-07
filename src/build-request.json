@@ -1,68 +1,76 @@
 {
   "kind": "build_request",
-  "title": "Activity 1 (Your Leadership Word) copy and button label updates",
+  "title": "Block Villainous (negative) validations with error code 000; add Leadership Board tab with 2-column feedback",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Update Activity 1 (Your Leadership Word) example words list to exactly: ethical, visionary, authentic, resilient, empathetic, principled, transformational, courageous, accountable, inclusive, decisive, adaptable, humble, inspiring, grounded.",
+      "text": "Update Activity 2 validation so that only the Heroic response can be validated. When the user triggers validation (\"Validate My Micro-Solution\" / generate another), do not use the Villain response to produce any validation output.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-4"
         ],
         "quotes": [
-          "update examples to \nethical\nvisionary\nauthentic\nresilient\nempathetic\nprincipled\ntransformational\ncourageous\naccountable\ninclusive\ndecisive\nadaptable\nhumble\ninspiring\ngrounded"
+          "only validate Heroic responses"
         ]
       },
       "acceptanceCriteria": [
-        "On the Activity 1 page, the 'Examples:' line displays the updated list in the same order provided by the user.",
-        "The examples content is sourced consistently from the Activity 1 content (proposalContent.activities.activity1.examples) so it is not duplicated in multiple places."
+        "In Activity 2, the generated validation message/citation is derived only from the Heroic response (and other non-villain fields as needed), and never from the Villain response text.",
+        "The UI still allows entering a Villain response as part of the submission form, but it is not used in the validation/feedback generation step."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "On the Activity 1 (Your Leadership Word) page, add the following anonymous-information notice as user-facing text: \"Your information is anonymous the only information we see is what is on the top leadership word community patterns board\".",
+      "text": "In both activities, block validation/feedback generation when the user input is Villainous/negative and show an error that includes error code \"000\". Do not produce an affirmation/validation result in this case.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-4"
         ],
         "quotes": [
-          "and add \n\nYour information is anonymous the only information we see is what is on the top leadership word community patterns board"
+          "in the both activities do not validate Villainous reponses ( any negative answers ) give an error code of 000 any negative answers",
+          "only validate Heroic responses"
         ]
       },
       "acceptanceCriteria": [
-        "The anonymous-information notice appears on Activity 1 in a readable location near the community patterns context (e.g., near the prompt area and/or near the community patterns board section).",
-        "The notice text matches exactly (including capitalization) as provided by the user."
+        "Activity 1: When the user requests feedback generation (affirmation), if the input is determined to be Villainous/negative, the UI shows an error containing \"000\" and does not display an affirmation result.",
+        "Activity 2: When the user requests validation (or generate another), if the input is determined to be Villainous/negative, the UI shows an error containing \"000\" and does not display a validation result.",
+        "The error message is user-facing English text and clearly states that only Heroic responses can be validated, including the literal code \"000\"."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Update the Activity 1 submit button label from \"Share Your Leadership Word\" to exactly \"Share Your leadership word For Feedback\" (when not in the submitting/loading state).",
+      "text": "Add a new navigation tab labeled \"Leadership Board\" that routes to a new page showing community feedback in a 2-column layout: Column 1 \"Leadership Words\" and Column 2 \"Community Solutions\".",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-4"
         ],
         "quotes": [
-          "update Share Your leadership word button to say  Share Your leadership word For Feedback"
+          "create a tab titled Leadership Board and use 2 columns",
+          "one column to be leadership words",
+          "two column community solutions",
+          "and list the feed back in the tab"
         ]
       },
       "acceptanceCriteria": [
-        "When the submit button is enabled and not submitting, its label reads exactly: \"Share Your leadership word For Feedback\".",
-        "When submitting, the loading label \"Submitting...\" remains unchanged."
+        "A new \"Leadership Board\" link appears in the main navigation (desktop and mobile) alongside the existing nav items.",
+        "Navigating to the Leadership Board page shows two visible columns on desktop (stacking responsibly on small screens) with headings exactly \"Leadership Words\" and \"Community Solutions\".",
+        "The \"Leadership Words\" column renders the existing leadership word community feedback (using the existing leadership words summary / counts UI).",
+        "The \"Community Solutions\" column renders the existing community micro-solution feedback list (using the existing micro-solutions list UI)."
       ]
     }
   ],
   "constraints": [
-    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
-    "Use English for all user-facing text."
+    "Do not edit files under frontend/immutablePaths (e.g., frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui).",
+    "Backend must remain a single Motoko actor in backend/main.mo; only introduce migration.mo if persisted state schema changes (not required for purely UI/validation-logic changes).",
+    "Use English for any user-facing text."
   ],
   "nonGoals": [
-    "Do not change backend data models, storage, or submission behavior for Activity 1.",
-    "Do not change Activity 2 content or UI.",
-    "Do not change the post-submission thank-you screen text unless required by the three requested changes."
+    "Adding third-party authentication providers (only Internet Identity is supported).",
+    "Adding external databases or non-IC backend services.",
+    "Implementing real-time updates (e.g., WebSockets) for the Leadership Board."
   ],
   "imageRequirements": {
     "required": [],

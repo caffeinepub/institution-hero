@@ -2,11 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-activity-1-your-leadership-word-example-words-list-to-exactly-ethical-visionary-authentic-resilient-empathetic-principled-transformational-courageous-accountable-inclusive-decisive-adaptable-humble-inspiring-grounded",
-      "featureTitle": "Update Activity 1 (Your Leadership Word) example words list to exactly: ethical, visionary, authentic, resilient, empathetic, principled, transformational, courageous, accountable, inclusive, decisive, adaptable, humble, inspiring, grounded.",
+      "featureId": "feature-update-activity-2-validation-so-that-only-the-heroic-response-can-be-validated-when-the-user-triggers-validation-validate-my-micro-solution-generate-another-do-not-use-the-villain-response-to-produce-any-validation-output",
+      "featureTitle": "Update Activity 2 validation so that only the Heroic response can be validated. When the user triggers validation (\"Validate My Micro-Solution\" / generate another), do not use the Villain response to produce any validation output.",
       "files": [
-        "frontend/src/content/proposalContent.ts",
-        "frontend/src/pages/Activity1LeadershipWordPage.tsx"
+        "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
+        "frontend/src/utils/activity2Validation.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -22,10 +22,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-on-the-activity-1-your-leadership-word-page-add-the-following-anonymous-information-notice-as-user-facing-text-your-information-is-anonymous-the-only-information-we-see-is-what-is-on-the-top-leadership-word-community-patterns-board",
-      "featureTitle": "On the Activity 1 (Your Leadership Word) page, add the following anonymous-information notice as user-facing text: \"Your information is anonymous the only information we see is what is on the top leadership word community patterns board\".",
+      "featureId": "feature-in-both-activities-block-validation-feedback-generation-when-the-user-input-is-villainous-negative-and-show-an-error-that-includes-error-code-000-do-not-produce-an-affirmation-validation-result-in-this-case",
+      "featureTitle": "In both activities, block validation/feedback generation when the user input is Villainous/negative and show an error that includes error code \"000\". Do not produce an affirmation/validation result in this case.",
       "files": [
-        "frontend/src/pages/Activity1LeadershipWordPage.tsx"
+        "frontend/src/pages/Activity1LeadershipWordPage.tsx",
+        "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
+        "frontend/src/utils/isVillainousInput.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -41,10 +43,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-the-activity-1-submit-button-label-from-share-your-leadership-word-to-exactly-share-your-leadership-word-for-feedback-when-not-in-the-submitting-loading-state",
-      "featureTitle": "Update the Activity 1 submit button label from \"Share Your Leadership Word\" to exactly \"Share Your leadership word For Feedback\" (when not in the submitting/loading state).",
+      "featureId": "feature-add-a-new-navigation-tab-labeled-leadership-board-that-routes-to-a-new-page-showing-community-feedback-in-a-2-column-layout-column-1-leadership-words-and-column-2-community-solutions",
+      "featureTitle": "Add a new navigation tab labeled \"Leadership Board\" that routes to a new page showing community feedback in a 2-column layout: Column 1 \"Leadership Words\" and Column 2 \"Community Solutions\".",
       "files": [
-        "frontend/src/pages/Activity1LeadershipWordPage.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/components/AppShell.tsx",
+        "frontend/src/pages/LeadershipBoardPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",

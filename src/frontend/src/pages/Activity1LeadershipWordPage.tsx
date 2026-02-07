@@ -6,11 +6,25 @@ import LeadershipWordPatternsSummary from '../components/LeadershipWordPatternsS
 import { proposalContent } from '../content/proposalContent';
 import { useSubmitLeadershipWord, useGetNextActivity1Quote } from '../hooks/useQueries';
 import { useActor } from '../hooks/useActor';
-import { MessageSquare, Send, CheckCircle, Sparkles, AlertCircle, Loader2, Info } from 'lucide-react';
+import { Sparkles, Send, CheckCircle, RefreshCw, AlertCircle, Loader2, Info } from 'lucide-react';
 import { generateAffirmation } from '../utils/activity1Affirmations';
-import { formatQuoteGenre } from '../utils/quoteFormatting';
 import { toUserFacingError } from '../utils/userFacingError';
+import { hasVillainousInput } from '../utils/isVillainousInput';
 import { Quote } from '../backend';
+
+interface LastSubmission {
+  word: string;
+  why: string;
+  roleModel: string;
+  resilienceExample: string;
+  actionStep: string;
+}
+
+interface AffirmationResult {
+  citation: string;
+  message: string;
+  quote: Quote | null;
+}
 
 export default function Activity1LeadershipWordPage() {
   const navigate = useNavigate();
@@ -21,9 +35,8 @@ export default function Activity1LeadershipWordPage() {
   const [resilienceExample, setResilienceExample] = useState('');
   const [actionStep, setActionStep] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [showAffirmation, setShowAffirmation] = useState(false);
-  const [affirmationText, setAffirmationText] = useState('');
-  const [quote, setQuote] = useState<Quote | null>(null);
+  const [lastSubmission, setLastSubmission] = useState<LastSubmission | null>(null);
+  const [affirmationResult, setAffirmationResult] = useState<AffirmationResult | null>(null);
   const [submissionError, setSubmissionError] = useState<string>('');
   const [quoteError, setQuoteError] = useState<string>('');
 
@@ -36,12 +49,6 @@ export default function Activity1LeadershipWordPage() {
     // Clear any previous errors
     setSubmissionError('');
 
-    // Validate single word
-    if (word.trim().split(/\s+/).length > 1) {
-      setSubmissionError('Please enter only ONE word that describes the kind of leader you admire.');
-      return;
-    }
-
     // Check if actor is ready
     if (!actor || isActorFetching) {
       setSubmissionError('Connection is still initializing. Please wait a moment and try again.');
@@ -50,13 +57,24 @@ export default function Activity1LeadershipWordPage() {
 
     try {
       await submitMutation.mutateAsync({
-        word: word.trim().toLowerCase(),
+        word,
         why,
         roleModel,
         resilienceExample,
         actionStep,
       });
+      
+      // Store the submission for affirmation
+      setLastSubmission({
+        word,
+        why,
+        roleModel,
+        resilienceExample,
+        actionStep,
+      });
+      
       setSubmitted(true);
+      setAffirmationResult(null);
       setSubmissionError('');
     } catch (error) {
       console.error('Failed to submit:', error);
@@ -64,39 +82,91 @@ export default function Activity1LeadershipWordPage() {
     }
   };
 
-  const handleGenerateAffirmation = async () => {
+  const handleGetAffirmation = async () => {
     // Check if actor is ready before fetching quote
     if (!actor || isActorFetching) {
       setQuoteError('Connection is still initializing. Please wait a moment and try again.');
       return;
     }
 
-    setQuoteError('');
-    
-    const affirmation = generateAffirmation({
-      word,
-      why,
-      roleModel,
-      resilienceExample,
-      actionStep,
-    });
-    
-    setAffirmationText(affirmation);
-    
-    // Fetch quote from backend
-    try {
-      const fetchedQuote = await getQuoteMutation.mutateAsync();
-      setQuote(fetchedQuote);
-    } catch (error) {
-      console.error('Failed to fetch quote:', error);
-      setQuoteError(toUserFacingError(error));
+    if (lastSubmission) {
+      setQuoteError('');
+      
+      // Check for villainous input
+      if (hasVillainousInput(
+        lastSubmission.word,
+        lastSubmission.why,
+        lastSubmission.roleModel,
+        lastSubmission.resilienceExample,
+        lastSubmission.actionStep
+      )) {
+        setQuoteError('Error 000: Only Heroic responses can be validated. Please ensure your input reflects positive leadership qualities.');
+        return;
+      }
+      
+      const message = generateAffirmation(lastSubmission);
+      
+      // Fetch quote from backend
+      try {
+        const fetchedQuote = await getQuoteMutation.mutateAsync();
+        setAffirmationResult({
+          citation: message,
+          message: message,
+          quote: fetchedQuote,
+        });
+      } catch (error) {
+        console.error('Failed to fetch quote:', error);
+        setQuoteError(toUserFacingError(error));
+        setAffirmationResult({
+          citation: message,
+          message: message,
+          quote: null,
+        });
+      }
     }
-    
-    setShowAffirmation(true);
+  };
+
+  const handleGenerateAnother = async () => {
+    // Check if actor is ready before fetching quote
+    if (!actor || isActorFetching) {
+      setQuoteError('Connection is still initializing. Please wait a moment and try again.');
+      return;
+    }
+
+    if (lastSubmission) {
+      setQuoteError('');
+      
+      // Check for villainous input
+      if (hasVillainousInput(
+        lastSubmission.word,
+        lastSubmission.why,
+        lastSubmission.roleModel,
+        lastSubmission.resilienceExample,
+        lastSubmission.actionStep
+      )) {
+        setQuoteError('Error 000: Only Heroic responses can be validated. Please ensure your input reflects positive leadership qualities.');
+        return;
+      }
+      
+      const message = generateAffirmation(lastSubmission);
+      
+      // Fetch next quote from backend
+      try {
+        const fetchedQuote = await getQuoteMutation.mutateAsync();
+        setAffirmationResult({
+          citation: message,
+          message: message,
+          quote: fetchedQuote,
+        });
+      } catch (error) {
+        console.error('Failed to fetch quote:', error);
+        setQuoteError(toUserFacingError(error));
+      }
+    }
   };
 
   const handleInputChange = () => {
-    // Clear error when user edits inputs
+    // Clear submission error when user edits inputs
     if (submissionError) {
       setSubmissionError('');
     }
@@ -114,62 +184,93 @@ export default function Activity1LeadershipWordPage() {
             Your leadership word has been shared with the community.
           </p>
 
-          {!showAffirmation && (
+          {/* Affirmation Button and Result */}
+          {!affirmationResult ? (
             <div className="mb-8">
               <button
-                onClick={handleGenerateAffirmation}
+                onClick={handleGetAffirmation}
                 disabled={getQuoteMutation.isPending || !isActorReady}
                 className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {getQuoteMutation.isPending ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-5 w-5 animate-spin" />
                     Loading...
                   </>
                 ) : (
                   <>
-                    <Sparkles className="h-4 w-4" />
-                    Get a Word of Affirmation
+                    <Sparkles className="h-5 w-5" />
+                    Get Your Affirmation
                   </>
                 )}
               </button>
             </div>
-          )}
+          ) : (
+            <div className="mb-8 rounded-lg border border-border bg-card p-6 text-left space-y-4">
+              <div className="flex items-start gap-3">
+                <Sparkles className="h-6 w-6 text-primary shrink-0 mt-1" />
+                <div className="flex-1">
+                  <h2 className="text-xl font-semibold text-foreground mb-3">
+                    Your Leadership Word is Affirmed!
+                  </h2>
+                  
+                  <p className="text-muted-foreground mb-4">
+                    {affirmationResult.message}
+                  </p>
 
-          {showAffirmation && (
-            <div className="mb-8 space-y-4">
-              <div className="p-6 rounded-lg border border-border bg-card text-left">
-                <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="h-5 w-5 text-primary shrink-0" />
-                  <h2 className="text-lg font-semibold text-foreground">Your Word of Affirmation</h2>
-                </div>
-                <p className="text-foreground leading-relaxed">{affirmationText}</p>
-              </div>
-
-              {quote && (
-                <div className="p-6 rounded-lg border border-border bg-muted/50 text-left">
-                  <div className="rounded-lg bg-background/50 p-4 border-l-4 border-primary">
-                    <p className="text-foreground italic mb-3">
-                      "{quote.quote}"
-                    </p>
-                    {quote.attribution && (
-                      <p className="text-sm text-muted-foreground mb-1">
-                        — {quote.attribution}
+                  {/* Quote */}
+                  {affirmationResult.quote && (
+                    <div className="rounded-lg bg-muted/50 p-4 mb-4 border-l-4 border-primary">
+                      <p className="text-foreground italic mb-3">
+                        "{affirmationResult.quote.quote}"
                       </p>
-                    )}
-                    <p className="text-xs text-muted-foreground font-medium">
-                      Source: {quote.movieReference}
-                    </p>
+                      {affirmationResult.quote.attribution && (
+                        <p className="text-sm text-muted-foreground mb-1">
+                          — {affirmationResult.quote.attribution}
+                        </p>
+                      )}
+                      <p className="text-xs text-muted-foreground font-medium">
+                        Source: {affirmationResult.quote.movieReference}
+                      </p>
+                    </div>
+                  )}
+
+                  {quoteError && (
+                    <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20 mb-4">
+                      <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                      <p className="text-sm text-destructive">{quoteError}</p>
+                    </div>
+                  )}
+
+                  {/* Generate Another Button */}
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      onClick={handleGenerateAnother}
+                      disabled={getQuoteMutation.isPending || !isActorReady}
+                      className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {getQuoteMutation.isPending ? (
+                        <>
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                          Loading...
+                        </>
+                      ) : (
+                        <>
+                          <RefreshCw className="h-3 w-3" />
+                          Generate Another
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
-              )}
+              </div>
+            </div>
+          )}
 
-              {quoteError && (
-                <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
-                  <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-                  <p className="text-sm text-destructive">{quoteError}</p>
-                </div>
-              )}
+          {quoteError && !affirmationResult && (
+            <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20 mb-8">
+              <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+              <p className="text-sm text-destructive">{quoteError}</p>
             </div>
           )}
 
@@ -190,11 +291,17 @@ export default function Activity1LeadershipWordPage() {
   const isActorReady = !!actor && !isActorFetching;
   const isSubmitDisabled = submitMutation.isPending || !isActorReady;
 
+  // Parse examples from comma-separated string
+  const examplesArray = proposalContent.activities.activity1.examples
+    .split(',')
+    .map((ex) => ex.trim())
+    .filter((ex) => ex.length > 0);
+
   return (
     <PageSection>
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
-          <MessageSquare className="h-10 w-10 text-primary" />
+          <Sparkles className="h-10 w-10 text-primary" />
           <div>
             <h1 className="text-4xl font-bold text-foreground">
               {proposalContent.activities.activity1.title}
@@ -203,21 +310,29 @@ export default function Activity1LeadershipWordPage() {
           </div>
         </div>
 
-        <div className="rounded-lg border border-border bg-muted/50 p-6 mb-8">
-          <h2 className="text-lg font-semibold mb-3">The Prompt</h2>
-          <p className="text-foreground text-xl mb-2">{proposalContent.activities.activity1.prompt}</p>
-          <p className="text-sm text-muted-foreground">
-            Examples: {proposalContent.activities.activity1.examples}
-          </p>
+        <div className="rounded-lg border border-border bg-muted/50 p-6 mb-4">
+          <h2 className="text-lg font-semibold mb-3">Prompt</h2>
+          <p className="text-muted-foreground mb-4">{proposalContent.activities.activity1.prompt}</p>
+          <div>
+            <p className="text-sm font-medium mb-2">Examples:</p>
+            <div className="flex flex-wrap gap-2">
+              {examplesArray.map((example, index) => (
+                <span
+                  key={index}
+                  className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium"
+                >
+                  {example}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="rounded-lg border border-border bg-card p-4 mb-8">
-          <div className="flex items-start gap-3">
-            <Info className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-            <p className="text-sm text-muted-foreground">
-              Your information is anonymous the only information we see is what is on the top leadership word community patterns board
-            </p>
-          </div>
+        <div className="rounded-lg border border-border bg-card p-4 mb-8 flex items-start gap-3">
+          <Info className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+          <p className="text-sm text-muted-foreground">
+            Your information is anonymous the only information we see is what is on the top leadership word community solutions
+          </p>
         </div>
 
         <SignInGate>
@@ -248,7 +363,7 @@ export default function Activity1LeadershipWordPage() {
                     setWord(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="Enter ONE word"
+                  placeholder="e.g., Resilient, Empathetic, Visionary..."
                   required
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 />
@@ -256,7 +371,7 @@ export default function Activity1LeadershipWordPage() {
 
               <div>
                 <label htmlFor="why" className="block text-sm font-medium mb-2">
-                  Why did you choose that word? <span className="text-destructive">*</span>
+                  Why does this word resonate with you? <span className="text-destructive">*</span>
                 </label>
                 <textarea
                   id="why"
@@ -265,7 +380,7 @@ export default function Activity1LeadershipWordPage() {
                     setWhy(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="Share your reasoning..."
+                  placeholder="Share your personal connection to this word..."
                   required
                   rows={3}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
@@ -274,7 +389,7 @@ export default function Activity1LeadershipWordPage() {
 
               <div>
                 <label htmlFor="roleModel" className="block text-sm font-medium mb-2">
-                  Who in your life reflects that word? <span className="text-destructive">*</span>
+                  Who embodies this quality? <span className="text-destructive">*</span>
                 </label>
                 <input
                   id="roleModel"
@@ -284,7 +399,7 @@ export default function Activity1LeadershipWordPage() {
                     setRoleModel(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="Teacher, coach, peer..."
+                  placeholder="Name a role model or leader..."
                   required
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 />
@@ -292,7 +407,7 @@ export default function Activity1LeadershipWordPage() {
 
               <div>
                 <label htmlFor="resilienceExample" className="block text-sm font-medium mb-2">
-                  How does that word show resilience? <span className="text-destructive">*</span>
+                  When have you demonstrated this quality? <span className="text-destructive">*</span>
                 </label>
                 <textarea
                   id="resilienceExample"
@@ -301,7 +416,7 @@ export default function Activity1LeadershipWordPage() {
                     setResilienceExample(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="Describe the connection..."
+                  placeholder="Describe a specific moment or experience..."
                   required
                   rows={3}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
@@ -310,7 +425,7 @@ export default function Activity1LeadershipWordPage() {
 
               <div>
                 <label htmlFor="actionStep" className="block text-sm font-medium mb-2">
-                  What is one small action YOU can take this week? <span className="text-destructive">*</span>
+                  What's one action you can take to embody this word more? <span className="text-destructive">*</span>
                 </label>
                 <textarea
                   id="actionStep"
@@ -319,7 +434,7 @@ export default function Activity1LeadershipWordPage() {
                     setActionStep(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="Your action step..."
+                  placeholder="Describe a concrete action step..."
                   required
                   rows={3}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
@@ -327,6 +442,7 @@ export default function Activity1LeadershipWordPage() {
               </div>
             </div>
 
+            {/* Submission error */}
             {submissionError && (
               <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
                 <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
@@ -341,22 +457,18 @@ export default function Activity1LeadershipWordPage() {
             >
               {submitMutation.isPending ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="h-5 w-5 animate-spin" />
                   Submitting...
                 </>
               ) : (
                 <>
-                  <Send className="h-4 w-4" />
-                  Share Your leadership word For Feedback
+                  <Send className="h-5 w-5" />
+                  Share Your Leadership Word For Feedback
                 </>
               )}
             </button>
           </form>
         </SignInGate>
-
-        <div className="mt-12">
-          <LeadershipWordPatternsSummary />
-        </div>
       </div>
     </PageSection>
   );

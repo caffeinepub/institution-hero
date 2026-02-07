@@ -20,7 +20,7 @@ export default function MicroSolutionsCommunityList() {
       <div className="rounded-lg border border-border bg-card p-6">
         <div className="flex items-center gap-2 mb-4">
           <Users className="h-5 w-5 text-primary" />
-          <h3 className="text-lg font-semibold">Community Micro-Solutions</h3>
+          <h3 className="text-lg font-semibold">community solutions</h3>
         </div>
         <p className="text-muted-foreground">Loading solutions...</p>
       </div>
@@ -32,7 +32,7 @@ export default function MicroSolutionsCommunityList() {
       <div className="rounded-lg border border-border bg-card p-6">
         <div className="flex items-center gap-2 mb-4">
           <Users className="h-5 w-5 text-primary" />
-          <h3 className="text-lg font-semibold">Community Micro-Solutions</h3>
+          <h3 className="text-lg font-semibold">community solutions</h3>
         </div>
         <p className="text-muted-foreground">
           No solutions shared yet. Be the first to contribute a micro-solution!
@@ -45,7 +45,7 @@ export default function MicroSolutionsCommunityList() {
     <div className="rounded-lg border border-border bg-card p-6">
       <div className="flex items-center gap-2 mb-4">
         <Users className="h-5 w-5 text-primary" />
-        <h3 className="text-lg font-semibold">Community Micro-Solutions</h3>
+        <h3 className="text-lg font-semibold">community solutions</h3>
       </div>
       <p className="text-sm text-muted-foreground mb-6">
         Heroic responses from student leaders addressing real campus challenges:

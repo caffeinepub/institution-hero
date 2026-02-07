@@ -1,55 +1,78 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Activity 1 copy updates (examples list, anonymity notice, submit button label)",
+  "title": "Heroic-only validation, villainous input blocking (000), and Leadership Board page",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Update Activity 1 example words list in proposal content to the exact provided sequence and keep the Activity 1 page sourcing it from proposalContent.",
+      "summary": "Ensure Activity 2 validation/citation generation never uses Villain response text and is derived only from Heroic and other non-villain fields.",
       "acceptanceCriteria": [
-        "On the Activity 1 page, the 'Examples:' line displays the updated list in the same order provided by the user.",
-        "The examples content is sourced consistently from the Activity 1 content (proposalContent.activities.activity1.examples) so it is not duplicated in multiple places."
+        "In Activity 2, the generated validation message/citation is derived only from the Heroic response (and other non-villain fields as needed), and never from the Villain response text.",
+        "The UI still allows entering a Villain response as part of the submission form, but it is not used in the validation/feedback generation step."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/content/proposalContent.ts",
+          "path": "frontend/src/utils/activity2Validation.ts",
           "operation": "modify",
-          "description": "Replace proposalContent.activities.activity1.examples with exactly: \"ethical, visionary, authentic, resilient, empathetic, principled, transformational, courageous, accountable, inclusive, decisive, adaptable, humble, inspiring, grounded.\" (including punctuation and order)."
+          "description": "Remove any Villain-response-bearing fields from the Activity 2 validation input type and ensure theme matching/citation selection and message generation only consider Heroic + allowed non-villain fields (e.g., microSolution, protectiveFactor, heroicResponse)."
         },
         {
-          "path": "frontend/src/pages/Activity1LeadershipWordPage.tsx",
+          "path": "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
           "operation": "modify",
-          "description": "Ensure the Activity 1 page continues to render the examples line directly from proposalContent.activities.activity1.examples (no hardcoded/duplicated examples elsewhere)."
+          "description": "Adjust the call site so the object passed into generateActivity2Validation excludes villainResponse (pass only the allowed non-villain fields), ensuring validation output cannot be influenced by the Villain text."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Add the exact anonymous-information notice text to the Activity 1 page near the community patterns context.",
+      "summary": "Block feedback/validation generation in Activities 1 and 2 when the relevant user input is villainous/negative; show a user-facing error containing code \"000\" and do not display results.",
       "acceptanceCriteria": [
-        "The anonymous-information notice appears on Activity 1 in a readable location near the community patterns context (e.g., near the prompt area and/or near the community patterns board section).",
-        "The notice text matches exactly (including capitalization) as provided by the user."
+        "Activity 1: When the user requests feedback generation (affirmation), if the input is determined to be Villainous/negative, the UI shows an error containing \"000\" and does not display an affirmation result.",
+        "Activity 2: When the user requests validation (or generate another), if the input is determined to be Villainous/negative, the UI shows an error containing \"000\" and does not display a validation result.",
+        "The error message is user-facing English text and clearly states that only Heroic responses can be validated, including the literal code \"000\"."
       ],
       "file_operations": [
         {
+          "path": "frontend/src/utils/isVillainousInput.ts",
+          "operation": "create",
+          "description": "Add a small shared utility that classifies a string (or combined strings) as villainous/negative using a conservative heuristic (keyword/phrase matching + basic normalization) suitable for client-side blocking before generating affirmations/validations."
+        },
+        {
           "path": "frontend/src/pages/Activity1LeadershipWordPage.tsx",
           "operation": "modify",
-          "description": "Add the user-facing notice text exactly as: \"Your information is anonymous the only information we see is what is on the top leadership word community patterns board\" and place it in a readable location near the community patterns section (e.g., above the LeadershipWordPatternsSummary section and/or near the prompt area)."
+          "description": "Before generating an affirmation (\"Get Your Affirmation\" and \"Generate Another\"), evaluate the relevant user inputs with isVillainousInput; if villainous/negative, show a user-facing error that includes code \"000\" (e.g., \"Error 000: Only Heroic responses can be validated...\") and do not set/render affirmationResult."
+        },
+        {
+          "path": "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
+          "operation": "modify",
+          "description": "Before generating validation (\"Validate My Micro-Solution\" and \"Generate Another\"), evaluate the relevant user inputs (heroicResponse and any other non-villain fields used for validation) with isVillainousInput; if villainous/negative, show a user-facing error that includes code \"000\" and do not set/render validationResult."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Update the Activity 1 submit button label to the exact requested text when not submitting, keeping the submitting label unchanged.",
+      "summary": "Add a new \"Leadership Board\" navigation tab and page that renders community feedback in a responsive 2-column layout.",
       "acceptanceCriteria": [
-        "When the submit button is enabled and not submitting, its label reads exactly: \"Share Your leadership word For Feedback\".",
-        "When submitting, the loading label \"Submitting...\" remains unchanged."
+        "A new \"Leadership Board\" link appears in the main navigation (desktop and mobile) alongside the existing nav items.",
+        "Navigating to the Leadership Board page shows two visible columns on desktop (stacking responsibly on small screens) with headings exactly \"Leadership Words\" and \"Community Solutions\".",
+        "The \"Leadership Words\" column renders the existing leadership word community feedback (using the existing leadership words summary / counts UI).",
+        "The \"Community Solutions\" column renders the existing community micro-solution feedback list (using the existing micro-solutions list UI)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/Activity1LeadershipWordPage.tsx",
+          "path": "frontend/src/pages/LeadershipBoardPage.tsx",
+          "operation": "create",
+          "description": "Create the Leadership Board page using the existing PageSection layout, and render a responsive two-column grid with headings exactly \"Leadership Words\" and \"Community Solutions\", using the existing LeadershipWordPatternsSummary and MicroSolutionsCommunityList components."
+        },
+        {
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Change the non-loading submit button label from \"Share Your Leadership Word\" to exactly \"Share Your leadership word For Feedback\" while leaving the pending state label \"Submitting...\" unchanged."
+          "description": "Register a new route (e.g., /leadership-board) wired to LeadershipBoardPage so the new tab navigates to the new page."
+        },
+        {
+          "path": "frontend/src/components/AppShell.tsx",
+          "operation": "modify",
+          "description": "Add a new navLinks item labeled \"Leadership Board\" so it appears in both desktop navigation and the mobile menu alongside existing items."
         }
       ]
     }

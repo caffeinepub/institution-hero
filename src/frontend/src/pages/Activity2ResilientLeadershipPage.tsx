@@ -6,32 +6,18 @@ import MicroSolutionsCommunityList from '../components/MicroSolutionsCommunityLi
 import { proposalContent } from '../content/proposalContent';
 import { useSubmitResilientLeadershipActivity, useGetNextActivity2Quote } from '../hooks/useQueries';
 import { useActor } from '../hooks/useActor';
-import { Users, Send, CheckCircle, Sparkles, RefreshCw, AlertCircle, Loader2 } from 'lucide-react';
+import { Users, Send, CheckCircle, Sparkles, RefreshCw, AlertCircle, Loader2, Info } from 'lucide-react';
 import { generateActivity2Validation } from '../utils/activity2Validation';
 import { formatQuoteGenre } from '../utils/quoteFormatting';
 import { ChallengeTypeKey, mapChallengeTypeKeyToEnum } from '../utils/challengeTypeMapping';
 import { toUserFacingError } from '../utils/userFacingError';
+import { hasVillainousInput } from '../utils/isVillainousInput';
 import { Quote } from '../backend';
 
-const challengeOptions: { value: ChallengeTypeKey; label: string }[] = [
-  { value: 'academicPressure', label: 'Academic Pressure' },
-  { value: 'mentalHealth', label: 'Mental Health' },
-  { value: 'financialStress', label: 'Financial Stress' },
-  { value: 'onlineLearning', label: 'Online Learning' },
-  { value: 'timeManagement', label: 'Time Management' },
-  { value: 'bullying', label: 'Bullying' },
-  { value: 'socialIsolation', label: 'Social Isolation' },
-];
-
-const protectiveFactorOptions = ['Support', 'Mentorship', 'Collaboration'];
-
 interface LastSubmission {
-  microSolution: string;
-  protectiveFactor: string;
-  villainResponse: string;
   heroicResponse: string;
-  challengeType?: string;
-  customChallenge?: string;
+  protectiveFactor: string;
+  microSolution: string;
 }
 
 interface ValidationResult {
@@ -40,20 +26,28 @@ interface ValidationResult {
   quote: Quote | null;
 }
 
+const CHALLENGE_OPTIONS: ChallengeTypeKey[] = [
+  'academicPressure',
+  'mentalHealth',
+  'financialStress',
+  'onlineLearning',
+  'timeManagement',
+  'bullying',
+  'socialIsolation',
+];
+
 export default function Activity2ResilientLeadershipPage() {
   const navigate = useNavigate();
   const { actor, isFetching: isActorFetching } = useActor();
-  const [challengeTypeKey, setChallengeTypeKey] = useState<ChallengeTypeKey | ''>('');
+  const [challengeType, setChallengeType] = useState<ChallengeTypeKey | null>(null);
   const [customChallenge, setCustomChallenge] = useState('');
   const [villainResponse, setVillainResponse] = useState('');
   const [heroicResponse, setHeroicResponse] = useState('');
   const [protectiveFactor, setProtectiveFactor] = useState('');
-  const [customProtectiveFactor, setCustomProtectiveFactor] = useState('');
   const [microSolution, setMicroSolution] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [lastSubmission, setLastSubmission] = useState<LastSubmission | null>(null);
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
-  const [challengeError, setChallengeError] = useState('');
   const [submissionError, setSubmissionError] = useState<string>('');
   const [quoteError, setQuoteError] = useState<string>('');
 
@@ -64,17 +58,7 @@ export default function Activity2ResilientLeadershipPage() {
     e.preventDefault();
 
     // Clear any previous errors
-    setChallengeError('');
     setSubmissionError('');
-
-    // Client-side validation: require at least one challenge input
-    const hasSelectedChallenge = challengeTypeKey !== '';
-    const hasCustomChallenge = customChallenge.trim() !== '';
-
-    if (!hasSelectedChallenge && !hasCustomChallenge) {
-      setChallengeError('Please select a challenge from the list or describe your own challenge.');
-      return;
-    }
 
     // Check if actor is ready
     if (!actor || isActorFetching) {
@@ -82,34 +66,25 @@ export default function Activity2ResilientLeadershipPage() {
       return;
     }
 
-    const finalProtectiveFactor =
-      protectiveFactor === 'custom' ? customProtectiveFactor : protectiveFactor;
-
     try {
-      // Enforce mutual exclusivity: when a challenge type is selected, submit customChallenge as null
-      // When a custom challenge is provided, submit challengeType as null
-      const mappedChallengeType = hasSelectedChallenge ? mapChallengeTypeKeyToEnum(challengeTypeKey) : null;
-      const finalCustomChallenge = hasCustomChallenge && !hasSelectedChallenge ? customChallenge.trim() : null;
+      const challengeTypeEnum = challengeType ? mapChallengeTypeKeyToEnum(challengeType) : null;
 
       await submitMutation.mutateAsync({
-        challengeType: mappedChallengeType,
-        customChallenge: finalCustomChallenge,
+        challengeType: challengeTypeEnum,
+        customChallenge: customChallenge || null,
         villainResponse,
         heroicResponse,
-        protectiveFactor: finalProtectiveFactor,
+        protectiveFactor,
         microSolution,
       });
-      
-      // Store the submission for validation
+
+      // Store the submission for validation (only heroic fields)
       setLastSubmission({
-        microSolution,
-        protectiveFactor: finalProtectiveFactor,
-        villainResponse,
         heroicResponse,
-        challengeType: challengeTypeKey || undefined,
-        customChallenge: customChallenge || undefined,
+        protectiveFactor,
+        microSolution,
       });
-      
+
       setSubmitted(true);
       setValidationResult(null);
       setSubmissionError('');
@@ -128,23 +103,33 @@ export default function Activity2ResilientLeadershipPage() {
 
     if (lastSubmission) {
       setQuoteError('');
-      
-      const { citation, message } = generateActivity2Validation(lastSubmission);
-      
+
+      // Check for villainous input in heroic fields only
+      if (hasVillainousInput(
+        lastSubmission.heroicResponse,
+        lastSubmission.protectiveFactor,
+        lastSubmission.microSolution
+      )) {
+        setQuoteError('Error 000: Only Heroic responses can be validated. Please ensure your input reflects positive leadership qualities and solutions.');
+        return;
+      }
+
+      const validation = generateActivity2Validation(lastSubmission);
+
       // Fetch quote from backend
       try {
         const fetchedQuote = await getQuoteMutation.mutateAsync();
         setValidationResult({
-          citation,
-          message,
+          citation: validation.citation,
+          message: validation.message,
           quote: fetchedQuote,
         });
       } catch (error) {
         console.error('Failed to fetch quote:', error);
         setQuoteError(toUserFacingError(error));
         setValidationResult({
-          citation,
-          message,
+          citation: validation.citation,
+          message: validation.message,
           quote: null,
         });
       }
@@ -160,37 +145,31 @@ export default function Activity2ResilientLeadershipPage() {
 
     if (lastSubmission) {
       setQuoteError('');
-      
-      const { citation, message } = generateActivity2Validation(lastSubmission);
-      
+
+      // Check for villainous input in heroic fields only
+      if (hasVillainousInput(
+        lastSubmission.heroicResponse,
+        lastSubmission.protectiveFactor,
+        lastSubmission.microSolution
+      )) {
+        setQuoteError('Error 000: Only Heroic responses can be validated. Please ensure your input reflects positive leadership qualities and solutions.');
+        return;
+      }
+
+      const validation = generateActivity2Validation(lastSubmission);
+
       // Fetch next quote from backend
       try {
         const fetchedQuote = await getQuoteMutation.mutateAsync();
         setValidationResult({
-          citation,
-          message,
+          citation: validation.citation,
+          message: validation.message,
           quote: fetchedQuote,
         });
       } catch (error) {
         console.error('Failed to fetch quote:', error);
         setQuoteError(toUserFacingError(error));
       }
-    }
-  };
-
-  const handleChallengeChange = (value: string) => {
-    setChallengeTypeKey(value as ChallengeTypeKey | '');
-    // Clear error when user makes a selection
-    if (value || customChallenge.trim()) {
-      setChallengeError('');
-    }
-  };
-
-  const handleCustomChallengeChange = (value: string) => {
-    setCustomChallenge(value);
-    // Clear error when user types
-    if (value.trim() || challengeTypeKey) {
-      setChallengeError('');
     }
   };
 
@@ -242,7 +221,7 @@ export default function Activity2ResilientLeadershipPage() {
                   <h2 className="text-xl font-semibold text-foreground mb-3">
                     Your Micro-Solution is Validated!
                   </h2>
-                  
+
                   <p className="text-muted-foreground mb-4">
                     {validationResult.message}
                   </p>
@@ -271,16 +250,6 @@ export default function Activity2ResilientLeadershipPage() {
                     </div>
                   )}
 
-                  {/* Research Citation */}
-                  <div className="rounded-lg bg-accent/10 p-4 border border-accent/20">
-                    <p className="text-xs font-semibold text-accent-foreground mb-2">
-                      ALIGNED RESEARCH CITATION:
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {validationResult.citation}
-                    </p>
-                  </div>
-
                   {/* Generate Another Button */}
                   <div className="mt-4 flex justify-end">
                     <button
@@ -303,6 +272,13 @@ export default function Activity2ResilientLeadershipPage() {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {quoteError && !validationResult && (
+            <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20 mb-8">
+              <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+              <p className="text-sm text-destructive">{quoteError}</p>
             </div>
           )}
 
@@ -338,11 +314,40 @@ export default function Activity2ResilientLeadershipPage() {
 
         <div className="rounded-lg border border-border bg-muted/50 p-6 mb-8">
           <h2 className="text-lg font-semibold mb-3">Common Campus Challenges</h2>
-          <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-            {proposalContent.activities.activity2.commonChallenges.map((challenge, index) => (
-              <li key={index}>{challenge}</li>
+          <p className="text-muted-foreground mb-4">
+            Select a challenge or describe your own, then explore both villain and heroic responses.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {CHALLENGE_OPTIONS.map((challenge) => (
+              <button
+                key={challenge}
+                type="button"
+                onClick={() => {
+                  setChallengeType(challenge);
+                  handleInputChange();
+                }}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  challengeType === challenge
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-card text-foreground hover:bg-muted border border-border'
+                }`}
+              >
+                {challenge
+                  .replace(/([A-Z])/g, ' $1')
+                  .trim()
+                  .split(' ')
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(' ')}
+              </button>
             ))}
-          </ul>
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-border bg-card p-4 mb-8 flex items-start gap-3">
+          <Info className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+          <p className="text-sm text-muted-foreground">
+            Your information is anonymous the only information we see is what is on the community solutions
+          </p>
         </div>
 
         <SignInGate>
@@ -362,56 +367,29 @@ export default function Activity2ResilientLeadershipPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="rounded-lg border border-border bg-card p-6 space-y-6">
               <div>
-                <label htmlFor="challengeType" className="block text-sm font-medium mb-2">
-                  Select a Challenge
-                </label>
-                <select
-                  id="challengeType"
-                  value={challengeTypeKey}
-                  onChange={(e) => {
-                    handleChallengeChange(e.target.value);
-                    handleInputChange();
-                  }}
-                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                >
-                  <option value="">-- Select a challenge --</option>
-                  {challengeOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
                 <label htmlFor="customChallenge" className="block text-sm font-medium mb-2">
-                  Or Describe Your Own Challenge
+                  Describe Your Challenge (Optional)
                 </label>
-                <input
+                <textarea
                   id="customChallenge"
-                  type="text"
                   value={customChallenge}
                   onChange={(e) => {
-                    handleCustomChallengeChange(e.target.value);
+                    setCustomChallenge(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="Describe a custom challenge..."
-                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  placeholder="If none of the above fit, describe your specific challenge..."
+                  rows={2}
+                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
                 />
               </div>
 
-              {/* Challenge validation error */}
-              {challengeError && (
-                <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
-                  <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-                  <p className="text-sm text-destructive">{challengeError}</p>
-                </div>
-              )}
-
               <div>
                 <label htmlFor="villainResponse" className="block text-sm font-medium mb-2">
-                  What would the villain response look like? <span className="text-destructive">*</span>
+                  Villain Response <span className="text-destructive">*</span>
                 </label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  How might someone respond negatively or destructively to this challenge?
+                </p>
                 <textarea
                   id="villainResponse"
                   value={villainResponse}
@@ -419,7 +397,7 @@ export default function Activity2ResilientLeadershipPage() {
                     setVillainResponse(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="Describe a destructive or unhelpful response..."
+                  placeholder="e.g., Give up, blame others, avoid responsibility..."
                   required
                   rows={3}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
@@ -428,8 +406,11 @@ export default function Activity2ResilientLeadershipPage() {
 
               <div>
                 <label htmlFor="heroicResponse" className="block text-sm font-medium mb-2">
-                  What would the heroic response look like? <span className="text-destructive">*</span>
+                  Heroic Response <span className="text-destructive">*</span>
                 </label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  How can you respond with resilience and leadership?
+                </p>
                 <textarea
                   id="heroicResponse"
                   value={heroicResponse}
@@ -437,7 +418,7 @@ export default function Activity2ResilientLeadershipPage() {
                     setHeroicResponse(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="Describe a constructive, resilient response..."
+                  placeholder="e.g., Seek support, develop a plan, take responsibility..."
                   required
                   rows={3}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
@@ -446,52 +427,32 @@ export default function Activity2ResilientLeadershipPage() {
 
               <div>
                 <label htmlFor="protectiveFactor" className="block text-sm font-medium mb-2">
-                  Which protective factor helps solve it? <span className="text-destructive">*</span>
+                  Protective Factor <span className="text-destructive">*</span>
                 </label>
-                <select
+                <p className="text-xs text-muted-foreground mb-2">
+                  What strength or resource helps you respond heroically?
+                </p>
+                <input
                   id="protectiveFactor"
+                  type="text"
                   value={protectiveFactor}
                   onChange={(e) => {
                     setProtectiveFactor(e.target.value);
                     handleInputChange();
                   }}
+                  placeholder="e.g., Social support, self-awareness, growth mindset..."
                   required
-                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                >
-                  <option value="">-- Select a protective factor --</option>
-                  {protectiveFactorOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                  <option value="custom">Custom</option>
-                </select>
+                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                />
               </div>
-
-              {protectiveFactor === 'custom' && (
-                <div>
-                  <label htmlFor="customProtectiveFactor" className="block text-sm font-medium mb-2">
-                    Describe Your Protective Factor <span className="text-destructive">*</span>
-                  </label>
-                  <input
-                    id="customProtectiveFactor"
-                    type="text"
-                    value={customProtectiveFactor}
-                    onChange={(e) => {
-                      setCustomProtectiveFactor(e.target.value);
-                      handleInputChange();
-                    }}
-                    placeholder="Enter your protective factor..."
-                    required
-                    className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                  />
-                </div>
-              )}
 
               <div>
                 <label htmlFor="microSolution" className="block text-sm font-medium mb-2">
-                  Your Micro-Solution <span className="text-destructive">*</span>
+                  Micro-Solution <span className="text-destructive">*</span>
                 </label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  What's one small, concrete action you can take?
+                </p>
                 <textarea
                   id="microSolution"
                   value={microSolution}
@@ -499,25 +460,19 @@ export default function Activity2ResilientLeadershipPage() {
                     setMicroSolution(e.target.value);
                     handleInputChange();
                   }}
-                  placeholder="Propose ONE small action a student leader could take..."
+                  placeholder="e.g., Schedule 15 minutes daily for self-care, reach out to one friend..."
                   required
                   rows={3}
                   className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
                 />
-                <p className="text-xs text-muted-foreground mt-2">
-                  Examples: {proposalContent.activities.activity2.microSolutionExamples.join(', ')}
-                </p>
               </div>
             </div>
 
-            {/* Submission error message */}
+            {/* Submission error */}
             {submissionError && (
-              <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20">
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
                 <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-destructive">Submission Failed</p>
-                  <p className="text-sm text-destructive/90 mt-1">{submissionError}</p>
-                </div>
+                <p className="text-sm text-destructive">{submissionError}</p>
               </div>
             )}
 
@@ -528,22 +483,18 @@ export default function Activity2ResilientLeadershipPage() {
             >
               {submitMutation.isPending ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="h-5 w-5 animate-spin" />
                   Submitting...
                 </>
               ) : (
                 <>
-                  <Send className="h-4 w-4" />
+                  <Send className="h-5 w-5" />
                   Share Your Micro-Solution
                 </>
               )}
             </button>
           </form>
         </SignInGate>
-
-        <div className="mt-12">
-          <MicroSolutionsCommunityList />
-        </div>
       </div>
     </PageSection>
   );

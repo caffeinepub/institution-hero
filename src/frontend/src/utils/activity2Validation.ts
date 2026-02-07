@@ -1,12 +1,9 @@
 import { REFERENCES } from '../content/references';
 
-interface Activity2Inputs {
-  microSolution: string;
+interface Activity2Input {
+  heroicResponse: string;
   protectiveFactor: string;
-  villainResponse?: string;
-  heroicResponse?: string;
-  challengeType?: string;
-  customChallenge?: string;
+  microSolution: string;
 }
 
 interface ValidationResult {
@@ -14,84 +11,73 @@ interface ValidationResult {
   message: string;
 }
 
-/**
- * Selects a reference citation that aligns with the micro-solution themes.
- * Uses stable reference keys to ensure citations always correspond to entries on the References page.
- */
-function selectAlignedCitation(inputs: Activity2Inputs): string {
-  const { microSolution, protectiveFactor, heroicResponse } = inputs;
+// Theme-to-reference mapping (using only heroic fields)
+const THEME_REFERENCES: Record<string, string[]> = {
+  resilience: ['masten2001', 'luthar2000', 'rutter2012'],
+  leadership: ['northouse2022', 'bass1985', 'burns1978'],
+  growth: ['dweck2006', 'yeager2012'],
+  support: ['cohen2004', 'thoits2011'],
+  mindfulness: ['kabatZinn2003', 'brown2007'],
+  identity: ['erikson1968', 'marcia1980'],
+  transformation: ['mezirow1991', 'kegan1982'],
+  community: ['putnam2000', 'erickson2015'],
+};
 
-  // Combine relevant text for theme matching
-  const combinedText = `${microSolution} ${protectiveFactor} ${heroicResponse || ''}`.toLowerCase();
+// Keywords for theme detection (only from heroic fields)
+const THEME_KEYWORDS: Record<string, string[]> = {
+  resilience: ['resilient', 'bounce back', 'overcome', 'adapt', 'persevere', 'recover', 'strength'],
+  leadership: ['lead', 'guide', 'inspire', 'motivate', 'influence', 'empower', 'vision'],
+  growth: ['grow', 'learn', 'develop', 'improve', 'progress', 'evolve', 'mindset'],
+  support: ['support', 'help', 'community', 'friend', 'mentor', 'network', 'connection'],
+  mindfulness: ['mindful', 'aware', 'present', 'reflect', 'meditation', 'conscious'],
+  identity: ['identity', 'self', 'who i am', 'values', 'authentic', 'purpose'],
+  transformation: ['transform', 'change', 'shift', 'transition', 'evolve', 'breakthrough'],
+  community: ['community', 'together', 'collective', 'group', 'team', 'collaborate'],
+};
 
-  // Theme-based citation mapping using stable reference keys
-  const citationThemes: Record<string, string[]> = {
-    // Leadership and resilience
-    leadership: ['erickson2017', 'jansen2024', 'northouse2022', 'ramamoorthi2023', 'sunderman2024'],
-    resilience: ['erickson2017', 'jansen2024', 'wang2025'],
+function detectThemes(input: Activity2Input): string[] {
+  const text = `${input.heroicResponse} ${input.protectiveFactor} ${input.microSolution}`.toLowerCase();
+  const detectedThemes: string[] = [];
 
-    // Support and mentorship
-    support: ['erickson2017', 'killingback2025', 'mcgrath2022', 'waddington2025'],
-    mentorship: ['jansen2024', 'killingback2025', 'mcgrath2022', 'northouse2022'],
-    collaboration: ['erickson2017', 'jansen2024', 'killingback2025', 'ramamoorthi2023'],
-
-    // Compassion and inclusion
-    compassion: ['killingback2025', 'mcgrath2022', 'waddington2025'],
-    inclusion: ['erickson2017', 'killingback2025', 'mcgrath2022', 'ramamoorthi2023'],
-    belonging: ['erickson2017', 'mcgrath2022', 'ramamoorthi2023'],
-
-    // Ethical and moral
-    ethical: ['anastasiou2025', 'bienkowska2025', 'ghamrawi2024', 'northouse2022'],
-    integrity: ['anastasiou2025', 'bienkowska2025', 'ghamrawi2024', 'northouse2022'],
-    destructive: ['erickson2015', 'bienkowska2025', 'ghamrawi2024'],
-
-    // Development and growth
-    development: ['erickson2017', 'jansen2024', 'sunderman2024', 'wang2025'],
-    growth: ['erickson2017', 'jansen2024', 'fazio2008', 'wang2025'],
-
-    // Challenges and adversity
-    challenge: ['erickson2017', 'elliott1996', 'jansen2024', 'wang2025'],
-    adversity: ['erickson2017', 'fazio2008', 'northouse2022', 'wang2025'],
-
-    // Community and connection
-    community: ['erickson2017', 'killingback2025', 'mcgrath2022', 'ramamoorthi2023'],
-    connection: ['killingback2025', 'mcgrath2022', 'waddington2025'],
-  };
-
-  // Find matching themes
-  const matchedKeys: string[] = [];
-  for (const [theme, keys] of Object.entries(citationThemes)) {
-    if (combinedText.includes(theme)) {
-      matchedKeys.push(...keys);
+  for (const [theme, keywords] of Object.entries(THEME_KEYWORDS)) {
+    if (keywords.some((keyword) => text.includes(keyword.toLowerCase()))) {
+      detectedThemes.push(theme);
     }
   }
 
-  // If no matches, use a default set focused on resilience and leadership
-  const finalKeys = matchedKeys.length > 0 ? matchedKeys : ['erickson2017', 'jansen2024', 'northouse2022', 'wang2025'];
-
-  // Remove duplicates
-  const uniqueKeys = Array.from(new Set(finalKeys));
-
-  // Select one citation deterministically based on input hash
-  const hash = microSolution.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const selectedKey = uniqueKeys[hash % uniqueKeys.length];
-
-  // Find the reference by key
-  const reference = REFERENCES.find((ref) => ref.key === selectedKey);
-
-  // Return the reference text, or fallback to first reference if not found
-  return reference ? reference.text : REFERENCES[0].text;
+  return detectedThemes.length > 0 ? detectedThemes : ['resilience'];
 }
 
-/**
- * Generates a validation result for Activity 2 micro-solution (citation and message only)
- */
-export function generateActivity2Validation(inputs: Activity2Inputs): ValidationResult {
-  // Select an aligned citation
-  const citation = selectAlignedCitation(inputs);
+function selectCitation(themes: string[]): string {
+  for (const theme of themes) {
+    const refs = THEME_REFERENCES[theme];
+    if (refs && refs.length > 0) {
+      const randomRef = refs[Math.floor(Math.random() * refs.length)];
+      const reference = REFERENCES.find((r) => r.key === randomRef);
+      if (reference) {
+        return reference.text;
+      }
+    }
+  }
+  return REFERENCES[0].text;
+}
 
-  // Generate validation message
-  const message = `Your micro-solution demonstrates the kind of heroic leadership that transforms challenges into opportunities for growth. By proposing "${inputs.microSolution.substring(0, 100)}${inputs.microSolution.length > 100 ? '...' : ''}", you're embodying the protective power of ${inputs.protectiveFactor.toLowerCase()} to create positive change in your academic community. This approach reflects the resilience and ethical leadership that strengthens institutional culture and supports student well-being.`;
+function generateMessage(input: Activity2Input, themes: string[]): string {
+  const messages = [
+    `Your heroic response demonstrates the power of resilience in action. By choosing to ${input.heroicResponse.toLowerCase()}, you're embodying the protective factor of ${input.protectiveFactor.toLowerCase()}. This micro-solution—${input.microSolution.toLowerCase()}—is a concrete step toward positive change.`,
+    `The protective factor you've identified—${input.protectiveFactor.toLowerCase()}—is a key strength in your resilience toolkit. Your micro-solution shows practical wisdom: ${input.microSolution.toLowerCase()}. This heroic response reflects true leadership.`,
+    `Your approach to this challenge shows remarkable insight. By leveraging ${input.protectiveFactor.toLowerCase()} and committing to ${input.microSolution.toLowerCase()}, you're creating a path forward that others can learn from.`,
+    `This heroic response—${input.heroicResponse.toLowerCase()}—demonstrates the kind of adaptive leadership that transforms challenges into opportunities. Your protective factor of ${input.protectiveFactor.toLowerCase()} provides a strong foundation.`,
+  ];
+
+  const index = themes.length % messages.length;
+  return messages[index];
+}
+
+export function generateActivity2Validation(input: Activity2Input): ValidationResult {
+  const themes = detectThemes(input);
+  const citation = selectCitation(themes);
+  const message = generateMessage(input, themes);
 
   return {
     citation,
