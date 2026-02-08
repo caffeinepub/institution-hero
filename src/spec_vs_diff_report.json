@@ -1,29 +1,56 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T21:16:42.730Z",
-  "summary": "REQ-1 appears implemented in BioPage.tsx: the section header is renamed to \"International Educational Experience\" and the paragraph is replaced with a bulleted list including the specified locations. The diff also includes unrelated modifications to repo metadata/state files not requested in the BuildRequest.",
-  "missing_requirements": [],
-  "hallucinated_features": [
+  "generatedAt": "2026-02-08T21:22:03.941Z",
+  "summary": "The diff does not add the required static footer image asset, and the actual rendering of the moat/trees footer strip cannot be verified from the truncated AppShell.tsx snippet. The frontend-file-summaries.txt also claims multiple unrelated feature changes that are not evidenced by the diff (only 3 files were modified).",
+  "missing_requirements": [
     {
-      "description": "Updated repository metadata/summary file content unrelated to the Bio page requirement.",
-      "reason": "BuildRequest only asks for a Bio page text/title change; it does not request updating generated file summaries.",
+      "id": "REQ-1",
+      "requirement": "Generate a new decorative footer background graphic (moat/trees) and add it as a static asset at frontend/public/assets/generated/moat-trees-footer-banner.dim_1600x300.png.",
+      "reason": "No new files were added in the diff, and there is no evidence that the required PNG was created at the specified path.",
       "evidence": [
-        "frontend-file-summaries.txt"
+        "<file-diff>: ADDED FILES: none",
+        "frontend/src/components/AppShell.tsx (truncated)"
       ]
     },
     {
-      "description": "Modified project tracking/state file (new_feature_requests entries/status).",
-      "reason": "BuildRequest does not request changing project_state.json or any project tracking metadata.",
+      "id": "REQ-2",
+      "requirement": "Render the new moat-and-trees footer graphic as a full-width bottom-of-page visual element on all routed tab pages, positioned above the global footer, responsive and non-overlapping.",
+      "reason": "The AppShell.tsx diff is truncated before any footer rendering is shown, and the required image asset is not present in the diff, so the end-to-end requirement (rendering that specific image) cannot be confirmed as implemented.",
       "evidence": [
-        "project_state.json"
+        "frontend/src/components/AppShell.tsx (truncated)",
+        "<file-diff>: ADDED FILES: none"
       ]
     }
   ],
-  "confidence": 0.78,
+  "hallucinated_features": [
+    {
+      "description": "Claims of updates across many frontend files (proposalContent, multiple pages, hooks/useQueries polling support, ordering changes, etc.).",
+      "reason": "The diff summary shows only 3 modified files (AppShell.tsx, frontend-file-summaries.txt, project_state.json). There is no evidence those other files were actually changed in this diff; the claims appear only as descriptions inside frontend-file-summaries.txt.",
+      "evidence": [
+        "frontend-file-summaries.txt (truncated)",
+        "<file-diff>: Modified files: frontend/src/components/AppShell.tsx, frontend-file-summaries.txt, project_state.json"
+      ]
+    },
+    {
+      "description": "Optional polling support added to LeadershipWordPatternsSummary, MicroSolutionsCommunityList, and React Query hooks plus micro-solution ordering reversal and optimistic cache updates.",
+      "reason": "These are described in frontend-file-summaries.txt, but there is no corresponding diff content for the referenced files (they are not listed as modified).",
+      "evidence": [
+        "frontend-file-summaries.txt (truncated)"
+      ]
+    },
+    {
+      "description": "SessionOutlinePage placeholder returning null and routing changes removing a Session Outline route.",
+      "reason": "Described in frontend-file-summaries.txt, but there is no evidence in the diff that App.tsx or SessionOutlinePage.tsx were modified (not listed among modified files).",
+      "evidence": [
+        "frontend-file-summaries.txt (truncated)"
+      ]
+    }
+  ],
+  "confidence": 0.72,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/pages/BioPage.tsx",
+    "frontend/src/components/AppShell.tsx",
     "project_state.json"
   ]
 }

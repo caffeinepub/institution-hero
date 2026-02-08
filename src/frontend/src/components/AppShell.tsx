@@ -144,8 +144,18 @@ export default function AppShell() {
         <Outlet />
       </main>
 
+      {/* Decorative Moat & Trees Footer Banner */}
+      <div className="w-full overflow-hidden">
+        <img
+          src="/assets/generated/moat-trees-footer-banner.dim_1600x300.png"
+          alt=""
+          className="w-full h-32 sm:h-40 md:h-48 lg:h-56 object-cover object-center"
+          aria-hidden="true"
+        />
+      </div>
+
       {/* Footer */}
-      <footer className="border-t border-border bg-muted/50 py-8 mt-12">
+      <footer className="border-t border-border bg-muted/50 py-8">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center text-sm text-muted-foreground">
             <p className="flex items-center justify-center gap-1.5">

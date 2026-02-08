@@ -1,7 +1,7 @@
 {
   "frontend/src/App.tsx": "Main application component with TanStack Router setup for all routes except the removed Session Outline route.",
   "frontend/src/content/proposalContent.ts": "Centralized content module containing all proposal text with Activity 1 examples updated to the new list (ethical, visionary, authentic, resilient, empathetic, principled, transformational, courageous, accountable, inclusive, decisive, adaptable, humble, inspiring, grounded) and references sourced from the updated references.ts module.",
-  "frontend/src/components/AppShell.tsx": "Shared application shell with header navigation (excluding Session Outline), auth controls, and footer with responsive mobile menu.",
+  "frontend/src/components/AppShell.tsx": "Shared application shell with header navigation, auth controls, decorative moat-and-trees footer banner strip above the global footer, and responsive mobile menu.",
   "frontend/src/components/PageSection.tsx": "Reusable layout wrapper component providing consistent container width, padding, and spacing for all page content.",
   "frontend/src/components/SignInGate.tsx": "Authentication gate component that displays sign-in prompt when user is not authenticated, wrapping protected content like activity submissions.",
   "frontend/src/components/LeadershipWordPatternsSummary.tsx": "Displays aggregated top leadership words with visual bar chart showing submission counts from the community, now supporting optional polling via props for real-time updates.",

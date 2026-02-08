@@ -2,11 +2,9 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-in-the-bio-tab-bio-page-update-the-section-currently-titled-international-experience-to-be-titled-international-educational-experience-and-replace-the-existing-descriptive-paragraph-with-a-clearly-formatted-list-containing-exactly-these-locations-one-per-line-bullet-berlin-germany-zurich-switzerland-milan-italy-london-england-johannesburg-south-africa-antigua-guatemala",
-      "featureTitle": "In the Bio tab (Bio page), update the section currently titled \"International Experience\" to be titled \"International Educational Experience\" and replace the existing descriptive paragraph with a clearly formatted list containing exactly these locations (one per line/bullet): Berlin, Germany; Zurich, Switzerland; Milan, Italy; London, England; Johannesburg, South Africa; Antigua, Guatemala.",
-      "files": [
-        "frontend/src/pages/BioPage.tsx"
-      ],
+      "featureId": "feature-generate-a-new-decorative-footer-background-graphic-visually-consistent-with-the-existing-castle-hero-banner-style-featuring-a-water-moat-and-trees-sized-to-work-as-a-bottom-of-page-strip-on-all-tab-pages",
+      "featureTitle": "Generate a new decorative footer background graphic, visually consistent with the existing castle hero banner style, featuring a water moat and trees, sized to work as a bottom-of-page strip on all tab pages.",
+      "files": [],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
@@ -17,6 +15,25 @@
       ],
       "testIds": [
         "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-render-the-new-moat-and-trees-footer-graphic-as-a-full-width-bottom-of-page-visual-element-on-all-routed-pages-the-tab-pages-positioned-above-the-global-footer-so-it-appears-at-the-bottom-of-each-page-s-content-area",
+      "featureTitle": "Render the new moat-and-trees footer graphic as a full-width bottom-of-page visual element on all routed pages (the tab pages), positioned above the global footer so it appears at the bottom of each page’s content area.",
+      "files": [
+        "frontend/src/components/AppShell.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
       ],
       "confidence": "high"
     }

@@ -5,12 +5,21 @@
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Castle-style moat and trees footer banner illustration (moat-trees-footer-banner.dim_1600x300.png)",
   "existing_features": [
     {
-      "id": "feature-in-the-bio-tab-bio-page-update-the-section-currently-titled-international-experience-to-be-titled-international-educational-experience-and-replace-the-existing-descriptive-paragraph-with-a-clearly-formatted-list-containing-exactly-these-locations-one-per-line-bullet-berlin-germany-zurich-switzerland-milan-italy-london-england-johannesburg-south-africa-antigua-guatemala",
-      "title": "In the Bio tab (Bio page), update the section currently titled \"International Experience\" to be titled \"International Educational Experience\" and replace the existing descriptive paragraph with a clearly formatted list containing exactly these locations (one per line/bullet): Berlin, Germany; Zurich, Switzerland; Milan, Italy; London, England; Johannesburg, South Africa; Antigua, Guatemala.",
+      "id": "feature-generate-a-new-decorative-footer-background-graphic-visually-consistent-with-the-existing-castle-hero-banner-style-featuring-a-water-moat-and-trees-sized-to-work-as-a-bottom-of-page-strip-on-all-tab-pages",
+      "title": "Generate a new decorative footer background graphic, visually consistent with the existing castle hero banner style, featuring a water moat and trees, sized to work as a bottom-of-page strip on all tab pages.",
       "reqIds": [
         "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-render-the-new-moat-and-trees-footer-graphic-as-a-full-width-bottom-of-page-visual-element-on-all-routed-pages-the-tab-pages-positioned-above-the-global-footer-so-it-appears-at-the-bottom-of-each-page-s-content-area",
+      "title": "Render the new moat-and-trees footer graphic as a full-width bottom-of-page visual element on all routed pages (the tab pages), positioned above the global footer so it appears at the bottom of each page’s content area.",
+      "reqIds": [
+        "REQ-2"
       ],
       "version": 1
     }
@@ -18,12 +27,13 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Bio tab: Rename \"International Experience\" to \"International Educational Experience\" and list locations (Berlin, Zurich, Milan, London, Johannesburg, Antigua)",
+      "summary": "Create an alternate bottom-of-tab page background graphic similar to the castle title background, featuring water (a moat) and trees",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Update Bio tab International Experience section title and locations",
+  "gameProjectType": "none",
+  "projectName": "Add moat-and-trees footer graphic for bottom of tab pages",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

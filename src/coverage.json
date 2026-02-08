@@ -1,24 +1,35 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T21:16:42.733Z",
+  "generatedAt": "2026-02-08T21:22:03.943Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
-    "implemented": 1,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "In the Bio tab (Bio page), update the section currently titled \"International Experience\" to be titled \"International Educational Experience\" and replace the existing descriptive paragraph with a clearly formatted list containing exactly these locations (one per line/bullet): Berlin, Germany; Zurich, Switzerland; Milan, Italy; London, England; Johannesburg, South Africa; Antigua, Guatemala.",
+        "summary": "Generate a new decorative footer background graphic, visually consistent with the existing castle hero banner style, featuring a water moat and trees, sized to work as a bottom-of-page strip on all tab pages.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/BioPage.tsx"
+          "frontend/public/assets/generated/moat-trees-footer-banner.dim_1600x300.png"
         ],
         "matchedFiles": [
-          "frontend/src/pages/BioPage.tsx"
+          "frontend/public/assets/generated/moat-trees-footer-banner.dim_1600x300.png"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Render the new moat-and-trees footer graphic as a full-width bottom-of-page visual element on all routed pages (the tab pages), positioned above the global footer so it appears at the bottom of each page’s content area.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/AppShell.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/AppShell.tsx"
         ]
       }
     ]
@@ -28,7 +39,8 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/pages/BioPage.tsx",
+    "frontend/public/assets/generated/moat-trees-footer-banner.dim_1600x300.png",
+    "frontend/src/components/AppShell.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
