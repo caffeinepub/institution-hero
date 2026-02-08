@@ -1,73 +1,47 @@
 {
   "kind": "build_request",
-  "title": "Show Activity 1 & 2 feedback on Leadership Board immediately (no manual refresh)",
+  "title": "Show uploaded QR code image on the Slides tab",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Make the Leadership Board update automatically while the page is open so new Activity 1 (leadership word) and Activity 2 (micro-solution) submissions appear without the user manually refreshing the browser.",
+      "text": "Add the uploaded image file \"Morris, 2012, QR code.png\" to the frontend static assets (under the existing public assets path convention, e.g., frontend/public/assets/...) and render it on the Slides page (/slides).",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "Post feedback from activity 1 and 2 to leadership board simultaneously as it is given to the user.\n\nSo the feedback is shown on leadership board without having to refresh page"
+          "add this picture to slides tab"
         ]
       },
       "acceptanceCriteria": [
-        "When the Leadership Board page is left open, it periodically refetches both leadership word counts and community solutions so newly submitted data appears without a full page reload.",
-        "The refresh mechanism does not require WebSockets or other real-time services; it works using client-side polling/refetch behavior.",
-        "The polling interval is reasonable (e.g., a few seconds) and does not cause visible UI flicker during background updates."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "After a successful Activity 1 submission, update the cached Leadership Word counts immediately so any mounted Leadership Board/summary views reflect the new word count right away (in the same SPA session), without waiting for the next refetch.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Post feedback from activity 1 and 2 to leadership board simultaneously as it is given to the user."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Submitting Activity 1 causes the leadership word counts UI (wherever currently mounted) to update immediately after the submission succeeds.",
-        "The cached update correctly increments the submitted word’s count (or adds it if it does not exist yet).",
-        "The existing invalidation behavior is preserved so the cache will still reconcile with the backend on subsequent refetches."
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "After a successful Activity 2 submission, update the cached Community Solutions list immediately so any mounted Leadership Board/solutions views reflect the new micro-solution right away (in the same SPA session), without waiting for the next refetch.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Post feedback from activity 1 and 2 to leadership board simultaneously as it is given to the user."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Submitting Activity 2 causes the community solutions UI (wherever currently mounted) to include the new submission immediately after the submission succeeds.",
-        "The cached update includes the submitted fields needed by the list rendering (challenge type/custom challenge, microSolution, protectiveFactor).",
-        "The existing invalidation behavior is preserved so the cache will still reconcile with the backend on subsequent refetches."
+        "The repository contains the uploaded file \"Morris, 2012, QR code.png\" under a public static assets directory so it is served by the frontend.",
+        "Visiting the Slides tab route (/slides) displays the image.",
+        "The image is responsive (fits within the page width without overflowing) and includes an English alt text.",
+        "The Slides tab no longer renders a blank page (SlidesPage.tsx no longer returns null)."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files under frontend/src/components/ui or any paths listed as immutable in SYSTEM_CONTEXT.",
-    "Respect the existing single-actor Motoko backend architecture; do not introduce additional backend services."
+    "Do not edit files under frontend/src/components/ui or any frontend immutablePaths listed in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Implementing true push-based real-time updates (e.g., WebSockets, server-sent events).",
-    "Changing backend data models or adding new backend endpoints unless strictly required for the UI refresh behavior."
+    "Do not implement slide decks, multi-slide navigation, uploads, or backend storage for slides.",
+    "Do not change routing/navigation structure beyond what is required to display the image on the existing /slides route."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

@@ -1,34 +1,16 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Project to display user feedback from activities 1 and 2 on a leadership board in real time, without requiring a page refresh.",
-  "architectural_notes": [
-    "Leadership board should update in real time when activity 1 or 2 feedback is submitted (no manual refresh)."
-  ],
+  "summary": "New project",
+  "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-make-the-leadership-board-update-automatically-while-the-page-is-open-so-new-activity-1-leadership-word-and-activity-2-micro-solution-submissions-appear-without-the-user-manually-refreshing-the-browser",
-      "title": "Make the Leadership Board update automatically while the page is open so new Activity 1 (leadership word) and Activity 2 (micro-solution) submissions appear without the user manually refreshing the browser.",
+      "id": "feature-add-the-uploaded-image-file-morris-2012-qr-code-png-to-the-frontend-static-assets-under-the-existing-public-assets-path-convention-e-g-frontend-public-assets-and-render-it-on-the-slides-page-slides",
+      "title": "Add the uploaded image file \"Morris, 2012, QR code.png\" to the frontend static assets (under the existing public assets path convention, e.g., frontend/public/assets/...) and render it on the Slides page (/slides).",
       "reqIds": [
         "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-after-a-successful-activity-1-submission-update-the-cached-leadership-word-counts-immediately-so-any-mounted-leadership-board-summary-views-reflect-the-new-word-count-right-away-in-the-same-spa-session-without-waiting-for-the-next-refetch",
-      "title": "After a successful Activity 1 submission, update the cached Leadership Word counts immediately so any mounted Leadership Board/summary views reflect the new word count right away (in the same SPA session), without waiting for the next refetch.",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-after-a-successful-activity-2-submission-update-the-cached-community-solutions-list-immediately-so-any-mounted-leadership-board-solutions-views-reflect-the-new-micro-solution-right-away-in-the-same-spa-session-without-waiting-for-the-next-refetch",
-      "title": "After a successful Activity 2 submission, update the cached Community Solutions list immediately so any mounted Leadership Board/solutions views reflect the new micro-solution right away (in the same SPA session), without waiting for the next refetch.",
-      "reqIds": [
-        "REQ-3"
       ],
       "version": 1
     }
@@ -36,12 +18,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Post feedback from activities 1 and 2 to the leadership board immediately as it is given to the user (no page refresh required).",
+      "summary": "Add the provided picture to the Slides tab",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Show Activity 1 & 2 feedback on Leadership Board immediately (no manual refresh)",
+  "projectName": "Show uploaded QR code image on the Slides tab",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

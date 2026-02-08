@@ -2,13 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-make-the-leadership-board-update-automatically-while-the-page-is-open-so-new-activity-1-leadership-word-and-activity-2-micro-solution-submissions-appear-without-the-user-manually-refreshing-the-browser",
-      "featureTitle": "Make the Leadership Board update automatically while the page is open so new Activity 1 (leadership word) and Activity 2 (micro-solution) submissions appear without the user manually refreshing the browser.",
+      "featureId": "feature-add-the-uploaded-image-file-morris-2012-qr-code-png-to-the-frontend-static-assets-under-the-existing-public-assets-path-convention-e-g-frontend-public-assets-and-render-it-on-the-slides-page-slides",
+      "featureTitle": "Add the uploaded image file \"Morris, 2012, QR code.png\" to the frontend static assets (under the existing public assets path convention, e.g., frontend/public/assets/...) and render it on the Slides page (/slides).",
       "files": [
-        "frontend/src/components/LeadershipWordPatternsSummary.tsx",
-        "frontend/src/components/MicroSolutionsCommunityList.tsx",
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/LeadershipBoardPage.tsx"
+        "frontend/src/pages/SlidesPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -20,44 +17,6 @@
       ],
       "testIds": [
         "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-after-a-successful-activity-1-submission-update-the-cached-leadership-word-counts-immediately-so-any-mounted-leadership-board-summary-views-reflect-the-new-word-count-right-away-in-the-same-spa-session-without-waiting-for-the-next-refetch",
-      "featureTitle": "After a successful Activity 1 submission, update the cached Leadership Word counts immediately so any mounted Leadership Board/summary views reflect the new word count right away (in the same SPA session), without waiting for the next refetch.",
-      "files": [
-        "frontend/src/hooks/useQueries.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-after-a-successful-activity-2-submission-update-the-cached-community-solutions-list-immediately-so-any-mounted-leadership-board-solutions-views-reflect-the-new-micro-solution-right-away-in-the-same-spa-session-without-waiting-for-the-next-refetch",
-      "featureTitle": "After a successful Activity 2 submission, update the cached Community Solutions list immediately so any mounted Leadership Board/solutions views reflect the new micro-solution right away (in the same SPA session), without waiting for the next refetch.",
-      "files": [
-        "frontend/src/hooks/useQueries.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
       ],
       "confidence": "high"
     }

@@ -1,68 +1,27 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Leadership Board auto-refresh + immediate cache updates after Activity submissions",
+  "title": "Render uploaded QR code image on the Slides page",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Auto-refresh Leadership Board data (Activity 1 word counts + Activity 2 micro-solutions) via client-side polling without UI flicker.",
+      "summary": "Add the uploaded QR code image to public static assets and render it responsively on the existing /slides route with English alt text.",
       "acceptanceCriteria": [
-        "When the Leadership Board page is left open, it periodically refetches both leadership word counts and community solutions so newly submitted data appears without a full page reload.",
-        "The refresh mechanism does not require WebSockets or other real-time services; it works using client-side polling/refetch behavior.",
-        "The polling interval is reasonable (e.g., a few seconds) and does not cause visible UI flicker during background updates."
+        "The repository contains the uploaded file \"Morris, 2012, QR code.png\" under a public static assets directory so it is served by the frontend.",
+        "Visiting the Slides tab route (/slides) displays the image.",
+        "The image is responsive (fits within the page width without overflowing) and includes an English alt text.",
+        "The Slides tab no longer renders a blank page (SlidesPage.tsx no longer returns null)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Extend useLeadershipWordCounts and useMicroSolutions to optionally enable polling via React Query (refetchInterval + refetchIntervalInBackground) and reduce flicker during background refresh by preserving previous data during refetch (e.g., keepPreviousData/placeholderData behavior) while keeping existing defaults for non-polling usage."
+          "path": "frontend/public/assets/Morris, 2012, QR code.png",
+          "operation": "create",
+          "description": "Add the provided uploaded image file to the app's publicly served static assets so it can be referenced from the Slides page."
         },
         {
-          "path": "frontend/src/components/LeadershipWordPatternsSummary.tsx",
+          "path": "frontend/src/pages/SlidesPage.tsx",
           "operation": "modify",
-          "description": "Add an optional prop (e.g., enablePolling / pollingIntervalMs) and pass it through to useLeadershipWordCounts so the Leadership Board can opt into polling while other usages remain unchanged."
-        },
-        {
-          "path": "frontend/src/components/MicroSolutionsCommunityList.tsx",
-          "operation": "modify",
-          "description": "Add an optional prop (e.g., enablePolling / pollingIntervalMs) and pass it through to useMicroSolutions so the Leadership Board can opt into polling while other usages remain unchanged."
-        },
-        {
-          "path": "frontend/src/pages/LeadershipBoardPage.tsx",
-          "operation": "modify",
-          "description": "Enable polling for both LeadershipWordPatternsSummary and MicroSolutionsCommunityList on the Leadership Board page with a reasonable interval (a few seconds) so new Activity 1/2 submissions appear automatically without requiring a manual refresh."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "After Activity 1 submission succeeds, immediately update cached leadership word counts in the current SPA session (while preserving invalidation).",
-      "acceptanceCriteria": [
-        "Submitting Activity 1 causes the leadership word counts UI (wherever currently mounted) to update immediately after the submission succeeds.",
-        "The cached update correctly increments the submitted word’s count (or adds it if it does not exist yet).",
-        "The existing invalidation behavior is preserved so the cache will still reconcile with the backend on subsequent refetches."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "In useSubmitLeadershipWord.onSuccess, optimistically update the React Query cache for queryKey ['leadershipWordCounts'] using queryClient.setQueryData based on the submitted variables (increment existing word count or insert new entry), and keep the current invalidateQueries behavior to reconcile with the backend on later refetch."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "After Activity 2 submission succeeds, immediately update cached community solutions list in the current SPA session (while preserving invalidation).",
-      "acceptanceCriteria": [
-        "Submitting Activity 2 causes the community solutions UI (wherever currently mounted) to include the new submission immediately after the submission succeeds.",
-        "The cached update includes the submitted fields needed by the list rendering (challenge type/custom challenge, microSolution, protectiveFactor).",
-        "The existing invalidation behavior is preserved so the cache will still reconcile with the backend on subsequent refetches."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "In useSubmitResilientLeadershipActivity.onSuccess, optimistically update the React Query cache for queryKey ['microSolutions'] by inserting the newly submitted micro-solution (including challengeType/customChallenge, microSolution, protectiveFactor, plus any other required rendered fields) into the cached array, and keep the current invalidateQueries behavior to reconcile with the backend on later refetch."
+          "description": "Implement the Slides page UI so it no longer returns null; render the static asset image from frontend/public/assets/Morris, 2012, QR code.png using an English alt text and responsive sizing (e.g., constrain to container width and prevent overflow). Use the existing PageSection layout wrapper for consistent spacing (Verify the component's usage instructions before implementing)."
         }
       ]
     }
