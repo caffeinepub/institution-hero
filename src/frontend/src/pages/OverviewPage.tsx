@@ -1,4 +1,5 @@
 import PageSection from '../components/PageSection';
+import HeroBanner from '../components/HeroBanner';
 import { proposalContent } from '../content/proposalContent';
 import { Users, Target } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
@@ -6,28 +7,7 @@ import { Link } from '@tanstack/react-router';
 export default function OverviewPage() {
   return (
     <div>
-      {/* Hero Banner */}
-      <div className="relative w-full h-[400px] overflow-hidden border-b border-border/40">
-        <img
-          src="/assets/generated/institution-hero-banner.dim_1600x600.png"
-          alt="Institution Hero Banner"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-8">
-          <div className="container mx-auto max-w-5xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-3">
-              {proposalContent.subtitle}
-            </h1>
-            <div className="text-lg text-muted-foreground">
-              <p className="font-semibold">Michael Viernes</p>
-              <p className="text-base">
-                The Chicago School - Foundation for International Education - Student Global Leadership Conference - 2026
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <HeroBanner title={proposalContent.subtitle} />
 
       <PageSection>
         <div className="prose prose-lg max-w-none">

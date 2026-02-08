@@ -1,20 +1,29 @@
 import PageSection from '../components/PageSection';
+import HeroBanner from '../components/HeroBanner';
 
 export default function SlidesPage() {
   return (
-    <PageSection>
-      <div className="flex flex-col items-center gap-6">
-        <h1 className="text-3xl sm:text-4xl font-bold text-foreground text-center">
-          Slides
-        </h1>
-        <div className="w-full max-w-2xl">
-          <img
-            src="/assets/Morris, 2012, QR code.png"
-            alt="QR code for Morris 2021 presentation materials"
-            className="w-full h-auto rounded-lg shadow-md"
-          />
+    <div>
+      <HeroBanner title="Slides" />
+
+      <PageSection>
+        <div className="max-w-3xl mx-auto">
+          <p className="text-lg text-muted-foreground mb-8">
+            Access the presentation slides and materials for this session.
+          </p>
+
+          <div className="rounded-lg border border-border bg-card p-8 flex flex-col items-center">
+            <img
+              src="/assets/Morris, 2012, QR code.png"
+              alt="QR Code for Slides"
+              className="w-full max-w-md h-auto rounded-lg shadow-lg"
+            />
+            <p className="text-sm text-muted-foreground mt-6 text-center">
+              Scan the QR code to access the presentation slides
+            </p>
+          </div>
         </div>
-      </div>
-    </PageSection>
+      </PageSection>
+    </div>
   );
 }

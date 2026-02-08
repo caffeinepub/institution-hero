@@ -11,7 +11,7 @@ import Runtime "mo:core/Runtime";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
-
+// Apply migration logic from the migration module
 
 actor {
   // Initialize the access control system
@@ -62,14 +62,6 @@ actor {
     #warDogs;
   };
 
-  // Extended quote type with movie reference
-  public type Quote = {
-    quote : Text;
-    attribution : Text;
-    movieReference : Text;
-    genre : QuoteGenre;
-  };
-
   // Persistent Stores
   let userProfiles = Map.empty<Principal, UserProfile>();
   let leadershipWords = Map.empty<Principal, LeadershipWordSubmission>();
@@ -80,6 +72,13 @@ actor {
   let activity2Quotes = List.empty<Quote>();
   let activity1State = Map.empty<Principal, Nat>();
   let activity2State = Map.empty<Principal, Nat>();
+
+  // Wrapped Comparison Module for Sorting
+  module ActivityOrder {
+    public func compare(a : ResilientLeadershipActivity, b : ResilientLeadershipActivity) : Order.Order {
+      #less;
+    };
+  };
 
   // User Profile Management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
@@ -429,4 +428,11 @@ actor {
     });
     quotes;
   };
+  public type Quote = {
+    quote : Text;
+    attribution : Text;
+    movieReference : Text;
+    genre : QuoteGenre;
+  };
 };
+

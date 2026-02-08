@@ -1,34 +1,33 @@
 {
   "kind": "build_request",
-  "title": "Show uploaded QR code image on the Slides tab",
+  "title": "Update Bio tab International Experience section title and locations",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add the uploaded image file \"Morris, 2012, QR code.png\" to the frontend static assets (under the existing public assets path convention, e.g., frontend/public/assets/...) and render it on the Slides page (/slides).",
+      "text": "In the Bio tab (Bio page), update the section currently titled \"International Experience\" to be titled \"International Educational Experience\" and replace the existing descriptive paragraph with a clearly formatted list containing exactly these locations (one per line/bullet): Berlin, Germany; Zurich, Switzerland; Milan, Italy; London, England; Johannesburg, South Africa; Antigua, Guatemala.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "add this picture to slides tab"
+          "In the bio tab \nInternational Experience\nUpdate the title to say International Educational Experience\nAnd list these locations \nBerlin, Germany \nZurich, Switzerland \nMilan, Italy\nLondon, England\nJohannesburg, South Africa \nAntigua, Guatemala"
         ]
       },
       "acceptanceCriteria": [
-        "The repository contains the uploaded file \"Morris, 2012, QR code.png\" under a public static assets directory so it is served by the frontend.",
-        "Visiting the Slides tab route (/slides) displays the image.",
-        "The image is responsive (fits within the page width without overflowing) and includes an English alt text.",
-        "The Slides tab no longer renders a blank page (SlidesPage.tsx no longer returns null)."
+        "On the Bio page, the section header text reads exactly \"International Educational Experience\" (replacing \"International Experience\").",
+        "The paragraph under that header is removed/replaced with a list (e.g., <ul>/<li>) showing exactly 6 entries in this order: 1) Berlin, Germany 2) Zurich, Switzerland 3) Milan, Italy 4) London, England 5) Johannesburg, South Africa 6) Antigua, Guatemala.",
+        "No other content on the Bio page is changed (name, links, and other sections remain as-is)."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui or any frontend immutablePaths listed in SYSTEM_CONTEXT."
+    "Do not modify any files under frontend/src/components/ui or any other paths listed as immutable in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Do not implement slide decks, multi-slide navigation, uploads, or backend storage for slides.",
-    "Do not change routing/navigation structure beyond what is required to display the image on the existing /slides route."
+    "Adding new navigation items or new tabs.",
+    "Changing backend data models or storing these locations in the backend (keep as static Bio page content)."
   ],
   "imageRequirements": {
     "required": [],

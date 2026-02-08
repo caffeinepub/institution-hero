@@ -1,11 +1,10 @@
 # Specification
 
 ## Summary
-**Goal:** Display the uploaded QR code image on the existing Slides tab (/slides).
+**Goal:** Update the Bio page’s “International Experience” section to reflect the new title and present the locations as a formatted list.
 
 **Planned changes:**
-- Add the uploaded file `Morris, 2012, QR code.png` to the frontend’s public static assets directory (following the existing assets path convention).
-- Update the Slides page (`/slides`) to render the QR code image instead of returning `null`.
-- Ensure the image is responsive (fits within the page width without overflowing) and includes an English alt text.
+- Change the Bio page section header from “International Experience” to “International Educational Experience”.
+- Replace the existing descriptive paragraph under that header with a list containing exactly these six locations in order: Berlin, Germany; Zurich, Switzerland; Milan, Italy; London, England; Johannesburg, South Africa; Antigua, Guatemala.
 
-**User-visible outcome:** Visiting the Slides tab (/slides) shows the QR code image on the page, scaled to fit the layout.
+**User-visible outcome:** On the Bio page, users see the updated “International Educational Experience” section with the locations displayed as a clear list, with all other Bio content unchanged.

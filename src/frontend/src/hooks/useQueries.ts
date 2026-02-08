@@ -76,7 +76,9 @@ export function useMicroSolutions(options?: { refetchInterval?: number }) {
     queryKey: ['microSolutions'],
     queryFn: async () => {
       if (!actor) return [];
-      return actor.getAllMicroSolutions();
+      const solutions = await actor.getAllMicroSolutions();
+      // Backend List.add() adds to front, so reverse to get ascending (oldest-first) order
+      return [...solutions].reverse();
     },
     enabled: !!actor && !isFetching,
     refetchInterval: options?.refetchInterval,
@@ -147,6 +149,7 @@ export function useSubmitResilientLeadershipActivity() {
             microSolution: variables.microSolution,
           };
           
+          // Add to end to maintain ascending (oldest-first) order
           if (!oldData) return [newSolution];
           return [...oldData, newSolution];
         }

@@ -1,27 +1,21 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Render uploaded QR code image on the Slides page",
+  "title": "Update Bio International Experience section to Educational Experience list",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add the uploaded QR code image to public static assets and render it responsively on the existing /slides route with English alt text.",
+      "summary": "Update the Bio page section title to “International Educational Experience” and replace the descriptive paragraph with a 6-item location list.",
       "acceptanceCriteria": [
-        "The repository contains the uploaded file \"Morris, 2012, QR code.png\" under a public static assets directory so it is served by the frontend.",
-        "Visiting the Slides tab route (/slides) displays the image.",
-        "The image is responsive (fits within the page width without overflowing) and includes an English alt text.",
-        "The Slides tab no longer renders a blank page (SlidesPage.tsx no longer returns null)."
+        "On the Bio page, the section header text reads exactly \"International Educational Experience\" (replacing \"International Experience\").",
+        "The paragraph under that header is removed/replaced with a list (e.g., <ul>/<li>) showing exactly 6 entries in this order: 1) Berlin, Germany 2) Zurich, Switzerland 3) Milan, Italy 4) London, England 5) Johannesburg, South Africa 6) Antigua, Guatemala.",
+        "No other content on the Bio page is changed (name, links, and other sections remain as-is)."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/Morris, 2012, QR code.png",
-          "operation": "create",
-          "description": "Add the provided uploaded image file to the app's publicly served static assets so it can be referenced from the Slides page."
-        },
-        {
-          "path": "frontend/src/pages/SlidesPage.tsx",
+          "path": "frontend/src/pages/BioPage.tsx",
           "operation": "modify",
-          "description": "Implement the Slides page UI so it no longer returns null; render the static asset image from frontend/public/assets/Morris, 2012, QR code.png using an English alt text and responsive sizing (e.g., constrain to container width and prevent overflow). Use the existing PageSection layout wrapper for consistent spacing (Verify the component's usage instructions before implementing)."
+          "description": "In the International Experience card on the Bio page, change the <h3> text to exactly \"International Educational Experience\" and replace the existing <p> description with a clearly formatted list (e.g., <ul>/<li>) containing exactly these 6 locations in order: Berlin, Germany; Zurich, Switzerland; Milan, Italy; London, England; Johannesburg, South Africa; Antigua, Guatemala. Ensure no other Bio page content or styling outside this section is changed."
         }
       ]
     }

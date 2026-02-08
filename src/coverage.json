@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-07T16:21:02.024Z",
+  "generatedAt": "2026-02-08T21:16:42.733Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -12,14 +12,13 @@
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add the uploaded image file \"Morris, 2012, QR code.png\" to the frontend static assets (under the existing public assets path convention, e.g., frontend/public/assets/...) and render it on the Slides page (/slides).",
+        "summary": "In the Bio tab (Bio page), update the section currently titled \"International Experience\" to be titled \"International Educational Experience\" and replace the existing descriptive paragraph with a clearly formatted list containing exactly these locations (one per line/bullet): Berlin, Germany; Zurich, Switzerland; Milan, Italy; London, England; Johannesburg, South Africa; Antigua, Guatemala.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/assets/Morris, 2012, QR code.png",
-          "frontend/src/pages/SlidesPage.tsx"
+          "frontend/src/pages/BioPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/SlidesPage.tsx"
+          "frontend/src/pages/BioPage.tsx"
         ]
       }
     ]
@@ -29,7 +28,7 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/pages/SlidesPage.tsx",
+    "frontend/src/pages/BioPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

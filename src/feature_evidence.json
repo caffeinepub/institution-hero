@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-the-uploaded-image-file-morris-2012-qr-code-png-to-the-frontend-static-assets-under-the-existing-public-assets-path-convention-e-g-frontend-public-assets-and-render-it-on-the-slides-page-slides",
-      "featureTitle": "Add the uploaded image file \"Morris, 2012, QR code.png\" to the frontend static assets (under the existing public assets path convention, e.g., frontend/public/assets/...) and render it on the Slides page (/slides).",
+      "featureId": "feature-in-the-bio-tab-bio-page-update-the-section-currently-titled-international-experience-to-be-titled-international-educational-experience-and-replace-the-existing-descriptive-paragraph-with-a-clearly-formatted-list-containing-exactly-these-locations-one-per-line-bullet-berlin-germany-zurich-switzerland-milan-italy-london-england-johannesburg-south-africa-antigua-guatemala",
+      "featureTitle": "In the Bio tab (Bio page), update the section currently titled \"International Experience\" to be titled \"International Educational Experience\" and replace the existing descriptive paragraph with a clearly formatted list containing exactly these locations (one per line/bullet): Berlin, Germany; Zurich, Switzerland; Milan, Italy; London, England; Johannesburg, South Africa; Antigua, Guatemala.",
       "files": [
-        "frontend/src/pages/SlidesPage.tsx"
+        "frontend/src/pages/BioPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
