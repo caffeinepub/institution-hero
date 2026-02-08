@@ -1,58 +1,91 @@
 {
   "kind": "build_request",
-  "title": "Add moat-and-trees footer graphic for bottom of tab pages",
+  "title": "Allow anonymous Activity 1 & 2 submissions without waiting for Internet Identity",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Generate a new decorative footer background graphic, visually consistent with the existing castle hero banner style, featuring a water moat and trees, sized to work as a bottom-of-page strip on all tab pages.",
+      "text": "Update Activity 1 and Activity 2 pages so users can fill out and submit the forms without being blocked by Internet Identity authentication or identity-loading state.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Can you create a different graphic similar to The castle background behind the title (Heroes and Villains in Higher Education: Resilience and The Role of Next Generation Student Leaders)\nthat will fit for the bottom of the tab pages like water (a mote) and some trees or something"
+          "adjust the code so that anonymous users can submit without requiring the identity to finish loading."
         ]
       },
       "acceptanceCriteria": [
-        "A new image file exists at frontend/public/assets/generated/moat-trees-footer-banner.dim_1600x300.png.",
-        "The graphic is purely visual (no embedded text) and reads well when cropped responsively across common screen widths.",
-        "The graphic’s style matches the existing hero banner aesthetic (similar palette/illustration style to /assets/generated/institution-hero-banner.dim_1600x600.png)."
+        "When not signed in (anonymous), the Activity 1 form is visible and the Submit button can be used successfully.",
+        "When not signed in (anonymous), the Activity 2 form is visible and the Submit button can be used successfully.",
+        "The UI no longer shows a blocking “Connecting… Please wait while we establish a secure connection.” gate that prevents anonymous submissions on Activities 1 & 2."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Render the new moat-and-trees footer graphic as a full-width bottom-of-page visual element on all routed pages (the tab pages), positioned above the global footer so it appears at the bottom of each page’s content area.",
+      "text": "Refactor the use of the SignInGate component on Activities 1 & 2 so that it does not gate the submission forms; if any content still requires authentication (e.g., viewing community contributions), gate only that specific content and keep submission accessible.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "that will fit for the bottom of the tab pages like water (a mote) and some trees or something"
+          "anonymous users can submit without requiring the identity to finish loading."
         ]
       },
       "acceptanceCriteria": [
-        "Navigating to each route (e.g., Overview, Bio, Learning Outcomes, Takeaways, Activities, Slides, References, Movie References, Leadership Board) displays the moat/trees image as a bottom strip above the existing footer.",
-        "The image does not overlap page content and remains responsive (full width, fixed height or max-height, with appropriate object-fit).",
-        "No backend changes are required for this feature."
+        "Activity 1 page does not wrap the submission form in SignInGate.",
+        "Activity 2 page does not wrap the submission form in SignInGate.",
+        "If community sections remain gated, they display a sign-in prompt while the submission form remains usable."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Adjust frontend submit/quote actions on Activity 1 and Activity 2 to rely on the anonymous actor when the authenticated identity is unavailable, rather than blocking based on identity-loading state (e.g., do not treat Internet Identity initialization as a hard prerequisite for submission).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "submit without requiring the identity to finish loading."
+        ]
+      },
+      "acceptanceCriteria": [
+        "On a fresh load where Internet Identity never completes, users can still submit Activity 1 and Activity 2 responses.",
+        "Submission errors (if any) are real backend errors, not a generic 'Connection is still initializing' message solely caused by identity loading."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Update backend access control logic so anonymous principals are allowed to submit Activity 1 and Activity 2 responses (and can retrieve Activity 1/2 quotes if those are used immediately after anonymous submission).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "anonymous users can submit without requiring the identity to finish loading."
+        ]
+      },
+      "acceptanceCriteria": [
+        "backend/main.mo accepts calls from anonymous principals for submitLeadershipWord without trapping as unauthorized.",
+        "backend/main.mo accepts calls from anonymous principals for submitResilientLeadershipActivity without trapping as unauthorized.",
+        "If Activity pages fetch quotes after submission, backend/main.mo allows anonymous principals to call getNextActivity1Quote and getNextActivity2Quote (or the frontend avoids calling these endpoints anonymously)."
       ]
     }
   ],
   "constraints": [
-    "Do not edit any files under frontend/src/components/ui or any paths listed in frontend.immutablePaths (compose existing components instead).",
-    "Do not route generated images through the backend; serve them as static assets from frontend/public/assets/generated."
+    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts or other paths listed in frontend.immutablePaths.",
+    "Keep all Motoko logic in the single actor at backend/main.mo; add backend/migration.mo only if a state upgrade is required."
   ],
   "nonGoals": [
-    "Changing the existing hero banner image (/assets/generated/institution-hero-banner.dim_1600x600.png).",
-    "Adding new navigation tabs or changing the routing structure.",
-    "Adding any new backend endpoints or data models."
+    "Implementing third-party authentication providers (only Internet Identity is supported).",
+    "Adding new real-time communication features (e.g., WebSockets).",
+    "Changing unrelated pages or redesigning the overall navigation."
   ],
   "imageRequirements": {
-    "required": [
-      "Castle-style moat and trees footer banner illustration (moat-trees-footer-banner.dim_1600x300.png)"
-    ],
+    "required": [],
     "edits": []
   },
   "userProfileUpdate": {

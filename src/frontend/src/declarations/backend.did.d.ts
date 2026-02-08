@@ -17,13 +17,6 @@ export type ChallengeType = { 'timeManagement' : null } |
   { 'academicPressure' : null } |
   { 'financialStress' : null } |
   { 'onlineLearning' : null };
-export interface LeadershipWordSubmission {
-  'why' : string,
-  'roleModel' : string,
-  'word' : string,
-  'actionStep' : string,
-  'resilienceExample' : string,
-}
 export interface Quote {
   'movieReference' : string,
   'quote' : string,
@@ -54,23 +47,14 @@ export type UserRole = { 'admin' : null } |
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
-  'getAllActivity1Quotes' : ActorMethod<[], Array<Quote>>,
-  'getAllActivity2Quotes' : ActorMethod<[], Array<Quote>>,
-  'getAllLeadershipWordSubmissions' : ActorMethod<
-    [],
-    Array<[Principal, LeadershipWordSubmission]>
-  >,
   'getAllMicroSolutions' : ActorMethod<[], Array<ResilientLeadershipActivity>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getLeadershipWordCounts' : ActorMethod<[], Array<[string, bigint]>>,
   'getNextActivity1Quote' : ActorMethod<[], Quote>,
   'getNextActivity2Quote' : ActorMethod<[], Quote>,
-  'getTopLeadershipWords' : ActorMethod<[], Array<[string, bigint]>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
-  'populateActivity1Quotes' : ActorMethod<[Array<Quote>], undefined>,
-  'populateActivity2Quotes' : ActorMethod<[Array<Quote>], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'submitLeadershipWord' : ActorMethod<
     [string, string, string, string, string],

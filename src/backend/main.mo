@@ -1,17 +1,13 @@
 import Map "mo:core/Map";
 import List "mo:core/List";
-import Array "mo:core/Array";
 import Text "mo:core/Text";
 import Nat "mo:core/Nat";
-import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
 import Order "mo:core/Order";
 import Runtime "mo:core/Runtime";
 
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-
-// Apply migration logic from the migration module
 
 actor {
   // Initialize the access control system
@@ -67,7 +63,6 @@ actor {
   let leadershipWords = Map.empty<Principal, LeadershipWordSubmission>();
   let leadershipWordCounts = Map.empty<Text, Nat>();
   let leadershipActivities = List.empty<ResilientLeadershipActivity>();
-
   let activity1Quotes = List.empty<Quote>();
   let activity2Quotes = List.empty<Quote>();
   let activity1State = Map.empty<Principal, Nat>();
@@ -82,6 +77,9 @@ actor {
 
   // User Profile Management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
+    if (Principal.equal(caller, Principal.fromText("2vxsx-fae"))) {
+      Runtime.trap("Unauthorized: Anonymous users cannot access profiles.");
+    };
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can access profiles");
     };
@@ -89,6 +87,9 @@ actor {
   };
 
   public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
+    if (Principal.equal(caller, Principal.fromText("2vxsx-fae"))) {
+      Runtime.trap("Unauthorized: Anonymous users cannot access profiles.");
+    };
     if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Can only view your own profile");
     };
@@ -96,6 +97,9 @@ actor {
   };
 
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
+    if (Principal.equal(caller, Principal.fromText("2vxsx-fae"))) {
+      Runtime.trap("Unauthorized: Anonymous users cannot access profiles.");
+    };
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can save profiles");
     };
@@ -104,10 +108,6 @@ actor {
 
   // Submission Endpoints
   public shared ({ caller }) func submitLeadershipWord(word : Text, why : Text, roleModel : Text, resilienceExample : Text, actionStep : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can submit leadership words");
-    };
-
     let submission : LeadershipWordSubmission = {
       word;
       why;
@@ -133,10 +133,6 @@ actor {
     protectiveFactor : Text,
     microSolution : Text,
   ) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can submit activities");
-    };
-
     switch (customChallenge, challengeType) {
       case (null, null) {
         Runtime.trap("Please select at least a core Leadership Challenge.");
@@ -181,10 +177,6 @@ actor {
 
   // Query - Quote Cycling Endpoints
   public shared ({ caller }) func getNextActivity1Quote() : async Quote {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access quotes");
-    };
-
     switch (getNextQuote(caller, activity1Quotes, activity1State)) {
       case (null) {
         let defaultQuotes = getDefaultActivity1Quotes();
@@ -198,10 +190,6 @@ actor {
   };
 
   public shared ({ caller }) func getNextActivity2Quote() : async Quote {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access quotes");
-    };
-
     switch (getNextQuote(caller, activity2Quotes, activity2State)) {
       case (null) {
         let defaultQuotes = getDefaultActivity2Quotes();
@@ -214,88 +202,12 @@ actor {
     };
   };
 
-  // Query - Data Retrieval Endpoints
   public query ({ caller }) func getLeadershipWordCounts() : async [(Text, Nat)] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view word counts");
-    };
     leadershipWordCounts.toArray();
   };
 
   public query ({ caller }) func getAllMicroSolutions() : async [ResilientLeadershipActivity] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view micro-solutions");
-    };
     leadershipActivities.toArray();
-  };
-
-  public query ({ caller }) func getAllLeadershipWordSubmissions() : async [(Principal, LeadershipWordSubmission)] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can view all submissions");
-    };
-    leadershipWords.entries().toArray();
-  };
-
-  module LeadershipWordCount {
-    public func compare(a : (Text, Nat), b : (Text, Nat)) : Order.Order {
-      Nat.compare(b.1, a.1);
-    };
-  };
-
-  public query ({ caller }) func getTopLeadershipWords() : async [(Text, Nat)] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view top words");
-    };
-    leadershipWordCounts.entries().toArray();
-  };
-
-  // Update - Populate Quotes (Admin Only)
-  public shared ({ caller }) func populateActivity1Quotes(quotes : [Quote]) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can populate quotes");
-    };
-
-    activity1Quotes.clear();
-    for (quote in quotes.values()) {
-      activity1Quotes.add(quote);
-    };
-    activity1State.clear();
-  };
-
-  public shared ({ caller }) func populateActivity2Quotes(quotes : [Quote]) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can populate quotes");
-    };
-
-    activity2Quotes.clear();
-    for (quote in quotes.values()) {
-      activity2Quotes.add(quote);
-    };
-    activity2State.clear();
-  };
-
-  public query ({ caller }) func getAllActivity1Quotes() : async [Quote] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view quotes");
-    };
-
-    if (activity1Quotes.isEmpty()) {
-      getDefaultActivity1Quotes().toArray();
-    } else {
-      activity1Quotes.toArray();
-    };
-  };
-
-  public query ({ caller }) func getAllActivity2Quotes() : async [Quote] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view quotes");
-    };
-
-    if (activity2Quotes.isEmpty()) {
-      getDefaultActivity2Quotes().toArray();
-    } else {
-      activity2Quotes.toArray();
-    };
   };
 
   // Default Quotes with Movie References
@@ -400,7 +312,7 @@ actor {
       quote = "Resourcefulness is the key to rising above challenges.";
       attribution = "Danny Ocean (Inspired)";
       movieReference = "Ocean's Eleven";
-      genre = #kingsman; // Closest fit
+      genre = #kingsman;
     });
     quotes.add({
       quote = "Balance is found by accepting both light and shadow within.";
@@ -418,7 +330,7 @@ actor {
       quote = "Adapt and overcome, for every end is a new beginning.";
       attribution = "Diana Prince (Inspired)";
       movieReference = "Wonder Woman (DC Universe)";
-      genre = #avengers; // Closest fit
+      genre = #avengers;
     });
     quotes.add({
       quote = "A leader's true value lies in the hope they bring to others.";
@@ -435,4 +347,3 @@ actor {
     genre : QuoteGenre;
   };
 };
-

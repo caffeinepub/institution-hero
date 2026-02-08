@@ -1,37 +1,77 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Moat-and-trees footer banner asset and page-bottom rendering",
+  "title": "Enable anonymous submissions for Activities 1 & 2 without Internet Identity gating",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add a new castle-style decorative moat-and-trees footer banner graphic as a generated static asset sized for a bottom-of-page strip.",
+      "summary": "Make Activity 1 & 2 forms visible and submittable even when Internet Identity is not signed in or still loading.",
       "acceptanceCriteria": [
-        "A new image file exists at frontend/public/assets/generated/moat-trees-footer-banner.dim_1600x300.png.",
-        "The graphic is purely visual (no embedded text) and reads well when cropped responsively across common screen widths.",
-        "The graphic’s style matches the existing hero banner aesthetic (similar palette/illustration style to /assets/generated/institution-hero-banner.dim_1600x600.png)."
+        "When not signed in (anonymous), the Activity 1 form is visible and the Submit button can be used successfully.",
+        "When not signed in (anonymous), the Activity 2 form is visible and the Submit button can be used successfully.",
+        "The UI no longer shows a blocking “Connecting… Please wait while we establish a secure connection.” gate that prevents anonymous submissions on Activities 1 & 2."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/generated/moat-trees-footer-banner.dim_1600x300.png",
-          "operation": "create",
-          "description": "Create the new decorative footer strip illustration (moat + trees), visually consistent with the existing castle hero banner style; ensure it is text-free and designed to crop well horizontally at common viewport widths."
+          "path": "frontend/src/pages/Activity1LeadershipWordPage.tsx",
+          "operation": "modify",
+          "description": "Remove the blocking identity/actor-loading UI gate around the Activity 1 submission form and ensure the form renders for anonymous users; keep only minimal non-blocking feedback (e.g., disable submit only while the submit mutation is pending or while no actor is available yet)."
+        },
+        {
+          "path": "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
+          "operation": "modify",
+          "description": "Remove the blocking identity/actor-loading UI gate around the Activity 2 submission form and ensure the form renders for anonymous users; keep only minimal non-blocking feedback (e.g., disable submit only while the submit mutation is pending or while no actor is available yet)."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Render the moat-and-trees footer banner as a full-width bottom-of-page strip on all routed pages, positioned above the global footer and responsive without overlapping content.",
+      "summary": "Refactor SignInGate usage so it gates only authenticated-only sections (e.g., community contributions) and not the submission forms on Activities 1 & 2.",
       "acceptanceCriteria": [
-        "Navigating to each route (e.g., Overview, Bio, Learning Outcomes, Takeaways, Activities, Slides, References, Movie References, Leadership Board) displays the moat/trees image as a bottom strip above the existing footer.",
-        "The image does not overlap page content and remains responsive (full width, fixed height or max-height, with appropriate object-fit).",
-        "No backend changes are required for this feature."
+        "Activity 1 page does not wrap the submission form in SignInGate.",
+        "Activity 2 page does not wrap the submission form in SignInGate.",
+        "If community sections remain gated, they display a sign-in prompt while the submission form remains usable."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/AppShell.tsx",
+          "path": "frontend/src/pages/Activity1LeadershipWordPage.tsx",
           "operation": "modify",
-          "description": "Insert a full-width decorative image strip immediately above the existing global <footer>, using the static asset frontend/public/assets/generated/moat-trees-footer-banner.dim_1600x300.png; ensure layout keeps it at the bottom of each page’s content area (within the flex column shell), with responsive sizing (fixed height or max-height) and object-fit so it does not overlap the routed page content."
+          "description": "Stop wrapping the Activity 1 submission form in SignInGate; if community-facing content remains on this page (e.g., LeadershipWordPatternsSummary after submission), wrap only that specific community section in SignInGate while keeping the submission flow accessible."
+        },
+        {
+          "path": "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
+          "operation": "modify",
+          "description": "Stop wrapping the Activity 2 submission form in SignInGate; if community-facing content remains on this page (e.g., MicroSolutionsCommunityList after submission), wrap only that specific community section in SignInGate while keeping the submission flow accessible."
+        },
+        {
+          "path": "frontend/src/components/SignInGate.tsx",
+          "operation": "modify",
+          "description": "Adjust SignInGate messaging so it no longer claims sign-in is required to submit responses (since Activities 1 & 2 allow anonymous submission); keep the prompt oriented toward gated content like viewing community contributions, and ensure behavior remains a simple render-block for only the wrapped section."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Ensure submit/quote actions on Activities 1 & 2 use an anonymous actor when authenticated identity is unavailable, instead of blocking on identity-loading state.",
+      "acceptanceCriteria": [
+        "On a fresh load where Internet Identity never completes, users can still submit Activity 1 and Activity 2 responses.",
+        "Submission errors (if any) are real backend errors, not a generic 'Connection is still initializing' message solely caused by identity loading."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Refactor Activity 1/2 submit and quote mutations to be resilient to actor unavailability by falling back to creating/using an anonymous actor when the authenticated actor is not yet available; avoid throwing/returning generic initialization errors solely due to identity loading."
+        },
+        {
+          "path": "frontend/src/pages/Activity1LeadershipWordPage.tsx",
+          "operation": "modify",
+          "description": "Update Activity 1 submit and quote-fetch handlers to no longer block based on isActorFetching; rely on the refactored mutations that can operate with an anonymous actor, and ensure any user-visible errors come from actual failures (using toUserFacingError)."
+        },
+        {
+          "path": "frontend/src/pages/Activity2ResilientLeadershipPage.tsx",
+          "operation": "modify",
+          "description": "Update Activity 2 submit and quote-fetch handlers to no longer block based on isActorFetching; rely on the refactored mutations that can operate with an anonymous actor, and ensure any user-visible errors come from actual failures (using toUserFacingError)."
         }
       ]
     }

@@ -28,7 +28,7 @@ interface AffirmationResult {
 
 export default function Activity1LeadershipWordPage() {
   const navigate = useNavigate();
-  const { actor, isFetching: isActorFetching } = useActor();
+  const { actor } = useActor();
   const [word, setWord] = useState('');
   const [why, setWhy] = useState('');
   const [roleModel, setRoleModel] = useState('');
@@ -48,12 +48,6 @@ export default function Activity1LeadershipWordPage() {
 
     // Clear any previous errors
     setSubmissionError('');
-
-    // Check if actor is ready
-    if (!actor || isActorFetching) {
-      setSubmissionError('Connection is still initializing. Please wait a moment and try again.');
-      return;
-    }
 
     try {
       await submitMutation.mutateAsync({
@@ -83,12 +77,6 @@ export default function Activity1LeadershipWordPage() {
   };
 
   const handleGetAffirmation = async () => {
-    // Check if actor is ready before fetching quote
-    if (!actor || isActorFetching) {
-      setQuoteError('Connection is still initializing. Please wait a moment and try again.');
-      return;
-    }
-
     if (lastSubmission) {
       setQuoteError('');
       
@@ -125,12 +113,6 @@ export default function Activity1LeadershipWordPage() {
   };
 
   const handleGenerateAnother = async () => {
-    // Check if actor is ready before fetching quote
-    if (!actor || isActorFetching) {
-      setQuoteError('Connection is still initializing. Please wait a moment and try again.');
-      return;
-    }
-
     if (lastSubmission) {
       setQuoteError('');
       
@@ -170,8 +152,6 @@ export default function Activity1LeadershipWordPage() {
   };
 
   if (submitted) {
-    const isActorReady = !!actor && !isActorFetching;
-
     return (
       <div>
         <HeroBanner 
@@ -192,7 +172,7 @@ export default function Activity1LeadershipWordPage() {
               <div className="mb-8">
                 <button
                   onClick={handleGetAffirmation}
-                  disabled={getQuoteMutation.isPending || !isActorReady}
+                  disabled={getQuoteMutation.isPending || !actor}
                   className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {getQuoteMutation.isPending ? (
@@ -262,7 +242,7 @@ export default function Activity1LeadershipWordPage() {
                     <div className="mt-4 flex justify-end">
                       <button
                         onClick={handleGenerateAnother}
-                        disabled={getQuoteMutation.isPending || !isActorReady}
+                        disabled={getQuoteMutation.isPending || !actor}
                         className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {getQuoteMutation.isPending ? (
@@ -290,9 +270,12 @@ export default function Activity1LeadershipWordPage() {
               </div>
             )}
 
-            <div className="mb-12">
-              <LeadershipWordPatternsSummary />
-            </div>
+            <SignInGate>
+              <div className="mb-12">
+                <LeadershipWordPatternsSummary />
+              </div>
+            </SignInGate>
+
             <button
               onClick={() => navigate({ to: '/activities' })}
               className="px-6 py-3 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
@@ -304,9 +287,6 @@ export default function Activity1LeadershipWordPage() {
       </div>
     );
   }
-
-  const isActorReady = !!actor && !isActorFetching;
-  const isSubmitDisabled = submitMutation.isPending || !isActorReady;
 
   // Parse examples from comma-separated string
   const examplesArray = proposalContent.activities.activity1.examples
@@ -348,124 +328,111 @@ export default function Activity1LeadershipWordPage() {
             </p>
           </div>
 
-          <SignInGate>
-            {/* Actor initialization message */}
-            {!isActorReady && (
-              <div className="mb-6 flex items-start gap-3 p-4 rounded-lg bg-muted border border-border">
-                <Loader2 className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5 animate-spin" />
-                <div>
-                  <p className="text-sm font-medium text-foreground">Connecting...</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Please wait while we establish a secure connection.
-                  </p>
-                </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="rounded-lg border border-border bg-card p-6 space-y-6">
+              <div>
+                <label htmlFor="word" className="block text-sm font-medium mb-2">
+                  Your Leadership Word <span className="text-destructive">*</span>
+                </label>
+                <input
+                  id="word"
+                  type="text"
+                  value={word}
+                  onChange={(e) => {
+                    setWord(e.target.value);
+                    handleInputChange();
+                  }}
+                  placeholder="e.g., Resilient, Empathetic, Visionary..."
+                  required
+                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="why" className="block text-sm font-medium mb-2">
+                  Why does this word resonate with you? <span className="text-destructive">*</span>
+                </label>
+                <textarea
+                  id="why"
+                  value={why}
+                  onChange={(e) => {
+                    setWhy(e.target.value);
+                    handleInputChange();
+                  }}
+                  placeholder="Share your personal connection to this leadership quality..."
+                  required
+                  rows={3}
+                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="roleModel" className="block text-sm font-medium mb-2">
+                  Who embodies this quality? <span className="text-destructive">*</span>
+                </label>
+                <input
+                  id="roleModel"
+                  type="text"
+                  value={roleModel}
+                  onChange={(e) => {
+                    setRoleModel(e.target.value);
+                    handleInputChange();
+                  }}
+                  placeholder="Name a role model or leader..."
+                  required
+                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="resilienceExample" className="block text-sm font-medium mb-2">
+                  How does this quality relate to resilience? <span className="text-destructive">*</span>
+                </label>
+                <textarea
+                  id="resilienceExample"
+                  value={resilienceExample}
+                  onChange={(e) => {
+                    setResilienceExample(e.target.value);
+                    handleInputChange();
+                  }}
+                  placeholder="Describe the connection between this quality and resilience..."
+                  required
+                  rows={3}
+                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="actionStep" className="block text-sm font-medium mb-2">
+                  One action step to develop this quality <span className="text-destructive">*</span>
+                </label>
+                <textarea
+                  id="actionStep"
+                  value={actionStep}
+                  onChange={(e) => {
+                    setActionStep(e.target.value);
+                    handleInputChange();
+                  }}
+                  placeholder="What's one concrete step you can take?"
+                  required
+                  rows={2}
+                  className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+                />
+              </div>
+            </div>
+
+            {submissionError && (
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                <p className="text-sm text-destructive">{submissionError}</p>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="rounded-lg border border-border bg-card p-6 space-y-6">
-                <div>
-                  <label htmlFor="word" className="block text-sm font-medium mb-2">
-                    Your Leadership Word <span className="text-destructive">*</span>
-                  </label>
-                  <input
-                    id="word"
-                    type="text"
-                    value={word}
-                    onChange={(e) => {
-                      setWord(e.target.value);
-                      handleInputChange();
-                    }}
-                    placeholder="e.g., Resilient, Empathetic, Visionary..."
-                    required
-                    className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="why" className="block text-sm font-medium mb-2">
-                    Why does this word resonate with you? <span className="text-destructive">*</span>
-                  </label>
-                  <textarea
-                    id="why"
-                    value={why}
-                    onChange={(e) => {
-                      setWhy(e.target.value);
-                      handleInputChange();
-                    }}
-                    placeholder="Share your personal connection to this leadership quality..."
-                    required
-                    rows={3}
-                    className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="roleModel" className="block text-sm font-medium mb-2">
-                    Who embodies this quality? <span className="text-destructive">*</span>
-                  </label>
-                  <input
-                    id="roleModel"
-                    type="text"
-                    value={roleModel}
-                    onChange={(e) => {
-                      setRoleModel(e.target.value);
-                      handleInputChange();
-                    }}
-                    placeholder="Name a role model or leader..."
-                    required
-                    className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="resilienceExample" className="block text-sm font-medium mb-2">
-                    How does this quality relate to resilience? <span className="text-destructive">*</span>
-                  </label>
-                  <textarea
-                    id="resilienceExample"
-                    value={resilienceExample}
-                    onChange={(e) => {
-                      setResilienceExample(e.target.value);
-                      handleInputChange();
-                    }}
-                    placeholder="Describe the connection between this quality and resilience..."
-                    required
-                    rows={3}
-                    className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="actionStep" className="block text-sm font-medium mb-2">
-                    One action step to develop this quality <span className="text-destructive">*</span>
-                  </label>
-                  <textarea
-                    id="actionStep"
-                    value={actionStep}
-                    onChange={(e) => {
-                      setActionStep(e.target.value);
-                      handleInputChange();
-                    }}
-                    placeholder="What's one concrete step you can take?"
-                    required
-                    rows={2}
-                    className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
-                  />
-                </div>
-              </div>
-
-              {submissionError && (
-                <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
-                  <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-                  <p className="text-sm text-destructive">{submissionError}</p>
-                </div>
-              )}
-
+            <div className="flex justify-end">
               <button
                 type="submit"
-                disabled={isSubmitDisabled}
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={submitMutation.isPending || !actor}
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitMutation.isPending ? (
                   <>
@@ -475,12 +442,12 @@ export default function Activity1LeadershipWordPage() {
                 ) : (
                   <>
                     <Send className="h-5 w-5" />
-                    Submit My Leadership Word
+                    Submit
                   </>
                 )}
               </button>
-            </form>
-          </SignInGate>
+            </div>
+          </form>
         </div>
       </PageSection>
     </div>

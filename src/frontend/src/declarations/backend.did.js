@@ -13,30 +13,6 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
-export const QuoteGenre = IDL.Variant({
-  'starWars' : IDL.Null,
-  'transformers' : IDL.Null,
-  'batman' : IDL.Null,
-  'threeKings' : IDL.Null,
-  'kingsman' : IDL.Null,
-  'darkKnightTrilogy' : IDL.Null,
-  'avengers' : IDL.Null,
-  'infinite' : IDL.Null,
-  'warDogs' : IDL.Null,
-});
-export const Quote = IDL.Record({
-  'movieReference' : IDL.Text,
-  'quote' : IDL.Text,
-  'genre' : QuoteGenre,
-  'attribution' : IDL.Text,
-});
-export const LeadershipWordSubmission = IDL.Record({
-  'why' : IDL.Text,
-  'roleModel' : IDL.Text,
-  'word' : IDL.Text,
-  'actionStep' : IDL.Text,
-  'resilienceExample' : IDL.Text,
-});
 export const ChallengeType = IDL.Variant({
   'timeManagement' : IDL.Null,
   'socialIsolation' : IDL.Null,
@@ -55,17 +31,27 @@ export const ResilientLeadershipActivity = IDL.Record({
   'protectiveFactor' : IDL.Text,
 });
 export const UserProfile = IDL.Record({ 'name' : IDL.Text });
+export const QuoteGenre = IDL.Variant({
+  'starWars' : IDL.Null,
+  'transformers' : IDL.Null,
+  'batman' : IDL.Null,
+  'threeKings' : IDL.Null,
+  'kingsman' : IDL.Null,
+  'darkKnightTrilogy' : IDL.Null,
+  'avengers' : IDL.Null,
+  'infinite' : IDL.Null,
+  'warDogs' : IDL.Null,
+});
+export const Quote = IDL.Record({
+  'movieReference' : IDL.Text,
+  'quote' : IDL.Text,
+  'genre' : QuoteGenre,
+  'attribution' : IDL.Text,
+});
 
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'getAllActivity1Quotes' : IDL.Func([], [IDL.Vec(Quote)], ['query']),
-  'getAllActivity2Quotes' : IDL.Func([], [IDL.Vec(Quote)], ['query']),
-  'getAllLeadershipWordSubmissions' : IDL.Func(
-      [],
-      [IDL.Vec(IDL.Tuple(IDL.Principal, LeadershipWordSubmission))],
-      ['query'],
-    ),
   'getAllMicroSolutions' : IDL.Func(
       [],
       [IDL.Vec(ResilientLeadershipActivity)],
@@ -80,19 +66,12 @@ export const idlService = IDL.Service({
     ),
   'getNextActivity1Quote' : IDL.Func([], [Quote], []),
   'getNextActivity2Quote' : IDL.Func([], [Quote], []),
-  'getTopLeadershipWords' : IDL.Func(
-      [],
-      [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))],
-      ['query'],
-    ),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
       [IDL.Opt(UserProfile)],
       ['query'],
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-  'populateActivity1Quotes' : IDL.Func([IDL.Vec(Quote)], [], []),
-  'populateActivity2Quotes' : IDL.Func([IDL.Vec(Quote)], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'submitLeadershipWord' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
@@ -121,30 +100,6 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
-  const QuoteGenre = IDL.Variant({
-    'starWars' : IDL.Null,
-    'transformers' : IDL.Null,
-    'batman' : IDL.Null,
-    'threeKings' : IDL.Null,
-    'kingsman' : IDL.Null,
-    'darkKnightTrilogy' : IDL.Null,
-    'avengers' : IDL.Null,
-    'infinite' : IDL.Null,
-    'warDogs' : IDL.Null,
-  });
-  const Quote = IDL.Record({
-    'movieReference' : IDL.Text,
-    'quote' : IDL.Text,
-    'genre' : QuoteGenre,
-    'attribution' : IDL.Text,
-  });
-  const LeadershipWordSubmission = IDL.Record({
-    'why' : IDL.Text,
-    'roleModel' : IDL.Text,
-    'word' : IDL.Text,
-    'actionStep' : IDL.Text,
-    'resilienceExample' : IDL.Text,
-  });
   const ChallengeType = IDL.Variant({
     'timeManagement' : IDL.Null,
     'socialIsolation' : IDL.Null,
@@ -163,17 +118,27 @@ export const idlFactory = ({ IDL }) => {
     'protectiveFactor' : IDL.Text,
   });
   const UserProfile = IDL.Record({ 'name' : IDL.Text });
+  const QuoteGenre = IDL.Variant({
+    'starWars' : IDL.Null,
+    'transformers' : IDL.Null,
+    'batman' : IDL.Null,
+    'threeKings' : IDL.Null,
+    'kingsman' : IDL.Null,
+    'darkKnightTrilogy' : IDL.Null,
+    'avengers' : IDL.Null,
+    'infinite' : IDL.Null,
+    'warDogs' : IDL.Null,
+  });
+  const Quote = IDL.Record({
+    'movieReference' : IDL.Text,
+    'quote' : IDL.Text,
+    'genre' : QuoteGenre,
+    'attribution' : IDL.Text,
+  });
   
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-    'getAllActivity1Quotes' : IDL.Func([], [IDL.Vec(Quote)], ['query']),
-    'getAllActivity2Quotes' : IDL.Func([], [IDL.Vec(Quote)], ['query']),
-    'getAllLeadershipWordSubmissions' : IDL.Func(
-        [],
-        [IDL.Vec(IDL.Tuple(IDL.Principal, LeadershipWordSubmission))],
-        ['query'],
-      ),
     'getAllMicroSolutions' : IDL.Func(
         [],
         [IDL.Vec(ResilientLeadershipActivity)],
@@ -188,19 +153,12 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getNextActivity1Quote' : IDL.Func([], [Quote], []),
     'getNextActivity2Quote' : IDL.Func([], [Quote], []),
-    'getTopLeadershipWords' : IDL.Func(
-        [],
-        [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))],
-        ['query'],
-      ),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(UserProfile)],
         ['query'],
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-    'populateActivity1Quotes' : IDL.Func([IDL.Vec(Quote)], [], []),
-    'populateActivity2Quotes' : IDL.Func([IDL.Vec(Quote)], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'submitLeadershipWord' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],

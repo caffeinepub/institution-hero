@@ -1,4 +1,4 @@
-import { useLeadershipWordCounts } from '../hooks/useQueries';
+import { useGetLeadershipWordCounts } from '../hooks/useQueries';
 import { BarChart3, TrendingUp } from 'lucide-react';
 
 interface LeadershipWordPatternsSummaryProps {
@@ -10,8 +10,8 @@ export default function LeadershipWordPatternsSummary({
   enablePolling = false,
   pollingIntervalMs = 3000,
 }: LeadershipWordPatternsSummaryProps) {
-  const { data: wordCounts, isLoading } = useLeadershipWordCounts(
-    enablePolling ? { refetchInterval: pollingIntervalMs } : undefined
+  const { data: wordCounts, isLoading } = useGetLeadershipWordCounts(
+    enablePolling ? pollingIntervalMs : undefined
   );
 
   if (isLoading) {

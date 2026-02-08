@@ -2,24 +2,35 @@
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
   "summary": "New project",
-  "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Castle-style moat and trees footer banner illustration (moat-trees-footer-banner.dim_1600x300.png)",
+  "architectural_notes": [
+    "Make Internet Identity authentication optional for Activity 1 & 2 submission flow (use anonymous actor/session fallback when identity is not ready)."
+  ],
+  "known_issues": [
+    "Activities 1 & 2 can get stuck on “Connecting… Please wait while we establish a secure connection” and block Submit when Internet Identity connection does not complete."
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-generate-a-new-decorative-footer-background-graphic-visually-consistent-with-the-existing-castle-hero-banner-style-featuring-a-water-moat-and-trees-sized-to-work-as-a-bottom-of-page-strip-on-all-tab-pages",
-      "title": "Generate a new decorative footer background graphic, visually consistent with the existing castle hero banner style, featuring a water moat and trees, sized to work as a bottom-of-page strip on all tab pages.",
+      "id": "feature-update-activity-1-and-activity-2-pages-so-users-can-fill-out-and-submit-the-forms-without-being-blocked-by-internet-identity-authentication-or-identity-loading-state",
+      "title": "Update Activity 1 and Activity 2 pages so users can fill out and submit the forms without being blocked by Internet Identity authentication or identity-loading state.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-render-the-new-moat-and-trees-footer-graphic-as-a-full-width-bottom-of-page-visual-element-on-all-routed-pages-the-tab-pages-positioned-above-the-global-footer-so-it-appears-at-the-bottom-of-each-page-s-content-area",
-      "title": "Render the new moat-and-trees footer graphic as a full-width bottom-of-page visual element on all routed pages (the tab pages), positioned above the global footer so it appears at the bottom of each page’s content area.",
+      "id": "feature-refactor-the-use-of-the-signingate-component-on-activities-1-2-so-that-it-does-not-gate-the-submission-forms-if-any-content-still-requires-authentication-e-g-viewing-community-contributions-gate-only-that-specific-content-and-keep-submission-accessible",
+      "title": "Refactor the use of the SignInGate component on Activities 1 & 2 so that it does not gate the submission forms; if any content still requires authentication (e.g., viewing community contributions), gate only that specific content and keep submission accessible.",
       "reqIds": [
         "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-adjust-frontend-submit-quote-actions-on-activity-1-and-activity-2-to-rely-on-the-anonymous-actor-when-the-authenticated-identity-is-unavailable-rather-than-blocking-based-on-identity-loading-state-e-g-do-not-treat-internet-identity-initialization-as-a-hard-prerequisite-for-submission",
+      "title": "Adjust frontend submit/quote actions on Activity 1 and Activity 2 to rely on the anonymous actor when the authenticated identity is unavailable, rather than blocking based on identity-loading state (e.g., do not treat Internet Identity initialization as a hard prerequisite for submission).",
+      "reqIds": [
+        "REQ-3"
       ],
       "version": 1
     }
@@ -27,13 +38,20 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Create an alternate bottom-of-tab page background graphic similar to the castle title background, featuring water (a moat) and trees",
+      "summary": "Allow anonymous users to submit Activity 1 & 2 responses without waiting for Internet Identity connection to finish",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Update backend access control logic so anonymous principals are allowed to submit Activity 1 and Activity 2 responses (and can retrieve Activity 1/2 quotes if those are used immediately after anonymous submission).",
+      "reqIds": [
+        "REQ-4"
+      ],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
-  "projectName": "Add moat-and-trees footer graphic for bottom of tab pages",
+  "projectName": "Allow anonymous Activity 1 & 2 submissions without waiting for Internet Identity",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

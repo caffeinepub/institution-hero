@@ -2,9 +2,12 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-generate-a-new-decorative-footer-background-graphic-visually-consistent-with-the-existing-castle-hero-banner-style-featuring-a-water-moat-and-trees-sized-to-work-as-a-bottom-of-page-strip-on-all-tab-pages",
-      "featureTitle": "Generate a new decorative footer background graphic, visually consistent with the existing castle hero banner style, featuring a water moat and trees, sized to work as a bottom-of-page strip on all tab pages.",
-      "files": [],
+      "featureId": "feature-update-activity-1-and-activity-2-pages-so-users-can-fill-out-and-submit-the-forms-without-being-blocked-by-internet-identity-authentication-or-identity-loading-state",
+      "featureTitle": "Update Activity 1 and Activity 2 pages so users can fill out and submit the forms without being blocked by Internet Identity authentication or identity-loading state.",
+      "files": [
+        "frontend/src/pages/Activity1LeadershipWordPage.tsx",
+        "frontend/src/pages/Activity2ResilientLeadershipPage.tsx"
+      ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
@@ -19,10 +22,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-render-the-new-moat-and-trees-footer-graphic-as-a-full-width-bottom-of-page-visual-element-on-all-routed-pages-the-tab-pages-positioned-above-the-global-footer-so-it-appears-at-the-bottom-of-each-page-s-content-area",
-      "featureTitle": "Render the new moat-and-trees footer graphic as a full-width bottom-of-page visual element on all routed pages (the tab pages), positioned above the global footer so it appears at the bottom of each page’s content area.",
+      "featureId": "feature-refactor-the-use-of-the-signingate-component-on-activities-1-2-so-that-it-does-not-gate-the-submission-forms-if-any-content-still-requires-authentication-e-g-viewing-community-contributions-gate-only-that-specific-content-and-keep-submission-accessible",
+      "featureTitle": "Refactor the use of the SignInGate component on Activities 1 & 2 so that it does not gate the submission forms; if any content still requires authentication (e.g., viewing community contributions), gate only that specific content and keep submission accessible.",
       "files": [
-        "frontend/src/components/AppShell.tsx"
+        "frontend/src/components/SignInGate.tsx",
+        "frontend/src/pages/Activity1LeadershipWordPage.tsx",
+        "frontend/src/pages/Activity2ResilientLeadershipPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -34,6 +39,27 @@
       ],
       "testIds": [
         "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-adjust-frontend-submit-quote-actions-on-activity-1-and-activity-2-to-rely-on-the-anonymous-actor-when-the-authenticated-identity-is-unavailable-rather-than-blocking-based-on-identity-loading-state-e-g-do-not-treat-internet-identity-initialization-as-a-hard-prerequisite-for-submission",
+      "featureTitle": "Adjust frontend submit/quote actions on Activity 1 and Activity 2 to rely on the anonymous actor when the authenticated identity is unavailable, rather than blocking based on identity-loading state (e.g., do not treat Internet Identity initialization as a hard prerequisite for submission).",
+      "files": [
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/Activity1LeadershipWordPage.tsx",
+        "frontend/src/pages/Activity2ResilientLeadershipPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
       ],
       "confidence": "high"
     }

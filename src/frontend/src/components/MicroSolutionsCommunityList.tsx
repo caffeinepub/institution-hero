@@ -1,4 +1,4 @@
-import { useMicroSolutions } from '../hooks/useQueries';
+import { useGetAllMicroSolutions } from '../hooks/useQueries';
 import { Users, Lightbulb, Shield } from 'lucide-react';
 import { ChallengeType } from '../backend';
 
@@ -21,8 +21,8 @@ export default function MicroSolutionsCommunityList({
   enablePolling = false,
   pollingIntervalMs = 3000,
 }: MicroSolutionsCommunityListProps) {
-  const { data: solutions, isLoading } = useMicroSolutions(
-    enablePolling ? { refetchInterval: pollingIntervalMs } : undefined
+  const { data: solutions, isLoading } = useGetAllMicroSolutions(
+    enablePolling ? pollingIntervalMs : undefined
   );
 
   if (isLoading) {

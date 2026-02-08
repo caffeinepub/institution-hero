@@ -89,21 +89,6 @@ export class ExternalBlob {
         return this;
     }
 }
-export interface LeadershipWordSubmission {
-    why: string;
-    roleModel: string;
-    word: string;
-    actionStep: string;
-    resilienceExample: string;
-}
-export interface ResilientLeadershipActivity {
-    microSolution: string;
-    customChallenge?: string;
-    villainResponse: string;
-    challengeType?: ChallengeType;
-    heroicResponse: string;
-    protectiveFactor: string;
-}
 export interface Quote {
     movieReference: string;
     quote: string;
@@ -112,6 +97,14 @@ export interface Quote {
 }
 export interface UserProfile {
     name: string;
+}
+export interface ResilientLeadershipActivity {
+    microSolution: string;
+    customChallenge?: string;
+    villainResponse: string;
+    challengeType?: ChallengeType;
+    heroicResponse: string;
+    protectiveFactor: string;
 }
 export enum ChallengeType {
     timeManagement = "timeManagement",
@@ -141,20 +134,14 @@ export enum UserRole {
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    getAllActivity1Quotes(): Promise<Array<Quote>>;
-    getAllActivity2Quotes(): Promise<Array<Quote>>;
-    getAllLeadershipWordSubmissions(): Promise<Array<[Principal, LeadershipWordSubmission]>>;
     getAllMicroSolutions(): Promise<Array<ResilientLeadershipActivity>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getLeadershipWordCounts(): Promise<Array<[string, bigint]>>;
     getNextActivity1Quote(): Promise<Quote>;
     getNextActivity2Quote(): Promise<Quote>;
-    getTopLeadershipWords(): Promise<Array<[string, bigint]>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
-    populateActivity1Quotes(quotes: Array<Quote>): Promise<void>;
-    populateActivity2Quotes(quotes: Array<Quote>): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     submitLeadershipWord(word: string, why: string, roleModel: string, resilienceExample: string, actionStep: string): Promise<void>;
     submitResilientLeadershipActivity(challengeType: ChallengeType | null, customChallenge: string | null, villainResponse: string, heroicResponse: string, protectiveFactor: string, microSolution: string): Promise<void>;
@@ -190,88 +177,46 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async getAllActivity1Quotes(): Promise<Array<Quote>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getAllActivity1Quotes();
-                return from_candid_vec_n3(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getAllActivity1Quotes();
-            return from_candid_vec_n3(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async getAllActivity2Quotes(): Promise<Array<Quote>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getAllActivity2Quotes();
-                return from_candid_vec_n3(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getAllActivity2Quotes();
-            return from_candid_vec_n3(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async getAllLeadershipWordSubmissions(): Promise<Array<[Principal, LeadershipWordSubmission]>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getAllLeadershipWordSubmissions();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getAllLeadershipWordSubmissions();
-            return result;
-        }
-    }
     async getAllMicroSolutions(): Promise<Array<ResilientLeadershipActivity>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getAllMicroSolutions();
-                return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n3(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getAllMicroSolutions();
-            return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n3(this._uploadFile, this._downloadFile, result);
         }
     }
     async getCallerUserProfile(): Promise<UserProfile | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getCallerUserProfile();
-                return from_candid_opt_n15(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n10(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCallerUserProfile();
-            return from_candid_opt_n15(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n10(this._uploadFile, this._downloadFile, result);
         }
     }
     async getCallerUserRole(): Promise<UserRole> {
         if (this.processError) {
             try {
                 const result = await this.actor.getCallerUserRole();
-                return from_candid_UserRole_n16(this._uploadFile, this._downloadFile, result);
+                return from_candid_UserRole_n11(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCallerUserRole();
-            return from_candid_UserRole_n16(this._uploadFile, this._downloadFile, result);
+            return from_candid_UserRole_n11(this._uploadFile, this._downloadFile, result);
         }
     }
     async getLeadershipWordCounts(): Promise<Array<[string, bigint]>> {
@@ -292,56 +237,42 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getNextActivity1Quote();
-                return from_candid_Quote_n4(this._uploadFile, this._downloadFile, result);
+                return from_candid_Quote_n13(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getNextActivity1Quote();
-            return from_candid_Quote_n4(this._uploadFile, this._downloadFile, result);
+            return from_candid_Quote_n13(this._uploadFile, this._downloadFile, result);
         }
     }
     async getNextActivity2Quote(): Promise<Quote> {
         if (this.processError) {
             try {
                 const result = await this.actor.getNextActivity2Quote();
-                return from_candid_Quote_n4(this._uploadFile, this._downloadFile, result);
+                return from_candid_Quote_n13(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getNextActivity2Quote();
-            return from_candid_Quote_n4(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async getTopLeadershipWords(): Promise<Array<[string, bigint]>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getTopLeadershipWords();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getTopLeadershipWords();
-            return result;
+            return from_candid_Quote_n13(this._uploadFile, this._downloadFile, result);
         }
     }
     async getUserProfile(arg0: Principal): Promise<UserProfile | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getUserProfile(arg0);
-                return from_candid_opt_n15(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n10(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getUserProfile(arg0);
-            return from_candid_opt_n15(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n10(this._uploadFile, this._downloadFile, result);
         }
     }
     async isCallerAdmin(): Promise<boolean> {
@@ -355,34 +286,6 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.isCallerAdmin();
-            return result;
-        }
-    }
-    async populateActivity1Quotes(arg0: Array<Quote>): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.populateActivity1Quotes(to_candid_vec_n18(this._uploadFile, this._downloadFile, arg0));
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.populateActivity1Quotes(to_candid_vec_n18(this._uploadFile, this._downloadFile, arg0));
-            return result;
-        }
-    }
-    async populateActivity2Quotes(arg0: Array<Quote>): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.populateActivity2Quotes(to_candid_vec_n18(this._uploadFile, this._downloadFile, arg0));
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.populateActivity2Quotes(to_candid_vec_n18(this._uploadFile, this._downloadFile, arg0));
             return result;
         }
     }
@@ -417,43 +320,61 @@ export class Backend implements backendInterface {
     async submitResilientLeadershipActivity(arg0: ChallengeType | null, arg1: string | null, arg2: string, arg3: string, arg4: string, arg5: string): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.submitResilientLeadershipActivity(to_candid_opt_n23(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n26(this._uploadFile, this._downloadFile, arg1), arg2, arg3, arg4, arg5);
+                const result = await this.actor.submitResilientLeadershipActivity(to_candid_opt_n17(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n20(this._uploadFile, this._downloadFile, arg1), arg2, arg3, arg4, arg5);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.submitResilientLeadershipActivity(to_candid_opt_n23(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n26(this._uploadFile, this._downloadFile, arg1), arg2, arg3, arg4, arg5);
+            const result = await this.actor.submitResilientLeadershipActivity(to_candid_opt_n17(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n20(this._uploadFile, this._downloadFile, arg1), arg2, arg3, arg4, arg5);
             return result;
         }
     }
 }
-function from_candid_ChallengeType_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ChallengeType): ChallengeType {
-    return from_candid_variant_n14(_uploadFile, _downloadFile, value);
+function from_candid_ChallengeType_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ChallengeType): ChallengeType {
+    return from_candid_variant_n9(_uploadFile, _downloadFile, value);
 }
-function from_candid_QuoteGenre_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _QuoteGenre): QuoteGenre {
-    return from_candid_variant_n7(_uploadFile, _downloadFile, value);
+function from_candid_QuoteGenre_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _QuoteGenre): QuoteGenre {
+    return from_candid_variant_n16(_uploadFile, _downloadFile, value);
 }
-function from_candid_Quote_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Quote): Quote {
+function from_candid_Quote_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Quote): Quote {
+    return from_candid_record_n14(_uploadFile, _downloadFile, value);
+}
+function from_candid_ResilientLeadershipActivity_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ResilientLeadershipActivity): ResilientLeadershipActivity {
     return from_candid_record_n5(_uploadFile, _downloadFile, value);
 }
-function from_candid_ResilientLeadershipActivity_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ResilientLeadershipActivity): ResilientLeadershipActivity {
-    return from_candid_record_n10(_uploadFile, _downloadFile, value);
+function from_candid_UserRole_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
+    return from_candid_variant_n12(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRole_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
-    return from_candid_variant_n17(_uploadFile, _downloadFile, value);
-}
-function from_candid_opt_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+function from_candid_opt_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_ChallengeType]): ChallengeType | null {
-    return value.length === 0 ? null : from_candid_ChallengeType_n13(_uploadFile, _downloadFile, value[0]);
-}
-function from_candid_opt_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
+function from_candid_opt_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_record_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_opt_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_ChallengeType]): ChallengeType | null {
+    return value.length === 0 ? null : from_candid_ChallengeType_n8(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_record_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    movieReference: string;
+    quote: string;
+    genre: _QuoteGenre;
+    attribution: string;
+}): {
+    movieReference: string;
+    quote: string;
+    genre: QuoteGenre;
+    attribution: string;
+} {
+    return {
+        movieReference: value.movieReference,
+        quote: value.quote,
+        genre: from_candid_QuoteGenre_n15(_uploadFile, _downloadFile, value.genre),
+        attribution: value.attribution
+    };
+}
+function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     microSolution: string;
     customChallenge: [] | [string];
     villainResponse: string;
@@ -470,49 +391,14 @@ function from_candid_record_n10(_uploadFile: (file: ExternalBlob) => Promise<Uin
 } {
     return {
         microSolution: value.microSolution,
-        customChallenge: record_opt_to_undefined(from_candid_opt_n11(_uploadFile, _downloadFile, value.customChallenge)),
+        customChallenge: record_opt_to_undefined(from_candid_opt_n6(_uploadFile, _downloadFile, value.customChallenge)),
         villainResponse: value.villainResponse,
-        challengeType: record_opt_to_undefined(from_candid_opt_n12(_uploadFile, _downloadFile, value.challengeType)),
+        challengeType: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.challengeType)),
         heroicResponse: value.heroicResponse,
         protectiveFactor: value.protectiveFactor
     };
 }
-function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    movieReference: string;
-    quote: string;
-    genre: _QuoteGenre;
-    attribution: string;
-}): {
-    movieReference: string;
-    quote: string;
-    genre: QuoteGenre;
-    attribution: string;
-} {
-    return {
-        movieReference: value.movieReference,
-        quote: value.quote,
-        genre: from_candid_QuoteGenre_n6(_uploadFile, _downloadFile, value.genre),
-        attribution: value.attribution
-    };
-}
-function from_candid_variant_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    timeManagement: null;
-} | {
-    socialIsolation: null;
-} | {
-    mentalHealth: null;
-} | {
-    bullying: null;
-} | {
-    academicPressure: null;
-} | {
-    financialStress: null;
-} | {
-    onlineLearning: null;
-}): ChallengeType {
-    return "timeManagement" in value ? ChallengeType.timeManagement : "socialIsolation" in value ? ChallengeType.socialIsolation : "mentalHealth" in value ? ChallengeType.mentalHealth : "bullying" in value ? ChallengeType.bullying : "academicPressure" in value ? ChallengeType.academicPressure : "financialStress" in value ? ChallengeType.financialStress : "onlineLearning" in value ? ChallengeType.onlineLearning : value;
-}
-function from_candid_variant_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     admin: null;
 } | {
     user: null;
@@ -521,7 +407,7 @@ function from_candid_variant_n17(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): UserRole {
     return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
 }
-function from_candid_variant_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     starWars: null;
 } | {
     transformers: null;
@@ -542,103 +428,39 @@ function from_candid_variant_n7(_uploadFile: (file: ExternalBlob) => Promise<Uin
 }): QuoteGenre {
     return "starWars" in value ? QuoteGenre.starWars : "transformers" in value ? QuoteGenre.transformers : "batman" in value ? QuoteGenre.batman : "threeKings" in value ? QuoteGenre.threeKings : "kingsman" in value ? QuoteGenre.kingsman : "darkKnightTrilogy" in value ? QuoteGenre.darkKnightTrilogy : "avengers" in value ? QuoteGenre.avengers : "infinite" in value ? QuoteGenre.infinite : "warDogs" in value ? QuoteGenre.warDogs : value;
 }
-function from_candid_vec_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Quote>): Array<Quote> {
-    return value.map((x)=>from_candid_Quote_n4(_uploadFile, _downloadFile, x));
+function from_candid_variant_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    timeManagement: null;
+} | {
+    socialIsolation: null;
+} | {
+    mentalHealth: null;
+} | {
+    bullying: null;
+} | {
+    academicPressure: null;
+} | {
+    financialStress: null;
+} | {
+    onlineLearning: null;
+}): ChallengeType {
+    return "timeManagement" in value ? ChallengeType.timeManagement : "socialIsolation" in value ? ChallengeType.socialIsolation : "mentalHealth" in value ? ChallengeType.mentalHealth : "bullying" in value ? ChallengeType.bullying : "academicPressure" in value ? ChallengeType.academicPressure : "financialStress" in value ? ChallengeType.financialStress : "onlineLearning" in value ? ChallengeType.onlineLearning : value;
 }
-function from_candid_vec_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_ResilientLeadershipActivity>): Array<ResilientLeadershipActivity> {
-    return value.map((x)=>from_candid_ResilientLeadershipActivity_n9(_uploadFile, _downloadFile, x));
+function from_candid_vec_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_ResilientLeadershipActivity>): Array<ResilientLeadershipActivity> {
+    return value.map((x)=>from_candid_ResilientLeadershipActivity_n4(_uploadFile, _downloadFile, x));
 }
-function to_candid_ChallengeType_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ChallengeType): _ChallengeType {
-    return to_candid_variant_n25(_uploadFile, _downloadFile, value);
-}
-function to_candid_QuoteGenre_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: QuoteGenre): _QuoteGenre {
-    return to_candid_variant_n22(_uploadFile, _downloadFile, value);
-}
-function to_candid_Quote_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Quote): _Quote {
-    return to_candid_record_n20(_uploadFile, _downloadFile, value);
+function to_candid_ChallengeType_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ChallengeType): _ChallengeType {
+    return to_candid_variant_n19(_uploadFile, _downloadFile, value);
 }
 function to_candid_UserRole_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): _UserRole {
     return to_candid_variant_n2(_uploadFile, _downloadFile, value);
 }
-function to_candid_opt_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ChallengeType | null): [] | [_ChallengeType] {
-    return value === null ? candid_none() : candid_some(to_candid_ChallengeType_n24(_uploadFile, _downloadFile, value));
+function to_candid_opt_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ChallengeType | null): [] | [_ChallengeType] {
+    return value === null ? candid_none() : candid_some(to_candid_ChallengeType_n18(_uploadFile, _downloadFile, value));
 }
-function to_candid_opt_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: string | null): [] | [string] {
+function to_candid_opt_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: string | null): [] | [string] {
     return value === null ? candid_none() : candid_some(value);
 }
-function to_candid_record_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    movieReference: string;
-    quote: string;
-    genre: QuoteGenre;
-    attribution: string;
-}): {
-    movieReference: string;
-    quote: string;
-    genre: _QuoteGenre;
-    attribution: string;
-} {
-    return {
-        movieReference: value.movieReference,
-        quote: value.quote,
-        genre: to_candid_QuoteGenre_n21(_uploadFile, _downloadFile, value.genre),
-        attribution: value.attribution
-    };
-}
-function to_candid_variant_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): {
-    admin: null;
-} | {
-    user: null;
-} | {
-    guest: null;
-} {
-    return value == UserRole.admin ? {
-        admin: null
-    } : value == UserRole.user ? {
-        user: null
-    } : value == UserRole.guest ? {
-        guest: null
-    } : value;
-}
-function to_candid_variant_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: QuoteGenre): {
-    starWars: null;
-} | {
-    transformers: null;
-} | {
-    batman: null;
-} | {
-    threeKings: null;
-} | {
-    kingsman: null;
-} | {
-    darkKnightTrilogy: null;
-} | {
-    avengers: null;
-} | {
-    infinite: null;
-} | {
-    warDogs: null;
-} {
-    return value == QuoteGenre.starWars ? {
-        starWars: null
-    } : value == QuoteGenre.transformers ? {
-        transformers: null
-    } : value == QuoteGenre.batman ? {
-        batman: null
-    } : value == QuoteGenre.threeKings ? {
-        threeKings: null
-    } : value == QuoteGenre.kingsman ? {
-        kingsman: null
-    } : value == QuoteGenre.darkKnightTrilogy ? {
-        darkKnightTrilogy: null
-    } : value == QuoteGenre.avengers ? {
-        avengers: null
-    } : value == QuoteGenre.infinite ? {
-        infinite: null
-    } : value == QuoteGenre.warDogs ? {
-        warDogs: null
-    } : value;
-}
-function to_candid_variant_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ChallengeType): {
+function to_candid_variant_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ChallengeType): {
     timeManagement: null;
 } | {
     socialIsolation: null;
@@ -669,8 +491,20 @@ function to_candid_variant_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint
         onlineLearning: null
     } : value;
 }
-function to_candid_vec_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<Quote>): Array<_Quote> {
-    return value.map((x)=>to_candid_Quote_n19(_uploadFile, _downloadFile, x));
+function to_candid_variant_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): {
+    admin: null;
+} | {
+    user: null;
+} | {
+    guest: null;
+} {
+    return value == UserRole.admin ? {
+        admin: null
+    } : value == UserRole.user ? {
+        user: null
+    } : value == UserRole.guest ? {
+        guest: null
+    } : value;
 }
 export interface CreateActorOptions {
     agent?: Agent;
