@@ -1,7 +1,6 @@
-import PageSection from '../components/PageSection';
-import HeroBanner from '../components/HeroBanner';
-import { Film } from 'lucide-react';
-import { movieReferences } from '../content/movieReferences';
+import HeroBanner from "../components/HeroBanner";
+import PageSection from "../components/PageSection";
+import { movieReferences } from "../content/movieReferences";
 
 export default function MovieReferencesPage() {
   return (
@@ -11,14 +10,15 @@ export default function MovieReferencesPage() {
       <PageSection>
         <div className="max-w-4xl mx-auto">
           <p className="text-muted-foreground mb-8">
-            The following films and film series inspire the quotes used throughout the activities. These
-            references demonstrate themes of resilience, leadership, and heroic action.
+            The following films and film series inspire the quotes used
+            throughout the activities. These references demonstrate themes of
+            resilience, leadership, and heroic action.
           </p>
 
           <div className="space-y-4">
-            {movieReferences.map((reference, index) => (
+            {movieReferences.map((reference) => (
               <div
-                key={index}
+                key={reference}
                 className="p-6 rounded-lg border border-border bg-card hover:bg-accent/5 transition-colors"
               >
                 <p className="text-foreground leading-relaxed">{reference}</p>

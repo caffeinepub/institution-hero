@@ -1,18 +1,23 @@
-import { StrictMode } from 'react';
-import { RouterProvider, createRouter, createRoute, createRootRoute } from '@tanstack/react-router';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import AppShell from './components/AppShell';
-import OverviewPage from './pages/OverviewPage';
-import BioPage from './pages/BioPage';
-import LearningOutcomesPage from './pages/LearningOutcomesPage';
-import TakeawaysPage from './pages/TakeawaysPage';
-import ActivitiesPage from './pages/ActivitiesPage';
-import Activity1LeadershipWordPage from './pages/Activity1LeadershipWordPage';
-import Activity2ResilientLeadershipPage from './pages/Activity2ResilientLeadershipPage';
-import ReferencesPage from './pages/ReferencesPage';
-import SlidesPage from './pages/SlidesPage';
-import MovieReferencesPage from './pages/MovieReferencesPage';
-import LeadershipBoardPage from './pages/LeadershipBoardPage';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  RouterProvider,
+  createRootRoute,
+  createRoute,
+  createRouter,
+} from "@tanstack/react-router";
+import { StrictMode } from "react";
+import AppShell from "./components/AppShell";
+import ActivitiesPage from "./pages/ActivitiesPage";
+import Activity1LeadershipWordPage from "./pages/Activity1LeadershipWordPage";
+import Activity2ResilientLeadershipPage from "./pages/Activity2ResilientLeadershipPage";
+import BioPage from "./pages/BioPage";
+import LeadershipBoardPage from "./pages/LeadershipBoardPage";
+import LearningOutcomesPage from "./pages/LearningOutcomesPage";
+import MovieReferencesPage from "./pages/MovieReferencesPage";
+import OverviewPage from "./pages/OverviewPage";
+import ReferencesPage from "./pages/ReferencesPage";
+import SlidesPage from "./pages/SlidesPage";
+import TakeawaysPage from "./pages/TakeawaysPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,67 +34,67 @@ const rootRoute = createRootRoute({
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/',
+  path: "/",
   component: OverviewPage,
 });
 
 const bioRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/bio',
+  path: "/bio",
   component: BioPage,
 });
 
 const learningOutcomesRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/learning-outcomes',
+  path: "/learning-outcomes",
   component: LearningOutcomesPage,
 });
 
 const takeawaysRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/takeaways',
+  path: "/takeaways",
   component: TakeawaysPage,
 });
 
 const activitiesRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/activities',
+  path: "/activities",
   component: ActivitiesPage,
 });
 
 const activity1Route = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/activity-1',
+  path: "/activity-1",
   component: Activity1LeadershipWordPage,
 });
 
 const activity2Route = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/activity-2',
+  path: "/activity-2",
   component: Activity2ResilientLeadershipPage,
 });
 
 const referencesRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/references',
+  path: "/references",
   component: ReferencesPage,
 });
 
 const slidesRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/slides',
+  path: "/slides",
   component: SlidesPage,
 });
 
 const movieReferencesRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/movie-references',
+  path: "/movie-references",
   component: MovieReferencesPage,
 });
 
 const leadershipBoardRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/leadership-board',
+  path: "/leadership-board",
   component: LeadershipBoardPage,
 });
 
@@ -109,7 +114,7 @@ const routeTree = rootRoute.addChildren([
 
 const router = createRouter({ routeTree });
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
   }

@@ -1,8 +1,8 @@
-import PageSection from '../components/PageSection';
-import HeroBanner from '../components/HeroBanner';
-import { proposalContent } from '../content/proposalContent';
-import { Link } from '@tanstack/react-router';
-import { MessageSquare, Users, ArrowRight } from 'lucide-react';
+import { Link } from "@tanstack/react-router";
+import { ArrowRight, MessageSquare, Users } from "lucide-react";
+import HeroBanner from "../components/HeroBanner";
+import PageSection from "../components/PageSection";
+import { proposalContent } from "../content/proposalContent";
 
 export default function ActivitiesPage() {
   return (
@@ -12,7 +12,8 @@ export default function ActivitiesPage() {
       <PageSection>
         <div className="max-w-4xl mx-auto">
           <p className="text-lg text-muted-foreground mb-12">
-            Engage with these research-based exercises to develop your leadership identity and resilience.
+            Engage with these research-based exercises to develop your
+            leadership identity and resilience.
           </p>
 
           <div className="grid md:grid-cols-2 gap-8">
@@ -21,7 +22,9 @@ export default function ActivitiesPage() {
               <div className="p-6 bg-primary/5 border-b border-border">
                 <div className="flex items-center gap-2 mb-2">
                   <MessageSquare className="h-6 w-6 text-primary" />
-                  <h2 className="text-2xl font-bold text-foreground">Activity 1</h2>
+                  <h2 className="text-2xl font-bold text-foreground">
+                    Activity 1
+                  </h2>
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">
                   {proposalContent.activities.activity1.title}
@@ -29,9 +32,12 @@ export default function ActivitiesPage() {
               </div>
               <div className="p-6">
                 <p className="text-sm text-muted-foreground mb-4">
-                  <strong>Goal:</strong> {proposalContent.activities.activity1.goal}
+                  <strong>Goal:</strong>{" "}
+                  {proposalContent.activities.activity1.goal}
                 </p>
-                <p className="text-muted-foreground mb-6">{proposalContent.activities.activity1.description}</p>
+                <p className="text-muted-foreground mb-6">
+                  {proposalContent.activities.activity1.description}
+                </p>
                 <Link
                   to="/activity-1"
                   className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors w-full justify-center"
@@ -47,7 +53,9 @@ export default function ActivitiesPage() {
               <div className="p-6 bg-primary/5 border-b border-border">
                 <div className="flex items-center gap-2 mb-2">
                   <Users className="h-6 w-6 text-primary" />
-                  <h2 className="text-2xl font-bold text-foreground">Activity 2</h2>
+                  <h2 className="text-2xl font-bold text-foreground">
+                    Activity 2
+                  </h2>
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">
                   {proposalContent.activities.activity2.title}
@@ -55,9 +63,12 @@ export default function ActivitiesPage() {
               </div>
               <div className="p-6">
                 <p className="text-sm text-muted-foreground mb-4">
-                  <strong>Goal:</strong> {proposalContent.activities.activity2.goal}
+                  <strong>Goal:</strong>{" "}
+                  {proposalContent.activities.activity2.goal}
                 </p>
-                <p className="text-muted-foreground mb-6">{proposalContent.activities.activity2.description}</p>
+                <p className="text-muted-foreground mb-6">
+                  {proposalContent.activities.activity2.description}
+                </p>
                 <Link
                   to="/activity-2"
                   className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors w-full justify-center"

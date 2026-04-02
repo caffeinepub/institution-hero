@@ -1,5 +1,5 @@
-import PageSection from '../components/PageSection';
-import HeroBanner from '../components/HeroBanner';
+import HeroBanner from "../components/HeroBanner";
+import PageSection from "../components/PageSection";
 
 export default function SlidesPage() {
   return (
@@ -12,15 +12,22 @@ export default function SlidesPage() {
             Access the presentation slides and materials for this session.
           </p>
 
-          <div className="rounded-lg border border-border bg-card p-8 flex flex-col items-center">
-            <img
-              src="/assets/Morris, 2012, QR code.png"
-              alt="QR Code for Slides"
-              className="w-full max-w-md h-auto rounded-lg shadow-lg"
-            />
-            <p className="text-sm text-muted-foreground mt-6 text-center">
-              Scan the QR code to access the presentation slides
-            </p>
+          <div className="flex flex-col md:flex-row gap-8 justify-center items-center">
+            <div className="rounded-lg border border-border bg-card p-6 flex flex-col items-center flex-1">
+              <img
+                src="/assets/morris_2012_qr_code-019d4c74-c4f1-7196-86ac-707ca34a5ba6.png"
+                alt="Morris, 2021 QR Code"
+                className="w-full max-w-xs h-auto rounded-lg shadow-lg"
+              />
+            </div>
+
+            <div className="rounded-lg border border-border bg-card p-6 flex flex-col items-center flex-1">
+              <img
+                src="/assets/viernes_2026_fie_1-019d4c74-c4bc-7218-aa3f-1af13aa4b0e4.png"
+                alt="Viernes, 2026 QR Code"
+                className="w-full max-w-xs h-auto rounded-lg shadow-lg"
+              />
+            </div>
           </div>
         </div>
       </PageSection>

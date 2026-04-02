@@ -1,5 +1,5 @@
-import { useGetLeadershipWordCounts } from '../hooks/useQueries';
-import { BarChart3, TrendingUp } from 'lucide-react';
+import { BarChart3, TrendingUp } from "lucide-react";
+import { useGetLeadershipWordCounts } from "../hooks/useQueries";
 
 interface LeadershipWordPatternsSummaryProps {
   enablePolling?: boolean;
@@ -11,7 +11,7 @@ export default function LeadershipWordPatternsSummary({
   pollingIntervalMs = 3000,
 }: LeadershipWordPatternsSummaryProps) {
   const { data: wordCounts, isLoading } = useGetLeadershipWordCounts(
-    enablePolling ? pollingIntervalMs : undefined
+    enablePolling ? pollingIntervalMs : undefined,
   );
 
   if (isLoading) {
@@ -41,7 +41,9 @@ export default function LeadershipWordPatternsSummary({
   }
 
   // Sort by count descending and take top 10
-  const sortedWords = [...wordCounts].sort((a, b) => Number(b[1]) - Number(a[1])).slice(0, 10);
+  const sortedWords = [...wordCounts]
+    .sort((a, b) => Number(b[1]) - Number(a[1]))
+    .slice(0, 10);
   const maxCount = sortedWords.length > 0 ? Number(sortedWords[0][1]) : 1;
 
   return (
@@ -60,7 +62,9 @@ export default function LeadershipWordPatternsSummary({
             <div key={word} className="space-y-1">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-medium capitalize">{word}</span>
-                <span className="text-muted-foreground">{count.toString()}</span>
+                <span className="text-muted-foreground">
+                  {count.toString()}
+                </span>
               </div>
               <div className="h-2 bg-muted rounded-full overflow-hidden">
                 <div

@@ -1,8 +1,8 @@
-import PageSection from '../components/PageSection';
-import HeroBanner from '../components/HeroBanner';
-import { proposalContent } from '../content/proposalContent';
-import { Users, Target } from 'lucide-react';
-import { Link } from '@tanstack/react-router';
+import { Link } from "@tanstack/react-router";
+import { Target, Users } from "lucide-react";
+import HeroBanner from "../components/HeroBanner";
+import PageSection from "../components/PageSection";
+import { proposalContent } from "../content/proposalContent";
 
 export default function OverviewPage() {
   return (
@@ -12,11 +12,17 @@ export default function OverviewPage() {
       <PageSection>
         <div className="prose prose-lg max-w-none">
           <h2 className="text-3xl font-bold mb-6 text-foreground">Abstract</h2>
-          <p className="text-muted-foreground leading-relaxed mb-8">{proposalContent.abstractShort}</p>
+          <p className="text-muted-foreground leading-relaxed mb-8">
+            {proposalContent.abstractShort}
+          </p>
 
           <div className="my-12 p-6 rounded-lg bg-muted/50 border border-border">
-            <h3 className="text-xl font-semibold mb-4 text-foreground">Full Abstract</h3>
-            <p className="text-muted-foreground leading-relaxed">{proposalContent.abstract}</p>
+            <h3 className="text-xl font-semibold mb-4 text-foreground">
+              Full Abstract
+            </h3>
+            <p className="text-muted-foreground leading-relaxed">
+              {proposalContent.abstract}
+            </p>
           </div>
 
           {/* Quick Links */}

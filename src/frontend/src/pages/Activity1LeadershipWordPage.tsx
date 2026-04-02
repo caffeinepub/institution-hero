@@ -1,17 +1,32 @@
-import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
-import PageSection from '../components/PageSection';
-import HeroBanner from '../components/HeroBanner';
-import SignInGate from '../components/SignInGate';
-import LeadershipWordPatternsSummary from '../components/LeadershipWordPatternsSummary';
-import { proposalContent } from '../content/proposalContent';
-import { useSubmitLeadershipWord, useGetNextActivity1Quote } from '../hooks/useQueries';
-import { useActor } from '../hooks/useActor';
-import { Sparkles, Send, CheckCircle, RefreshCw, AlertCircle, Loader2, Info, BookOpen } from 'lucide-react';
-import { generateAffirmation, AffirmationResult as AffirmationData } from '../utils/activity1Affirmations';
-import { toUserFacingError } from '../utils/userFacingError';
-import { hasVillainousInput } from '../utils/isVillainousInput';
-import { Quote } from '../backend';
+import { useNavigate } from "@tanstack/react-router";
+import {
+  AlertCircle,
+  BookOpen,
+  CheckCircle,
+  Info,
+  Loader2,
+  RefreshCw,
+  Send,
+  Sparkles,
+} from "lucide-react";
+import { useState } from "react";
+import type { Quote } from "../backend";
+import HeroBanner from "../components/HeroBanner";
+import LeadershipWordPatternsSummary from "../components/LeadershipWordPatternsSummary";
+import PageSection from "../components/PageSection";
+import SignInGate from "../components/SignInGate";
+import { proposalContent } from "../content/proposalContent";
+import { useActor } from "../hooks/useActor";
+import {
+  useGetNextActivity1Quote,
+  useSubmitLeadershipWord,
+} from "../hooks/useQueries";
+import {
+  type AffirmationResult as AffirmationData,
+  generateAffirmation,
+} from "../utils/activity1Affirmations";
+import { hasVillainousInput } from "../utils/isVillainousInput";
+import { toUserFacingError } from "../utils/userFacingError";
 
 interface LastSubmission {
   word: string;
@@ -29,16 +44,19 @@ interface AffirmationResult {
 export default function Activity1LeadershipWordPage() {
   const navigate = useNavigate();
   const { actor } = useActor();
-  const [word, setWord] = useState('');
-  const [why, setWhy] = useState('');
-  const [roleModel, setRoleModel] = useState('');
-  const [resilienceExample, setResilienceExample] = useState('');
-  const [actionStep, setActionStep] = useState('');
+  const [word, setWord] = useState("");
+  const [why, setWhy] = useState("");
+  const [roleModel, setRoleModel] = useState("");
+  const [resilienceExample, setResilienceExample] = useState("");
+  const [actionStep, setActionStep] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [lastSubmission, setLastSubmission] = useState<LastSubmission | null>(null);
-  const [affirmationResult, setAffirmationResult] = useState<AffirmationResult | null>(null);
-  const [submissionError, setSubmissionError] = useState<string>('');
-  const [quoteError, setQuoteError] = useState<string>('');
+  const [lastSubmission, setLastSubmission] = useState<LastSubmission | null>(
+    null,
+  );
+  const [affirmationResult, setAffirmationResult] =
+    useState<AffirmationResult | null>(null);
+  const [submissionError, setSubmissionError] = useState<string>("");
+  const [quoteError, setQuoteError] = useState<string>("");
 
   const submitMutation = useSubmitLeadershipWord();
   const getQuoteMutation = useGetNextActivity1Quote();
@@ -47,7 +65,7 @@ export default function Activity1LeadershipWordPage() {
     e.preventDefault();
 
     // Clear any previous errors
-    setSubmissionError('');
+    setSubmissionError("");
 
     try {
       await submitMutation.mutateAsync({
@@ -57,7 +75,7 @@ export default function Activity1LeadershipWordPage() {
         resilienceExample,
         actionStep,
       });
-      
+
       // Store the submission for affirmation
       setLastSubmission({
         word,
@@ -66,34 +84,38 @@ export default function Activity1LeadershipWordPage() {
         resilienceExample,
         actionStep,
       });
-      
+
       setSubmitted(true);
       setAffirmationResult(null);
-      setSubmissionError('');
+      setSubmissionError("");
     } catch (error) {
-      console.error('Failed to submit:', error);
+      console.error("Failed to submit:", error);
       setSubmissionError(toUserFacingError(error));
     }
   };
 
   const handleGetAffirmation = async () => {
     if (lastSubmission) {
-      setQuoteError('');
-      
+      setQuoteError("");
+
       // Check for villainous input
-      if (hasVillainousInput(
-        lastSubmission.word,
-        lastSubmission.why,
-        lastSubmission.roleModel,
-        lastSubmission.resilienceExample,
-        lastSubmission.actionStep
-      )) {
-        setQuoteError('Error 000: Only Heroic responses can be validated. Please ensure your input reflects positive leadership qualities.');
+      if (
+        hasVillainousInput(
+          lastSubmission.word,
+          lastSubmission.why,
+          lastSubmission.roleModel,
+          lastSubmission.resilienceExample,
+          lastSubmission.actionStep,
+        )
+      ) {
+        setQuoteError(
+          "Error 000: Only Heroic responses can be validated. Please ensure your input reflects positive leadership qualities.",
+        );
         return;
       }
-      
+
       const affirmation = generateAffirmation(lastSubmission);
-      
+
       // Fetch quote from backend
       try {
         const fetchedQuote = await getQuoteMutation.mutateAsync();
@@ -102,7 +124,7 @@ export default function Activity1LeadershipWordPage() {
           quote: fetchedQuote,
         });
       } catch (error) {
-        console.error('Failed to fetch quote:', error);
+        console.error("Failed to fetch quote:", error);
         setQuoteError(toUserFacingError(error));
         setAffirmationResult({
           affirmation,
@@ -114,22 +136,26 @@ export default function Activity1LeadershipWordPage() {
 
   const handleGenerateAnother = async () => {
     if (lastSubmission) {
-      setQuoteError('');
-      
+      setQuoteError("");
+
       // Check for villainous input
-      if (hasVillainousInput(
-        lastSubmission.word,
-        lastSubmission.why,
-        lastSubmission.roleModel,
-        lastSubmission.resilienceExample,
-        lastSubmission.actionStep
-      )) {
-        setQuoteError('Error 000: Only Heroic responses can be validated. Please ensure your input reflects positive leadership qualities.');
+      if (
+        hasVillainousInput(
+          lastSubmission.word,
+          lastSubmission.why,
+          lastSubmission.roleModel,
+          lastSubmission.resilienceExample,
+          lastSubmission.actionStep,
+        )
+      ) {
+        setQuoteError(
+          "Error 000: Only Heroic responses can be validated. Please ensure your input reflects positive leadership qualities.",
+        );
         return;
       }
-      
+
       const affirmation = generateAffirmation(lastSubmission);
-      
+
       // Fetch next quote from backend
       try {
         const fetchedQuote = await getQuoteMutation.mutateAsync();
@@ -138,7 +164,7 @@ export default function Activity1LeadershipWordPage() {
           quote: fetchedQuote,
         });
       } catch (error) {
-        console.error('Failed to fetch quote:', error);
+        console.error("Failed to fetch quote:", error);
         setQuoteError(toUserFacingError(error));
       }
     }
@@ -147,14 +173,14 @@ export default function Activity1LeadershipWordPage() {
   const handleInputChange = () => {
     // Clear submission error when user edits inputs
     if (submissionError) {
-      setSubmissionError('');
+      setSubmissionError("");
     }
   };
 
   if (submitted) {
     return (
       <div>
-        <HeroBanner 
+        <HeroBanner
           title={proposalContent.activities.activity1.title}
           subtitle="Thank you for your submission!"
         />
@@ -162,7 +188,9 @@ export default function Activity1LeadershipWordPage() {
         <PageSection>
           <div className="max-w-3xl mx-auto text-center">
             <CheckCircle className="h-16 w-16 text-primary mx-auto mb-6" />
-            <h2 className="text-4xl font-bold text-foreground mb-4">Thank You!</h2>
+            <h2 className="text-4xl font-bold text-foreground mb-4">
+              Thank You!
+            </h2>
             <p className="text-lg text-muted-foreground mb-8">
               Your leadership word has been shared with the community.
             </p>
@@ -171,6 +199,7 @@ export default function Activity1LeadershipWordPage() {
             {!affirmationResult ? (
               <div className="mb-8">
                 <button
+                  type="button"
                   onClick={handleGetAffirmation}
                   disabled={getQuoteMutation.isPending || !actor}
                   className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -196,7 +225,7 @@ export default function Activity1LeadershipWordPage() {
                     <h3 className="text-xl font-semibold text-foreground mb-3">
                       Your Leadership Word is Affirmed!
                     </h3>
-                    
+
                     <p className="text-muted-foreground mb-4">
                       {affirmationResult.affirmation.message}
                     </p>
@@ -241,6 +270,7 @@ export default function Activity1LeadershipWordPage() {
                     {/* Generate Another Button */}
                     <div className="mt-4 flex justify-end">
                       <button
+                        type="button"
                         onClick={handleGenerateAnother}
                         disabled={getQuoteMutation.isPending || !actor}
                         className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -277,7 +307,8 @@ export default function Activity1LeadershipWordPage() {
             </SignInGate>
 
             <button
-              onClick={() => navigate({ to: '/activities' })}
+              type="button"
+              onClick={() => navigate({ to: "/activities" })}
               className="px-6 py-3 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               Back to Activities
@@ -290,13 +321,13 @@ export default function Activity1LeadershipWordPage() {
 
   // Parse examples from comma-separated string
   const examplesArray = proposalContent.activities.activity1.examples
-    .split(',')
+    .split(",")
     .map((ex) => ex.trim())
     .filter((ex) => ex.length > 0);
 
   return (
     <div>
-      <HeroBanner 
+      <HeroBanner
         title={proposalContent.activities.activity1.title}
         subtitle={proposalContent.activities.activity1.goal}
       />
@@ -305,13 +336,15 @@ export default function Activity1LeadershipWordPage() {
         <div className="max-w-3xl mx-auto">
           <div className="rounded-lg border border-border bg-muted/50 p-6 mb-4">
             <h2 className="text-lg font-semibold mb-3">Prompt</h2>
-            <p className="text-muted-foreground mb-4">{proposalContent.activities.activity1.prompt}</p>
+            <p className="text-muted-foreground mb-4">
+              {proposalContent.activities.activity1.prompt}
+            </p>
             <div>
               <p className="text-sm font-medium mb-2">Examples:</p>
               <div className="flex flex-wrap gap-2">
-                {examplesArray.map((example, index) => (
+                {examplesArray.map((example) => (
                   <span
-                    key={index}
+                    key={example}
                     className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium"
                   >
                     {example}
@@ -324,15 +357,20 @@ export default function Activity1LeadershipWordPage() {
           <div className="rounded-lg border border-border bg-card p-4 mb-8 flex items-start gap-3">
             <Info className="h-5 w-5 text-primary shrink-0 mt-0.5" />
             <p className="text-sm text-muted-foreground">
-              Your information is anonymous the only information we see is what is on the top leadership word community solutions
+              Your information is anonymous the only information we see is what
+              is on the top leadership word community solutions
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="rounded-lg border border-border bg-card p-6 space-y-6">
               <div>
-                <label htmlFor="word" className="block text-sm font-medium mb-2">
-                  Your Leadership Word <span className="text-destructive">*</span>
+                <label
+                  htmlFor="word"
+                  className="block text-sm font-medium mb-2"
+                >
+                  Your Leadership Word{" "}
+                  <span className="text-destructive">*</span>
                 </label>
                 <input
                   id="word"
@@ -350,7 +388,8 @@ export default function Activity1LeadershipWordPage() {
 
               <div>
                 <label htmlFor="why" className="block text-sm font-medium mb-2">
-                  Why does this word resonate with you? <span className="text-destructive">*</span>
+                  Why does this word resonate with you?{" "}
+                  <span className="text-destructive">*</span>
                 </label>
                 <textarea
                   id="why"
@@ -367,8 +406,12 @@ export default function Activity1LeadershipWordPage() {
               </div>
 
               <div>
-                <label htmlFor="roleModel" className="block text-sm font-medium mb-2">
-                  Who embodies this quality? <span className="text-destructive">*</span>
+                <label
+                  htmlFor="roleModel"
+                  className="block text-sm font-medium mb-2"
+                >
+                  Who embodies this quality?{" "}
+                  <span className="text-destructive">*</span>
                 </label>
                 <input
                   id="roleModel"
@@ -385,8 +428,12 @@ export default function Activity1LeadershipWordPage() {
               </div>
 
               <div>
-                <label htmlFor="resilienceExample" className="block text-sm font-medium mb-2">
-                  How does this quality relate to resilience? <span className="text-destructive">*</span>
+                <label
+                  htmlFor="resilienceExample"
+                  className="block text-sm font-medium mb-2"
+                >
+                  How does this quality relate to resilience?{" "}
+                  <span className="text-destructive">*</span>
                 </label>
                 <textarea
                   id="resilienceExample"
@@ -403,8 +450,12 @@ export default function Activity1LeadershipWordPage() {
               </div>
 
               <div>
-                <label htmlFor="actionStep" className="block text-sm font-medium mb-2">
-                  One action step to develop this quality <span className="text-destructive">*</span>
+                <label
+                  htmlFor="actionStep"
+                  className="block text-sm font-medium mb-2"
+                >
+                  One action step to develop this quality{" "}
+                  <span className="text-destructive">*</span>
                 </label>
                 <textarea
                   id="actionStep"
@@ -428,7 +479,7 @@ export default function Activity1LeadershipWordPage() {
               </div>
             )}
 
-            <div className="flex justify-end">
+            <div className="flex flex-col items-end gap-2">
               <button
                 type="submit"
                 disabled={submitMutation.isPending || !actor}
@@ -446,6 +497,9 @@ export default function Activity1LeadershipWordPage() {
                   </>
                 )}
               </button>
+              <p className="text-sm text-muted-foreground italic">
+                Submit your answers for feedback and a movie quote
+              </p>
             </div>
           </form>
         </div>

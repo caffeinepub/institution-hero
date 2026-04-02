@@ -1,7 +1,7 @@
-import PageSection from '../components/PageSection';
-import HeroBanner from '../components/HeroBanner';
-import { proposalContent } from '../content/proposalContent';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from "lucide-react";
+import HeroBanner from "../components/HeroBanner";
+import PageSection from "../components/PageSection";
+import { proposalContent } from "../content/proposalContent";
 
 export default function LearningOutcomesPage() {
   return (
@@ -16,11 +16,18 @@ export default function LearningOutcomesPage() {
 
           <div className="space-y-6">
             {proposalContent.learningOutcomes.map((outcome, index) => (
-              <div key={index} className="flex gap-4 p-6 rounded-lg border border-border bg-card">
+              <div
+                key={outcome.slice(0, 50)}
+                className="flex gap-4 p-6 rounded-lg border border-border bg-card"
+              >
                 <CheckCircle2 className="h-6 w-6 text-primary shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-semibold text-foreground mb-2">Outcome {index + 1}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{outcome}</p>
+                  <h3 className="font-semibold text-foreground mb-2">
+                    Outcome {index + 1}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {outcome}
+                  </p>
                 </div>
               </div>
             ))}

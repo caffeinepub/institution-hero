@@ -1,4 +1,4 @@
-import { QuoteGenre } from '../backend';
+import { QuoteGenre } from "../backend";
 
 /**
  * Maps backend QuoteGenre enum to user-facing English franchise labels
@@ -6,24 +6,24 @@ import { QuoteGenre } from '../backend';
 export function formatQuoteGenre(genre: QuoteGenre): string {
   switch (genre) {
     case QuoteGenre.starWars:
-      return 'Star Wars';
+      return "Star Wars";
     case QuoteGenre.avengers:
-      return 'Avengers';
+      return "Avengers";
     case QuoteGenre.batman:
-      return 'Batman';
+      return "Batman";
     case QuoteGenre.darkKnightTrilogy:
-      return 'The Dark Knight Trilogy';
+      return "The Dark Knight Trilogy";
     case QuoteGenre.infinite:
-      return 'Infinite';
+      return "Infinite";
     case QuoteGenre.kingsman:
-      return 'Kingsman';
+      return "Kingsman";
     case QuoteGenre.threeKings:
-      return 'Three Kings';
+      return "Three Kings";
     case QuoteGenre.transformers:
-      return 'Transformers';
+      return "Transformers";
     case QuoteGenre.warDogs:
-      return 'War Dogs';
+      return "War Dogs";
     default:
-      return 'Unknown';
+      return "Unknown";
   }
 }

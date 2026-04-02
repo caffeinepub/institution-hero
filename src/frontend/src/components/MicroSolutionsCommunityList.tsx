@@ -1,15 +1,15 @@
-import { useGetAllMicroSolutions } from '../hooks/useQueries';
-import { Users, Lightbulb, Shield } from 'lucide-react';
-import { ChallengeType } from '../backend';
+import { Lightbulb, Shield, Users } from "lucide-react";
+import { ChallengeType } from "../backend";
+import { useGetAllMicroSolutions } from "../hooks/useQueries";
 
 const challengeLabels: Record<ChallengeType, string> = {
-  [ChallengeType.academicPressure]: 'Academic Pressure',
-  [ChallengeType.mentalHealth]: 'Mental Health',
-  [ChallengeType.financialStress]: 'Financial Stress',
-  [ChallengeType.onlineLearning]: 'Online Learning',
-  [ChallengeType.timeManagement]: 'Time Management',
-  [ChallengeType.bullying]: 'Bullying',
-  [ChallengeType.socialIsolation]: 'Social Isolation',
+  [ChallengeType.academicPressure]: "Academic Pressure",
+  [ChallengeType.mentalHealth]: "Mental Health",
+  [ChallengeType.financialStress]: "Financial Stress",
+  [ChallengeType.onlineLearning]: "Online Learning",
+  [ChallengeType.timeManagement]: "Time Management",
+  [ChallengeType.bullying]: "Bullying",
+  [ChallengeType.socialIsolation]: "Social Isolation",
 };
 
 interface MicroSolutionsCommunityListProps {
@@ -22,7 +22,7 @@ export default function MicroSolutionsCommunityList({
   pollingIntervalMs = 3000,
 }: MicroSolutionsCommunityListProps) {
   const { data: solutions, isLoading } = useGetAllMicroSolutions(
-    enablePolling ? pollingIntervalMs : undefined
+    enablePolling ? pollingIntervalMs : undefined,
   );
 
   if (isLoading) {
@@ -61,15 +61,18 @@ export default function MicroSolutionsCommunityList({
         Heroic responses from student leaders addressing real campus challenges:
       </p>
       <div className="space-y-4 max-h-[600px] overflow-y-auto">
-        {solutions.map((solution, index) => (
-          <div key={index} className="p-4 rounded-lg bg-muted/50 border border-border/50 space-y-2">
+        {solutions.map((solution) => (
+          <div
+            key={solution.microSolution}
+            className="p-4 rounded-lg bg-muted/50 border border-border/50 space-y-2"
+          >
             <div className="flex items-start gap-2">
               <Lightbulb className="h-5 w-5 text-primary mt-0.5 shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-sm mb-1">
                   {solution.challengeType
                     ? challengeLabels[solution.challengeType]
-                    : solution.customChallenge || 'Custom Challenge'}
+                    : solution.customChallenge || "Custom Challenge"}
                 </p>
                 <p className="text-foreground">{solution.microSolution}</p>
               </div>

@@ -1,8 +1,8 @@
-import { Outlet, useNavigate, useRouterState } from '@tanstack/react-router';
-import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useQueryClient } from '@tanstack/react-query';
-import { Menu, X, Heart } from 'lucide-react';
-import { useState } from 'react';
+import { useQueryClient } from "@tanstack/react-query";
+import { Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Heart, Menu, X } from "lucide-react";
+import { useState } from "react";
+import { useInternetIdentity } from "../hooks/useInternetIdentity";
 
 export default function AppShell() {
   const navigate = useNavigate();
@@ -12,8 +12,13 @@ export default function AppShell() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isAuthenticated = !!identity;
-  const disabled = loginStatus === 'logging-in';
-  const authText = loginStatus === 'logging-in' ? 'Logging in...' : isAuthenticated ? 'Logout' : 'Login';
+  const disabled = loginStatus === "logging-in";
+  const authText =
+    loginStatus === "logging-in"
+      ? "Logging in..."
+      : isAuthenticated
+        ? "Logout"
+        : "Login";
 
   const handleAuth = async () => {
     if (isAuthenticated) {
@@ -23,8 +28,8 @@ export default function AppShell() {
       try {
         await login();
       } catch (error: any) {
-        console.error('Login error:', error);
-        if (error.message === 'User is already authenticated') {
+        console.error("Login error:", error);
+        if (error.message === "User is already authenticated") {
           await clear();
           setTimeout(() => login(), 300);
         }
@@ -33,15 +38,15 @@ export default function AppShell() {
   };
 
   const navLinks = [
-    { path: '/', label: 'Overview' },
-    { path: '/bio', label: 'Bio' },
-    { path: '/learning-outcomes', label: 'Learning Outcomes' },
-    { path: '/takeaways', label: 'Takeaways' },
-    { path: '/activities', label: 'Activities' },
-    { path: '/slides', label: 'Slides' },
-    { path: '/references', label: 'References' },
-    { path: '/movie-references', label: 'Movie References' },
-    { path: '/leadership-board', label: 'Leadership Board' },
+    { path: "/", label: "Overview" },
+    { path: "/bio", label: "Bio" },
+    { path: "/learning-outcomes", label: "Learning Outcomes" },
+    { path: "/takeaways", label: "Takeaways" },
+    { path: "/activities", label: "Activities" },
+    { path: "/slides", label: "Slides" },
+    { path: "/references", label: "References" },
+    { path: "/movie-references", label: "Movie References" },
+    { path: "/leadership-board", label: "Leadership Board" },
   ];
 
   const currentPath = routerState.location.pathname;
@@ -54,7 +59,8 @@ export default function AppShell() {
           <div className="flex h-16 items-center justify-between">
             {/* Logo/Title */}
             <button
-              onClick={() => navigate({ to: '/' })}
+              type="button"
+              onClick={() => navigate({ to: "/" })}
               className="text-xl font-bold text-foreground hover:text-primary transition-colors"
             >
               Leadership & Resilience
@@ -64,10 +70,13 @@ export default function AppShell() {
             <nav className="hidden lg:flex items-center gap-6">
               {navLinks.map((link) => (
                 <button
+                  type="button"
                   key={link.path}
                   onClick={() => navigate({ to: link.path })}
                   className={`text-sm font-medium transition-colors hover:text-primary ${
-                    currentPath === link.path ? 'text-primary' : 'text-muted-foreground'
+                    currentPath === link.path
+                      ? "text-primary"
+                      : "text-muted-foreground"
                   }`}
                 >
                   {link.label}
@@ -78,12 +87,13 @@ export default function AppShell() {
             {/* Auth Button (Desktop) */}
             <div className="hidden lg:block">
               <button
+                type="button"
                 onClick={handleAuth}
                 disabled={disabled}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   isAuthenticated
-                    ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
-                    : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                    ? "bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                    : "bg-primary text-primary-foreground hover:bg-primary/90"
                 } disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 {authText}
@@ -92,11 +102,16 @@ export default function AppShell() {
 
             {/* Mobile Menu Button */}
             <button
+              type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden p-2 rounded-lg hover:bg-muted transition-colors"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </div>
 
@@ -106,6 +121,7 @@ export default function AppShell() {
               <nav className="flex flex-col gap-2">
                 {navLinks.map((link) => (
                   <button
+                    type="button"
                     key={link.path}
                     onClick={() => {
                       navigate({ to: link.path });
@@ -113,8 +129,8 @@ export default function AppShell() {
                     }}
                     className={`text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                       currentPath === link.path
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-muted-foreground hover:bg-muted'
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:bg-muted"
                     }`}
                   >
                     {link.label}
@@ -122,12 +138,13 @@ export default function AppShell() {
                 ))}
                 <div className="mt-2 px-4">
                   <button
+                    type="button"
                     onClick={handleAuth}
                     disabled={disabled}
                     className={`w-full px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                       isAuthenticated
-                        ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
-                        : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                        ? "bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                        : "bg-primary text-primary-foreground hover:bg-primary/90"
                     } disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     {authText}
@@ -149,7 +166,9 @@ export default function AppShell() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center text-sm text-muted-foreground">
             <p className="flex items-center justify-center gap-1.5">
-              © 2026. Built with <Heart className="h-4 w-4 text-destructive fill-destructive" /> using{' '}
+              © 2026. Built with{" "}
+              <Heart className="h-4 w-4 text-destructive fill-destructive" />{" "}
+              using{" "}
               <a
                 href="https://caffeine.ai"
                 target="_blank"

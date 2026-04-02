@@ -1,15 +1,20 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useActor } from './useActor';
-import { ChallengeType, Quote, ResilientLeadershipActivity, UserProfile } from '../backend';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type {
+  ChallengeType,
+  Quote,
+  ResilientLeadershipActivity,
+  UserProfile,
+} from "../backend";
+import { useActor } from "./useActor";
 
 // User Profile Queries
 export function useGetCallerUserProfile() {
   const { actor, isFetching: actorFetching } = useActor();
 
   const query = useQuery<UserProfile | null>({
-    queryKey: ['currentUserProfile'],
+    queryKey: ["currentUserProfile"],
     queryFn: async () => {
-      if (!actor) throw new Error('Actor not available');
+      if (!actor) throw new Error("Actor not available");
       return actor.getCallerUserProfile();
     },
     enabled: !!actor && !actorFetching,
@@ -29,11 +34,11 @@ export function useSaveCallerUserProfile() {
 
   return useMutation({
     mutationFn: async (profile: UserProfile) => {
-      if (!actor) throw new Error('Actor not available');
+      if (!actor) throw new Error("Actor not available");
       return actor.saveCallerUserProfile(profile);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+      queryClient.invalidateQueries({ queryKey: ["currentUserProfile"] });
     },
   });
 }
@@ -51,17 +56,17 @@ export function useSubmitLeadershipWord() {
       resilienceExample: string;
       actionStep: string;
     }) => {
-      if (!actor) throw new Error('Actor not available');
+      if (!actor) throw new Error("Actor not available");
       return actor.submitLeadershipWord(
         data.word,
         data.why,
         data.roleModel,
         data.resilienceExample,
-        data.actionStep
+        data.actionStep,
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['leadershipWordCounts'] });
+      queryClient.invalidateQueries({ queryKey: ["leadershipWordCounts"] });
     },
   });
 }
@@ -70,7 +75,7 @@ export function useGetLeadershipWordCounts(pollingInterval?: number) {
   const { actor, isFetching: actorFetching } = useActor();
 
   return useQuery<Array<[string, bigint]>>({
-    queryKey: ['leadershipWordCounts'],
+    queryKey: ["leadershipWordCounts"],
     queryFn: async () => {
       if (!actor) return [];
       return actor.getLeadershipWordCounts();
@@ -94,20 +99,20 @@ export function useSubmitResilientLeadershipActivity() {
       protectiveFactor: string;
       microSolution: string;
     }) => {
-      if (!actor) throw new Error('Actor not available');
+      if (!actor) throw new Error("Actor not available");
       return actor.submitResilientLeadershipActivity(
         data.challengeType,
         data.customChallenge,
         data.villainResponse,
         data.heroicResponse,
         data.protectiveFactor,
-        data.microSolution
+        data.microSolution,
       );
     },
     onSuccess: (_, variables) => {
       // Optimistically update the cache by appending the new submission
       queryClient.setQueryData<ResilientLeadershipActivity[]>(
-        ['microSolutions'],
+        ["microSolutions"],
         (old) => {
           if (!old) return old;
           const newActivity: ResilientLeadershipActivity = {
@@ -119,9 +124,9 @@ export function useSubmitResilientLeadershipActivity() {
             microSolution: variables.microSolution,
           };
           return [...old, newActivity];
-        }
+        },
       );
-      queryClient.invalidateQueries({ queryKey: ['microSolutions'] });
+      queryClient.invalidateQueries({ queryKey: ["microSolutions"] });
     },
   });
 }
@@ -130,7 +135,7 @@ export function useGetAllMicroSolutions(pollingInterval?: number) {
   const { actor, isFetching: actorFetching } = useActor();
 
   return useQuery<ResilientLeadershipActivity[]>({
-    queryKey: ['microSolutions'],
+    queryKey: ["microSolutions"],
     queryFn: async () => {
       if (!actor) return [];
       const result = await actor.getAllMicroSolutions();
@@ -147,7 +152,7 @@ export function useGetNextActivity1Quote() {
 
   return useMutation<Quote>({
     mutationFn: async () => {
-      if (!actor) throw new Error('Actor not available');
+      if (!actor) throw new Error("Actor not available");
       return actor.getNextActivity1Quote();
     },
   });
@@ -158,7 +163,7 @@ export function useGetNextActivity2Quote() {
 
   return useMutation<Quote>({
     mutationFn: async () => {
-      if (!actor) throw new Error('Actor not available');
+      if (!actor) throw new Error("Actor not available");
       return actor.getNextActivity2Quote();
     },
   });
